@@ -1,0 +1,37 @@
+.container{
+  display: flex;
+  align-items: center;
+}
+.container :not(:last-child){
+  margin-right: 1rem;
+}
+.container > button{
+  padding: 8px 12px;
+  font-size: var(--font-size-1rem);
+  font-weight: var(--font-weight-600);
+  width: 120px;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  cursor: pointer;
+  transition: background 100ms ease-in-out;
+}
+
+.login{
+  background-color: var(--g-colorRed100);
+  color: var( --g-colorGray0);
+}
+.login:hover{
+  background-color: var(--g-colorRed100Hovered);
+}
+
+.register{
+  color: var(--g-colorGray300);
+  background-color: var(--g-colorGray100);
+}
+.register:hover{
+  background-color: var(--g-colorGray100Hovered);
+}
+

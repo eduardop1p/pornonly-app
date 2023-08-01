@@ -1,0 +1,19 @@
+.header-container{
+  padding: 1rem 1.5rem;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo-title{
+  display: flex;
+  align-items: center;
+}
+.logo-title > h2{
+  margin-left: 5px;
+  font-size: var(--font-size-1_25rem);
+  font-weight: var(--font-weight-600);
+  letter-spacing: 0;
+  color: var(--g-colorRedSecondary);
+}

@@ -1,0 +1,18 @@
+.container{
+  position: absolute;
+  right: 1.5rem;
+  cursor: pointer;
+  height: 40px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100%;
+  transition: background 200ms ease-in-out;
+}
+.container:hover{
+  background-color: var(--g-colorTransparentGray60);
+}
+.container > svg{
+  flex: none;
+}
