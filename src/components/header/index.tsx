@@ -6,7 +6,7 @@ import { cookies } from 'next/headers';
 import styles from './styles.module.css';
 
 import Logo from '../logo';
-import Nav from '../nav';
+import Nav from '../Nav';
 
 export default function Header() {
   const isAuth = cookies().has('token');

@@ -1,0 +1,30 @@
+.container{
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  height: 33px;
+  width: 33px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100%;
+  transition: background 200ms ease-in-out;
+}
+.container:hover{
+  background-color: var(--g-colorTransparentGray60);
+}
+.container > svg{
+  flex: none;
+  fill: var(--g-colorGray0);
+  display: inline-block;
+  position: relative;
+
+}
+.container::before{
+  position: absolute;
+  content: '';
+  height: 18px;
+  width: 18px;
+  background-color: var(--g-colorGray400);
+  border-radius: 100%;
+}

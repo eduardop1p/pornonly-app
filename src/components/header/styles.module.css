@@ -4,6 +4,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  box-shadow: var(--box-shadow_03);
+  background-color: var(--g-colorGray0);
+  top: 0;
+  z-index: 5;
+  position: fixed;
+  width: 100%;
 }
 
 .logo-title{
@@ -17,3 +23,5 @@
   letter-spacing: 0;
   color: var(--g-colorRedSecondary);
 }
+
+

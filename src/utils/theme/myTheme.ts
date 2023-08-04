@@ -1,5 +1,8 @@
 const myTheme = {
   colors: {
+    g_color5f5f5f: '#5f5f5f',
+    g_colo333: '#333',
+    g_colore9e9e9: '#e9e9e9',
     g_colorRed0: '#ff5247',
     g_colorRed100: '#e60023',
     g_colorRedSecondary: '#cc0000',
@@ -61,6 +64,7 @@ const myTheme = {
   box_shadow: {
     box_shadow_01: '0px 0px 15px -3px rgba(0,0,0,0.1)',
     box_shadow_02: '0 0 0 4px rgb(0 132 255/.5)',
+    box_shadow_03: 'rgba(0, 0, 0, 0.1) 0px 8px 8px -8px',
   },
 };
 
