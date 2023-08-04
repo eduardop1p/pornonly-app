@@ -28,8 +28,10 @@ export default function Login() {
   } = useForm<BodyLogin>();
 
   const handleFormSubmit: SubmitHandler<BodyLogin> = body => {
-    const { email, password } = body;
+    const email = body.email.trim();
+    const password = body.password.trim();
     let controllerError = true;
+
     if (!isEmail(email)) {
       setError('email', { message: 'E-mail inválido.' });
       controllerError = false;

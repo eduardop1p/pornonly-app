@@ -44,6 +44,7 @@ export default function Input({
         />
         {children}
       </div>
+
       {errors.username && name === 'username' && (
         <ErrorForm errorMsg={errors.username.message} />
       )}

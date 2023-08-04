@@ -5,6 +5,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import isEmail from 'validator/lib/isEmail';
+import isAlphanumeric from 'validator/lib/isAlphanumeric';
+import contains from 'validator/lib/contains';
 
 import styles from './styles.module.css';
 import { FormContainer } from '../formContainer/styles';
@@ -31,16 +33,48 @@ export default function CreateAccount() {
   } = useForm<BodyCreateAccount>();
 
   const handleFormSubmit: SubmitHandler<BodyCreateAccount> = body => {
-    const { username, email, password, repeatPassword } = body;
+    const username = body.username.trim();
+    const email = body.email.trim();
+    const password = body.password.trim();
+    const repeatPassword = body.repeatPassword.trim();
     let controllerError = true;
+
+    if (username.length < 4 || username.length > 15) {
+      setError('username', {
+        message: 'Usuário deve ter ao menos 4 caracteres e no máximo 15.',
+      });
+      controllerError = false;
+    }
+
+    if (!isAlphanumeric(username)) {
+      setError('username', {
+        message: 'Usuário deve conter apenas letras e números.',
+      });
+      controllerError = false;
+    }
+
+    if (!isEmail(email)) {
+      setError('email', { message: 'E-mail inválido.' });
+      controllerError = false;
+    }
 
     if (password !== repeatPassword) {
       setError('password', { message: 'As senhas não se coincidem.' });
       controllerError = false;
     }
 
-    if (!isEmail(email)) {
-      setError('email', { message: 'E-mail inválido.' });
+    if (password.length < 5 || password.length > 20) {
+      setError('password', {
+        message: 'Senha deve ter ao menos 5 caracteres e no máximo 20.',
+      });
+      controllerError = false;
+    }
+
+    const rgPassword = /[!@#$%^&*(),.?":{}|<>]/;
+    if (!rgPassword.test(password)) {
+      setError('password', {
+        message: 'Senha deve ter ao menos 1 caractere especial ex: @#$!*&%^.',
+      });
       controllerError = false;
     }
 
