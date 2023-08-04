@@ -1,4 +1,4 @@
-import * as types from '@/utils/context/types';
+import * as types from '@/utils/appContext/types';
 
 import { GlobalState } from './appContext';
 

@@ -17,7 +17,7 @@ export default function Header() {
         <Logo />
         <h2>Pornonly</h2>
       </Link>
-      {isAuth ? '' : <Nav isAuth={isAuth} />}
+      <Nav isAuth={isAuth} />
     </header>
   );
 }

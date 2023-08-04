@@ -1,0 +1,15 @@
+.container{
+  display: flex;
+  align-items: center;
+  margin: 8px 5px 0;
+}
+.container > svg{
+  flex: none;
+  margin-right: 8px;
+  fill: var(--g-colorRedSecondary);
+}
+.container > span{
+  color: var(--g-colorRedSecondary);
+  font-size: var(--font-size-0_75rem);
+  font-weight: var(--font-weight-400);
+}

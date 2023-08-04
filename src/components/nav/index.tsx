@@ -1,47 +1,21 @@
-'use client';
-
-import { useContext } from 'react';
-
+import Link from 'next/link';
 import styles from './styles.module.css';
-
-import { Context } from '@/utils/context/appContext';
-import * as actions from '@/utils/context/actions';
 
 interface Props {
   isAuth: boolean;
 }
 
 export default function Nav({ isAuth }: Props) {
-  const { dispatch } = useContext(Context) as any;
-
-  const handleClickLogin = () => {
-    dispatch(
-      actions.loginActiveSuccess({ loginActive: true, registerActive: false })
-    );
-  };
-  const handleClickRegister = () => {
-    dispatch(
-      actions.registerActiveSuccess({
-        registerActive: true,
-        loginActive: false,
-      })
-    );
-  };
-
   return isAuth ? (
     ''
   ) : (
     <nav className={styles.container}>
-      <button type="button" className={styles.login} onClick={handleClickLogin}>
+      <Link className={styles.login} href="/login">
         Login
-      </button>
-      <button
-        type="button"
-        className={styles.register}
-        onClick={handleClickRegister}
-      >
-        Registrar-se
-      </button>
+      </Link>
+      <Link className={styles['create-account']} href="/create-account">
+        Criar conta
+      </Link>
     </nav>
   );
 }

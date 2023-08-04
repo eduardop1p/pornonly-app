@@ -5,7 +5,7 @@
 .container :not(:last-child){
   margin-right: 1rem;
 }
-.container > button{
+.container > a{
   padding: 8px 12px;
   font-size: var(--font-size-1rem);
   font-weight: var(--font-weight-600);
@@ -27,11 +27,11 @@
   background-color: var(--g-colorRed100Hovered);
 }
 
-.register{
+.create-account{
   color: var(--g-colorGray300);
   background-color: var(--g-colorGray100);
 }
-.register:hover{
+.create-account:hover{
   background-color: var(--g-colorGray100Hovered);
 }
 

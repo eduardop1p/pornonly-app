@@ -1,0 +1,6 @@
+.param{
+  color: var(--g-colorGray111111);
+  font-size: var(--font-size-1rem);
+  text-align: center;
+  max-width: 200px;
+}

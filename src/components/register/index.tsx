@@ -4,7 +4,7 @@ import { useContext } from 'react';
 
 import { Container } from './styles';
 
-import { Context } from '@/utils/context/appContext';
+import { Context } from '@/utils/appContext/appContext';
 
 export default function Register() {
   const {

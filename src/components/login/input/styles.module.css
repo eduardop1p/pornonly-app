@@ -1,0 +1,28 @@
+.container{
+  width: 100%;
+  margin: 0 auto;
+}
+.container-input{
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.container-input > label{
+  margin-bottom: 8px;
+  color: var(--g-colorGray111111);
+  font-size: var(--font-size-0_90rem);
+  font-weight: var(--font-weight-400);
+}
+.container-input > input{
+  width: 100%;
+  border: 2px solid var(--color-border-container01);
+  padding: 8px 1rem;
+  min-height: 48px;
+  border-radius: 1rem;
+  font-size: var(--font-size-1rem);
+  font-weight: var(--font-weight-400);
+}
+.container-input > input:focus{
+  box-shadow: var(--box-shadow_02);
+}
