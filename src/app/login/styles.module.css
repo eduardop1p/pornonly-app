@@ -1,0 +1,6 @@
+.main{
+  background-color: var(--g-colore9e9e9);
+  min-height: 100vh;
+  position: absolute;
+  width: 100%;
+}

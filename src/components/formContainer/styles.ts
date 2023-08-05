@@ -3,12 +3,12 @@ import { TypeTheme } from '@/utils/theme/myTheme';
 
 export const FormContainer = styled.div<TypeTheme>`
   ${({ theme }) => css`
-    margin: 7rem auto 2rem;
+    margin: 7.5rem auto 3rem;
     max-width: 700px;
     min-height: 500px;
     padding: 2rem 1rem;
     border-radius: 2rem;
-    box-shadow: ${theme.box_shadow.box_shadow_01};
+    /* box-shadow: ${theme.box_shadow.box_shadow_01}; */
     background-color: ${theme.colors.g_colorGray0};
     display: flex;
     flex-direction: column;

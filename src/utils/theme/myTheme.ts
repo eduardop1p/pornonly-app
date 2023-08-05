@@ -65,6 +65,7 @@ const myTheme = {
     box_shadow_01: '0px 0px 15px -3px rgba(0,0,0,0.1)',
     box_shadow_02: '0 0 0 4px rgb(0 132 255/.5)',
     box_shadow_03: 'rgba(0, 0, 0, 0.1) 0px 8px 8px -8px',
+    box_shadow_04: '0 0 8px rgba(0,0,0,.1)',
   },
 };
 
