@@ -32,7 +32,7 @@ export default function Nav({ isAuth }: Props) {
         type="button"
         onClick={() => setPublishActive(!publishActive)}
         data-publish-active={publishActive}
-        onBlur={() => setTimeout(() => setPublishActive(false), 500)}
+        onBlur={() => setTimeout(() => setPublishActive(false), 300)}
         tabIndex={1}
       >
         <span>Criar</span>

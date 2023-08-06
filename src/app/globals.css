@@ -45,6 +45,7 @@
   --g-colorGray200Active: #828282;
   --g-colorRed100Active: #a3081a;
   --g-blueActive: #4a85c9;
+  --g-colorBgRgb-229: rgb(239, 239, 239);
   --g-colorTransparentDarkGray: rgba(51,51,51,.8);
   --g-colorTransparentWhite: hsla(0,0%,100%,.8);
   --g-colorTransparentGray60: rgba(0,0,0,.06);
@@ -62,6 +63,7 @@
   --font-size-1rem: 1rem;
   --font-size-1_25rem: 1.25rem;
   --font-size-2rem: 2rem;
+  --font-size-2_4rem: 2.4rem;
   --font-size-3_75rem: 3.75rem;
   --font-size-0_90rem: 0.90rem;
   --font-size-0_75rem: 0.75rem;
@@ -70,6 +72,8 @@
   --box-shadow_02: 0 0 0 4px rgb(0 132 255/.5);
   --box-shadow_03: rgba(0, 0, 0, 0.1) 0px 8px 8px -8px;
   --box-shadow_04: 0 0 8px rgba(0,0,0,.1);
+  --box-shadow_05: rgba(142, 142, 142, 0.5) 0px 1px 0px 0px;
+  --box-shadow_06: rgb(0, 116, 232) 0px 2px 0px 0px;
 
 }
 

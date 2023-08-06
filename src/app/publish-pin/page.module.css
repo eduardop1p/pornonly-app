@@ -1,4 +1,14 @@
 .main{
-  margin: 7rem auto 0;
-  width: calc(100% - 7rem);
+ background-color: var(--g-colore9e9e9);
+ min-height: 100vh;
+ width: 100%;
+ position: absolute;
+}
+
+.container-publish{
+  margin: 7.5rem auto 3rem;
+  max-width: 900px;
+  background-color: var(--g-colorGray0);
+  border-radius: 1rem;
+  padding: 2.5rem;
 }

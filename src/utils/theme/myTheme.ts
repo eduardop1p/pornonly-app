@@ -38,6 +38,7 @@ const myTheme = {
     g_colorGray200Active: '#828282',
     g_colorRed100Active: '#a3081a',
     g_blueActive: '#4a85c9',
+    g_colorBgRgb_229: 'rgb(239, 239, 239)',
     g_colorTransparentDarkGray: 'rgba(51,51,51,.8)',
     g_colorTransparentWhite: ' hsla(0,0%,100%,.8)',
     g_colorTransparentGray60: 'rgba(0,0,0,.06)',
@@ -60,12 +61,15 @@ const myTheme = {
     font_size_3_75rem: '3.75rem',
     font_size_0_90rem: '0.90rem',
     font_size_0_75rem: '0.75rem',
+    font_size_2_4rem: '2.4rem',
   },
   box_shadow: {
     box_shadow_01: '0px 0px 15px -3px rgba(0,0,0,0.1)',
     box_shadow_02: '0 0 0 4px rgb(0 132 255/.5)',
     box_shadow_03: 'rgba(0, 0, 0, 0.1) 0px 8px 8px -8px',
     box_shadow_04: '0 0 8px rgba(0,0,0,.1)',
+    box_shadow_05: 'rgba(142, 142, 142, 0.5) 0px 1px 0px 0px',
+    box_shadow_06: 'rgb(0, 116, 232) 0px 2px 0px 0px',
   },
 };
 
