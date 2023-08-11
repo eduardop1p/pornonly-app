@@ -12,11 +12,12 @@ export const Container = styled.div<TypeTheme>`
       display: flex;
       flex-direction: column;
       margin-right: 2rem;
+      flex: none;
+      width: 270px;
 
       & > .publish {
         border-radius: 12px;
         background-color: ${theme.colors.g_colorBgRgb_229};
-        width: 270px;
         height: 495px;
         flex: none;
         padding: 1rem;
@@ -60,6 +61,14 @@ export const Container = styled.div<TypeTheme>`
 
         & > .border-dashed {
           border: 2px dashed ${theme.colors.g_colorGray150Hovered};
+
+          &.border-dashed-no-upload-img {
+            border: 2px dashed ${theme.colors.g_colorRed100};
+
+            & > span {
+              color: ${theme.colors.g_colorRed100};
+            }
+          }
         }
 
         & > div {
@@ -88,13 +97,39 @@ export const Container = styled.div<TypeTheme>`
             justify-content: center;
             cursor: pointer;
 
-            & > div {
+            & > .upload-photo {
               margin: 0 auto;
               max-width: 70%;
               display: flex;
               flex-direction: column;
               align-items: center;
               text-align: center;
+
+              &.no-img-upload {
+                & > div {
+                  animation-name: noImgUpload;
+                  animation-duration: 100ms;
+                  animation-iteration-count: 1;
+                  animation-timing-function: linear;
+                  background-color: ${theme.colors.g_colorRed100};
+
+                  @keyframes noImgUpload {
+                    0% {
+                      transform: translateX(10px);
+                    }
+                    50% {
+                      transform: translateX(-10px);
+                    }
+                    100% {
+                      transform: translateX(0px);
+                    }
+                  }
+                }
+
+                & > span {
+                  color: ${theme.colors.g_colorRed100};
+                }
+              }
 
               & > div {
                 background-color: ${theme.colors.g_color5f5f5f};
@@ -132,7 +167,7 @@ export const Container = styled.div<TypeTheme>`
       }
 
       & > button {
-        width: 270px;
+        width: 100%;
         font-size: ${theme.font_size.font_size_1rem};
         font-weight: ${theme.font_weight.font_weight_500};
         color: ${theme.colors.g_colorGray0};
@@ -143,6 +178,11 @@ export const Container = styled.div<TypeTheme>`
         justify-content: center;
         cursor: pointer;
         border-radius: 24px;
+        transition: background 200ms ease-in-out;
+
+        &:hover {
+          background-color: ${theme.colors.g_colorRed100Hovered};
+        }
       }
     }
 
@@ -151,9 +191,74 @@ export const Container = styled.div<TypeTheme>`
       flex-direction: column;
       width: 100%;
 
+      & > div:not(.user) {
+        height: 70px;
+      }
+
+      & > .add-tags {
+        & > form {
+          width: 100%;
+          padding-bottom: 10px;
+          box-shadow: ${theme.box_shadow.box_shadow_05};
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: left;
+
+          &[data-tags-focus='true'] {
+            box-shadow: ${theme.box_shadow.box_shadow_06};
+          }
+
+          & > input {
+            border: none;
+            margin-left: 5px;
+            font-size: ${theme.font_size.font_size_1rem};
+            font-weight: ${theme.font_weight.font_weight_400};
+            width: 100%;
+          }
+
+          & > span {
+            margin-right: 8px;
+            background-color: ${theme.colors.g_colore9e9e9};
+            color: ${theme.colors.g_colorGray400};
+            font-weight: ${theme.font_weight.font_weight_500};
+            font-size: ${theme.font_size.font_size_0_90rem};
+            padding: 8px 12px;
+            border-radius: 2rem;
+            position: relative;
+
+            & > svg {
+              position: absolute;
+              border-radius: 100%;
+              cursor: pointer;
+              top: -5px;
+              right: -3px;
+              padding: 5px;
+              background-color: ${theme.colors.g_colore9e9e9};
+              fill: ${theme.colors.g_colorRed100};
+            }
+          }
+
+          & > button {
+            appearance: none;
+            background: transparent;
+            cursor: pointer;
+            flex: none;
+
+            & > svg {
+              fill: ${theme.colors.g_color5f5f5f};
+              opacity: 0.7;
+            }
+          }
+        }
+      }
+
+      & > .user {
+        margin-bottom: 3rem;
+      }
+
       & > div {
         margin-bottom: 2rem;
-        height: 70px;
 
         & > .info-input {
           display: flex;
@@ -169,11 +274,12 @@ export const Container = styled.div<TypeTheme>`
           }
         }
 
-        & > input,
+        & > #title,
         & > textarea {
           width: 100%;
           border: none;
           box-shadow: ${theme.box_shadow.box_shadow_05};
+          color: ${theme.colors.g_colorGray400};
 
           &:focus {
             box-shadow: ${theme.box_shadow.box_shadow_06};

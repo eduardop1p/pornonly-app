@@ -1,6 +1,6 @@
 import styles from './styles.module.css';
 
-export default function ErrorForm({
+export default function ErrorMsg({
   errorMsg,
 }: {
   errorMsg: string | undefined;

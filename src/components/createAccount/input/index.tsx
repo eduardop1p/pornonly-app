@@ -6,7 +6,7 @@ import styles from './styles.module.css';
 
 import { BodyCreateAccount } from '..';
 
-import ErrorForm from '../../errorForm';
+import ErrorForm from '../../errorMsg';
 
 interface Props {
   label: string;
