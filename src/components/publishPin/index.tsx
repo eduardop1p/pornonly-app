@@ -73,7 +73,7 @@ export default function PublishPin() {
     if (!valueTag) return;
     if (valueInputTags.length >= 5) return;
 
-    setValueInputTags(state => [...state, valueTag]);
+    setValueInputTags(state => [...state, valueTag.trim()]);
     setValueTag('');
   };
 

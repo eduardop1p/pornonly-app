@@ -102,7 +102,7 @@ export default function CreateAccount() {
           type="text"
           required={true}
           register={register}
-          errors={errors}
+          errorMsg={errors.username?.message}
         />
         <Input
           id="email"
@@ -112,7 +112,7 @@ export default function CreateAccount() {
           type="email"
           required={true}
           register={register}
-          errors={errors}
+          errorMsg={errors.email?.message}
         />
         <Input
           id="password"
@@ -122,7 +122,7 @@ export default function CreateAccount() {
           type={passwordType}
           required={true}
           register={register}
-          errors={errors}
+          errorMsg={errors.password?.message}
         >
           {
             <ShowPassword
@@ -139,7 +139,7 @@ export default function CreateAccount() {
           type={passwordType}
           required={true}
           register={register}
-          errors={errors}
+          errorMsg={errors.repeatPassword?.message}
         />
         <button className="create-account" type="submit">
           Criar

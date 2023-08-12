@@ -7,6 +7,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import isEmail from 'validator/lib/isEmail';
 
 import { FormContainer } from '../formContainer/styles';
+import Loading from '../loadingClient';
 
 import Logo from '../logo';
 import Input from './input';
@@ -19,6 +20,7 @@ export interface BodyLogin {
 
 export default function Login() {
   const [passwordType, setPasswordType] = useState('password');
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
@@ -27,7 +29,9 @@ export default function Login() {
     setError,
   } = useForm<BodyLogin>();
 
-  const handleFormSubmit: SubmitHandler<BodyLogin> = body => {
+  const handleFormSubmit: SubmitHandler<BodyLogin> = async body => {
+    if (isLoading) return;
+
     const email = body.email.trim();
     const password = body.password.trim();
     let controllerError = true;
@@ -38,9 +42,24 @@ export default function Login() {
     }
 
     if (!controllerError) return;
-    console.log(body);
 
-    // back-end errors
+    try {
+      setIsLoading(true);
+      const data = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/login`, {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+        // para aplicações post json tenho q colocar headers 'Content-Type': 'application/json'
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        cache: 'no-cache',
+      });
+      console.log(await data.json());
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleClickPasswordType = () => {
@@ -50,6 +69,7 @@ export default function Login() {
   return (
     <FormContainer>
       <Logo />
+      {isLoading && <Loading />}
       <h1 className="title-login">Bem vind@ a Pornonly</h1>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <Input
@@ -60,7 +80,7 @@ export default function Login() {
           type="email"
           required={true}
           register={register}
-          errors={errors}
+          errorMsg={errors.email?.message}
         />
         <Input
           id="password"
@@ -70,7 +90,7 @@ export default function Login() {
           type={passwordType}
           required={true}
           register={register}
-          errors={errors}
+          errorMsg={errors.password?.message}
         >
           {
             <ShowPassword
