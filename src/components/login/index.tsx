@@ -13,6 +13,7 @@ import { GlobalErrorClient as GlobalError } from '../globalErrorClient';
 import Logo from '../logo';
 import Input from './input';
 import ShowPassword from '../showPassword';
+import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
 
 export interface BodyLogin {
   email: string;
@@ -22,8 +23,8 @@ export interface BodyLogin {
 export default function Login() {
   const [passwordType, setPasswordType] = useState('password');
   const [isLoading, setIsLoading] = useState(false);
-  const [showGlobalError, setShowGlobalError] = useState(false);
-  const [msgGlobalError, setMsgGlobalError] = useState('');
+  const { handleServerError, showGlobalError, msgGlobalError } =
+    useGlobalErrorTime();
 
   const {
     register,
@@ -61,7 +62,7 @@ export default function Login() {
       const jsonResponse = await response.json();
       if (!response.ok) {
         if (jsonResponse.type === 'server') {
-          handleServerError();
+          handleServerError(jsonResponse.error as string);
           return;
         }
         setError(jsonResponse.type, { message: jsonResponse.error });
@@ -69,7 +70,7 @@ export default function Login() {
       }
       console.log('user logado.');
     } catch (err) {
-      handleServerError();
+      handleServerError('Erro interno no servidor.');
     } finally {
       setIsLoading(false);
     }
@@ -77,12 +78,6 @@ export default function Login() {
 
   const handleClickPasswordType = () => {
     setPasswordType(passwordType === 'password' ? 'text' : 'password');
-  };
-
-  const handleServerError = () => {
-    setShowGlobalError(true);
-    setMsgGlobalError('Erro interno no servidor.');
-    setTimeout(() => setShowGlobalError(false), 3000);
   };
 
   return (

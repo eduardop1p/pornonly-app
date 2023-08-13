@@ -16,6 +16,7 @@ import { GlobalErrorClient as GlobalError } from '../globalErrorClient';
 import Logo from '../logo';
 import Input from './input';
 import ShowPassword from '../showPassword';
+import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
 
 export interface BodyCreateAccount {
   username: string;
@@ -27,8 +28,8 @@ export interface BodyCreateAccount {
 export default function CreateAccount() {
   const [passwordType, setPasswordType] = useState('password');
   const [isLoading, setIsLoading] = useState(false);
-  const [showGlobalError, setShowGlobalError] = useState(false);
-  const [msgGlobalError, setMsgGlobalError] = useState('');
+  const { handleServerError, showGlobalError, msgGlobalError } =
+    useGlobalErrorTime();
 
   const {
     register,
@@ -94,7 +95,7 @@ export default function CreateAccount() {
       const jsonResponse = await response.json();
       if (!response.ok) {
         if (jsonResponse.type === 'server') {
-          handleServerError();
+          handleServerError(jsonResponse.error as string);
           return;
         }
         setError(jsonResponse.type, { message: jsonResponse.error });
@@ -102,7 +103,7 @@ export default function CreateAccount() {
       }
       console.log('user criado.');
     } catch (err) {
-      handleServerError();
+      handleServerError('Erro interno no servidor.');
     } finally {
       setIsLoading(false);
     }
@@ -110,12 +111,6 @@ export default function CreateAccount() {
 
   const handleClickPasswordType = () => {
     setPasswordType(passwordType === 'password' ? 'text' : 'password');
-  };
-
-  const handleServerError = () => {
-    setShowGlobalError(true);
-    setMsgGlobalError('Erro interno no servidor.');
-    setTimeout(() => setShowGlobalError(false), 3000);
   };
 
   return (

@@ -9,6 +9,7 @@ import styles from './styles.module.css';
 import Search from '../search';
 import Loading from '../loadingClient';
 import { GlobalErrorClient as GlobalError } from '../globalErrorClient';
+import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
 
 interface Props {
   isAuth: boolean;
@@ -20,8 +21,8 @@ export default function Nav({ isAuth }: Props) {
 
   const [publishActive, setPublishActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [showGlobalError, setShowGlobalError] = useState(false);
-  const [msgGlobalError, setMsgGlobalError] = useState('');
+  const { handleServerError, showGlobalError, msgGlobalError } =
+    useGlobalErrorTime();
 
   const handleLogout = async () => {
     if (isLoading) return;
@@ -34,17 +35,13 @@ export default function Nav({ isAuth }: Props) {
       });
       redirect.push('/login');
     } catch {
-      handleServerError();
+      handleServerError('O logout falhou. Tente novalmente.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleServerError = () => {
-    setShowGlobalError(true);
-    setMsgGlobalError('O logout falhou. Tente novalmente.');
-    setTimeout(() => setShowGlobalError(false), 3000);
-  };
+  // 'O logout falhou. Tente novalmente.'
 
   return (
     <>
