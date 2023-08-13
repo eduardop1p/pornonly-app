@@ -6,10 +6,12 @@ import Link from 'next/link';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import isEmail from 'validator/lib/isEmail';
 import isAlphanumeric from 'validator/lib/isAlphanumeric';
-import contains from 'validator/lib/contains';
+import isLowercase from 'validator/lib/isLowercase';
 
 import styles from './styles.module.css';
 import { FormContainer } from '../formContainer/styles';
+import Loading from '../loadingClient';
+import { GlobalErrorClient as GlobalError } from '../globalErrorClient';
 
 import Logo from '../logo';
 import Input from './input';
@@ -24,6 +26,9 @@ export interface BodyCreateAccount {
 
 export default function CreateAccount() {
   const [passwordType, setPasswordType] = useState('password');
+  const [isLoading, setIsLoading] = useState(false);
+  const [showGlobalError, setShowGlobalError] = useState(false);
+  const [msgGlobalError, setMsgGlobalError] = useState('');
 
   const {
     register,
@@ -32,7 +37,7 @@ export default function CreateAccount() {
     setError,
   } = useForm<BodyCreateAccount>();
 
-  const handleFormSubmit: SubmitHandler<BodyCreateAccount> = body => {
+  const handleFormSubmit: SubmitHandler<BodyCreateAccount> = async body => {
     const username = body.username.trim();
     const email = body.email.trim();
     const password = body.password.trim();
@@ -45,31 +50,16 @@ export default function CreateAccount() {
       });
       controllerError = false;
     }
-
-    if (!isAlphanumeric(username)) {
+    if (!isAlphanumeric(username) || !isLowercase(username)) {
       setError('username', {
-        message: 'Usuário deve conter apenas letras e números.',
+        message: 'Usuário deve conter apenas letras minusculas e números.',
       });
       controllerError = false;
     }
-
     if (!isEmail(email)) {
       setError('email', { message: 'E-mail inválido.' });
       controllerError = false;
     }
-
-    if (password !== repeatPassword) {
-      setError('password', { message: 'As senhas não se coincidem.' });
-      controllerError = false;
-    }
-
-    if (password.length < 5 || password.length > 20) {
-      setError('password', {
-        message: 'Senha deve ter ao menos 5 caracteres e no máximo 20.',
-      });
-      controllerError = false;
-    }
-
     const rgPassword = /[!@#$%^&*(),.?":{}|<>]/;
     if (!rgPassword.test(password)) {
       setError('password', {
@@ -77,18 +67,62 @@ export default function CreateAccount() {
       });
       controllerError = false;
     }
+    if (password !== repeatPassword) {
+      setError('password', { message: 'As senhas não se coincidem.' });
+      controllerError = false;
+    }
+    if (password.length < 5 || password.length > 20) {
+      setError('password', {
+        message: 'Senha deve ter ao menos 5 caracteres e no máximo 20.',
+      });
+      controllerError = false;
+    }
 
     if (!controllerError) return;
-    console.log(body);
+
+    try {
+      setIsLoading(true);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/users`, {
+        method: 'POST',
+        body: JSON.stringify({ username, email, password, repeatPassword }),
+        // para aplicações post json tenho q colocar headers 'Content-Type': 'application/json'
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        cache: 'no-cache',
+      });
+      const jsonResponse = await response.json();
+      if (!response.ok) {
+        if (jsonResponse.type === 'server') {
+          handleServerError();
+          return;
+        }
+        setError(jsonResponse.type, { message: jsonResponse.error });
+        return;
+      }
+      console.log('user criado.');
+    } catch (err) {
+      handleServerError();
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleClickPasswordType = () => {
     setPasswordType(passwordType === 'password' ? 'text' : 'password');
   };
 
+  const handleServerError = () => {
+    setShowGlobalError(true);
+    setMsgGlobalError('Erro interno no servidor.');
+    setTimeout(() => setShowGlobalError(false), 3000);
+  };
+
   return (
     <FormContainer>
       <Logo />
+      {isLoading && <Loading />}
+      <GlobalError errorMsg={msgGlobalError} showError={showGlobalError} />
       <h1 className="title-login">Bem vind@ a Pornonly</h1>
       <p className={styles.param}>
         Crie uma conta aqui grátes e aproveite o máximo do nosso site
@@ -102,7 +136,10 @@ export default function CreateAccount() {
           type="text"
           required={true}
           register={register}
-          errorMsg={errors.username?.message}
+          errors={{
+            message: errors.username?.message,
+            classError: errors.username,
+          }}
         />
         <Input
           id="email"
@@ -112,7 +149,7 @@ export default function CreateAccount() {
           type="email"
           required={true}
           register={register}
-          errorMsg={errors.email?.message}
+          errors={{ message: errors.email?.message, classError: errors.email }}
         />
         <Input
           id="password"
@@ -122,7 +159,10 @@ export default function CreateAccount() {
           type={passwordType}
           required={true}
           register={register}
-          errorMsg={errors.password?.message}
+          errors={{
+            message: errors.password?.message,
+            classError: errors.password,
+          }}
         >
           {
             <ShowPassword
@@ -139,7 +179,10 @@ export default function CreateAccount() {
           type={passwordType}
           required={true}
           register={register}
-          errorMsg={errors.repeatPassword?.message}
+          errors={{
+            message: errors.repeatPassword?.message,
+            classError: errors.repeatPassword,
+          }}
         />
         <button className="create-account" type="submit">
           Criar

@@ -1,6 +1,6 @@
 import { upperFirst } from 'lodash';
 import { ReactNode } from 'react';
-import type { UseFormRegister } from 'react-hook-form';
+import type { FieldError, UseFormRegister } from 'react-hook-form';
 
 import styles from './styles.module.css';
 
@@ -17,7 +17,7 @@ interface Props {
   required?: boolean;
   children?: ReactNode;
   register: UseFormRegister<BodyCreateAccount>;
-  errorMsg: string | undefined;
+  errors: { message?: string; classError?: FieldError };
 }
 
 export default function Input({
@@ -29,7 +29,7 @@ export default function Input({
   required = false,
   children,
   register,
-  errorMsg,
+  errors,
 }: Props) {
   return (
     <div className={styles.container}>
@@ -38,6 +38,7 @@ export default function Input({
         <input
           type={type}
           id={id}
+          className={errors.classError ? styles['error-input-border'] : ''}
           placeholder={placeholder}
           required={required}
           {...register(name)}
@@ -45,7 +46,7 @@ export default function Input({
         {children}
       </div>
 
-      <ErrorForm errorMsg={errorMsg} />
+      <ErrorForm errorMsg={errors.message} />
     </div>
   );
 }

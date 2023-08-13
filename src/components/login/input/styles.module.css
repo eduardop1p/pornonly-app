@@ -23,6 +23,9 @@
   font-size: var(--font-size-1rem);
   font-weight: var(--font-weight-400);
 }
+.error-input-border{
+  border: 2px solid var(--g-colorRed100) !important;
+}
 .container-input > input:focus{
   box-shadow: var(--box-shadow_02);
 }

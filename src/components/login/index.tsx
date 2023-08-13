@@ -8,6 +8,7 @@ import isEmail from 'validator/lib/isEmail';
 
 import { FormContainer } from '../formContainer/styles';
 import Loading from '../loadingClient';
+import { GlobalErrorClient as GlobalError } from '../globalErrorClient';
 
 import Logo from '../logo';
 import Input from './input';
@@ -21,6 +22,8 @@ export interface BodyLogin {
 export default function Login() {
   const [passwordType, setPasswordType] = useState('password');
   const [isLoading, setIsLoading] = useState(false);
+  const [showGlobalError, setShowGlobalError] = useState(false);
+  const [msgGlobalError, setMsgGlobalError] = useState('');
 
   const {
     register,
@@ -45,7 +48,7 @@ export default function Login() {
 
     try {
       setIsLoading(true);
-      const data = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/login`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/login`, {
         method: 'POST',
         body: JSON.stringify({ email, password }),
         // para aplicações post json tenho q colocar headers 'Content-Type': 'application/json'
@@ -53,10 +56,20 @@ export default function Login() {
           'Content-Type': 'application/json',
         },
         cache: 'no-cache',
+        credentials: 'include', // para setar os cookies no server tenho que colocar credentials: 'include'
       });
-      console.log(await data.json());
+      const jsonResponse = await response.json();
+      if (!response.ok) {
+        if (jsonResponse.type === 'server') {
+          handleServerError();
+          return;
+        }
+        setError(jsonResponse.type, { message: jsonResponse.error });
+        return;
+      }
+      console.log('user logado.');
     } catch (err) {
-      console.error(err);
+      handleServerError();
     } finally {
       setIsLoading(false);
     }
@@ -66,10 +79,17 @@ export default function Login() {
     setPasswordType(passwordType === 'password' ? 'text' : 'password');
   };
 
+  const handleServerError = () => {
+    setShowGlobalError(true);
+    setMsgGlobalError('Erro interno no servidor.');
+    setTimeout(() => setShowGlobalError(false), 3000);
+  };
+
   return (
     <FormContainer>
       <Logo />
       {isLoading && <Loading />}
+      <GlobalError errorMsg={msgGlobalError} showError={showGlobalError} />
       <h1 className="title-login">Bem vind@ a Pornonly</h1>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <Input
@@ -80,7 +100,7 @@ export default function Login() {
           type="email"
           required={true}
           register={register}
-          errorMsg={errors.email?.message}
+          errors={{ message: errors.email?.message, classError: errors.email }}
         />
         <Input
           id="password"
@@ -90,7 +110,10 @@ export default function Login() {
           type={passwordType}
           required={true}
           register={register}
-          errorMsg={errors.password?.message}
+          errors={{
+            message: errors.password?.message,
+            classError: errors.password,
+          }}
         >
           {
             <ShowPassword

@@ -1,6 +1,6 @@
 import { upperFirst } from 'lodash';
-import { ReactNode, memo } from 'react';
-import type { UseFormRegister } from 'react-hook-form';
+import { ReactNode } from 'react';
+import type { FieldError, UseFormRegister } from 'react-hook-form';
 
 import styles from './styles.module.css';
 
@@ -17,10 +17,10 @@ interface Props {
   required?: boolean;
   children?: ReactNode;
   register: UseFormRegister<BodyLogin>;
-  errorMsg: string | undefined;
+  errors: { message?: string; classError?: FieldError };
 }
 
-function Input({
+export default function Input({
   type,
   name,
   id,
@@ -29,7 +29,7 @@ function Input({
   required = false,
   children,
   register,
-  errorMsg,
+  errors,
 }: Props) {
   return (
     <div className={styles.container}>
@@ -37,6 +37,7 @@ function Input({
         <label htmlFor={id}>{upperFirst(label)}</label>
         <input
           type={type}
+          className={errors.classError ? styles['error-input-border'] : ''}
           id={id}
           placeholder={placeholder}
           required={required}
@@ -45,9 +46,7 @@ function Input({
         {children}
       </div>
 
-      <ErrorForm errorMsg={errorMsg} />
+      <ErrorForm errorMsg={errors.message} />
     </div>
   );
 }
-
-export default memo(Input);
