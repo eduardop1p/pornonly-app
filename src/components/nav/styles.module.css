@@ -127,3 +127,14 @@
 .link-active-publish{
   background-color: var(--g-colore9e9e9);
 }
+
+.links-auth{
+  display: flex;
+  align-items: center;
+}
+.links-auth > :not(:last-child){
+  margin-right: 10px;
+}
+.links-auth > button{
+  cursor: pointer;
+}

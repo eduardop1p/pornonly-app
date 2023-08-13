@@ -13,6 +13,7 @@ import Header from '@/components/header';
 import Login from '@/components/login';
 
 export default function Page() {
+  // console.log(cookies().getAll());
   return (
     <>
       <Header />
