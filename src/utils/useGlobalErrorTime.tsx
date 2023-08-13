@@ -1,16 +1,22 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function useGlobalErrorTime() {
   const [showGlobalError, setShowGlobalError] = useState(false);
   const [msgGlobalError, setMsgGlobalError] = useState('');
+  const [timiOutId, setTimiOutId] = useState<any>(null);
 
-  const handleServerError = useCallback((msg: string) => {
+  useEffect(() => {
+    return () => clearTimeout(timiOutId);
+  }, [timiOutId]);
+
+  const handleServerError = (msg: string) => {
     setShowGlobalError(true);
     setMsgGlobalError(msg);
-    setTimeout(() => setShowGlobalError(false), 3000);
-  }, []);
+    const id = setTimeout(() => setShowGlobalError(false), 3000);
+    setTimiOutId(id);
+  };
 
   return { showGlobalError, msgGlobalError, handleServerError };
 }
