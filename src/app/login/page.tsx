@@ -1,5 +1,4 @@
 import { Metadata } from 'next';
-// import { cookies } from 'next/headers';
 
 import styles from './styles.module.css';
 
@@ -13,7 +12,6 @@ import Header from '@/components/header';
 import Login from '@/components/login';
 
 export default function Page() {
-  // console.log(cookies().getAll());
   return (
     <>
       <Header />

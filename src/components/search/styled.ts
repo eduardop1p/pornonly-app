@@ -5,7 +5,7 @@ export const Container = styled.form<TypeTheme>`
   ${({ theme }) => css`
     width: 100%;
     position: relative;
-    margin: 0 1rem;
+    margin: 0 12px;
     background-color: ${theme.colors.g_colore9e9e9};
     display: flex;
     align-items: center;

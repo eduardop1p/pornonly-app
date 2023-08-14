@@ -92,17 +92,18 @@ button{
   height: 100vh;
   justify-content: center;
   align-items: center;
+  background-color: var(--g-colorGray0);
 }
 .container-not-found > .not-found{
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1rem;
+  gap: 14px;
 }
 .not-found > div{
   width: 1px;
   height: 3rem;
-  background-color: var(--g-color5f5f5f);
+  background-color: var(--g-colorGray150);
 }
 .not-found > h2{
   font-weight: var(--font-weight-600);

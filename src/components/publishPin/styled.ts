@@ -201,7 +201,7 @@ export const Container = styled.div<TypeTheme>`
         width: 100%;
 
         & > div:not(.user) {
-          height: 70px;
+          min-height: 70px;
         }
 
         & > .add-tags {

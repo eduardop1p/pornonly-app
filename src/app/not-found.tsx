@@ -1,7 +1,7 @@
 export default function NotFoundPage() {
   return (
     <div className="container-not-found">
-      <title>Pornonly - Page not found error 404</title>
+      <title>Pornonly - Error 404</title>
       <div className="not-found">
         <h2>404</h2>
         <div></div>

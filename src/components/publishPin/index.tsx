@@ -11,6 +11,7 @@ import ErrorMsg from '../errorMsg';
 
 export interface BodyFile {
   title: string;
+  description: string;
 }
 
 export default function PublishPin() {
@@ -74,6 +75,8 @@ export default function PublishPin() {
   };
 
   const handleChangeTextatera = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    if (event.target.value == '\n') event.target.value = ''; // bug das linhas infinitas apertando o enter consertado aqui
+
     setInputDescriptionLength(event.target.value.length);
     event.currentTarget.style.height = '5px';
     event.currentTarget.style.paddingBottom = '10px';
@@ -204,10 +207,11 @@ export default function PublishPin() {
           <div className="user">Foto e nome de usuário adcionar aqui</div>
           <div>
             <textarea
+              style={{ maxHeight: '138px' }}
               id="description"
-              name="description"
               placeholder="Adcione uma descrição"
               maxLength={500}
+              {...register('description')}
               onChange={handleChangeTextatera}
               onFocus={() => setInputDescriptionInFocus(true)}
               onBlur={() => setInputDescriptionInFocus(false)}
