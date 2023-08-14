@@ -5,6 +5,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import isEmail from 'validator/lib/isEmail';
+import { useRouter } from 'next/navigation';
 
 import { FormContainer } from '../formContainer/styles';
 import Loading from '../loadingClient';
@@ -21,6 +22,7 @@ export interface BodyLogin {
 }
 
 export default function Login() {
+  const redirect = useRouter();
   const [passwordType, setPasswordType] = useState('password');
   const [isLoading, setIsLoading] = useState(false);
   const { handleServerError, showGlobalError, msgGlobalError } =
@@ -68,7 +70,8 @@ export default function Login() {
         setError(jsonResponse.type, { message: jsonResponse.error });
         return;
       }
-      console.log('user logado.');
+      redirect.refresh(); // usar redirect.refresh() para atualizar os estados do react no client, esse refresh não irar carregar a pagina
+      redirect.push('/');
     } catch (err) {
       handleServerError('Erro interno no servidor.');
     } finally {

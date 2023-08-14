@@ -33,6 +33,7 @@ export default function Nav({ isAuth }: Props) {
         method: 'GET',
         credentials: 'include',
       });
+      redirect.refresh();
       redirect.push('/login');
     } catch {
       handleServerError('O logout falhou. Tente novalmente.');
