@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { ReactNode } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -13,9 +14,10 @@ import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
 
 interface Props {
   isAuth: boolean;
+  children?: ReactNode;
 }
 
-export default function Nav({ isAuth }: Props) {
+export default function Nav({ isAuth, children }: Props) {
   const pathName = usePathname();
   const redirect = useRouter();
 
@@ -120,8 +122,12 @@ export default function Nav({ isAuth }: Props) {
           </div>
         ) : (
           <div className={styles['links-auth']}>
-            <span>user</span>
-            <button type="button" onClick={handleLogout}>
+            {children}
+            <button
+              type="button"
+              className={styles.logout}
+              onClick={handleLogout}
+            >
               Sair
             </button>
           </div>

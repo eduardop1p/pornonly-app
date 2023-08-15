@@ -1,0 +1,22 @@
+.container{
+  width: 25px;
+  height: 25px;
+  border-radius: 100%;
+  overflow: hidden;
+  background-color: var(--g-colore9e9e9);
+  transition: box-shadow 200ms ease-in-out;
+}
+.container:hover{
+  box-shadow: 0 0 0 5px var(--g-colore9e9e9);;
+}
+.container > a{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  height: 100%;
+  width: 100%;
+  font-size: var(--font-size-0_75rem);
+  font-weight: var(--font-weight-400);
+  color: var(--g-colorGray400);
+}

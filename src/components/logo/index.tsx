@@ -1,8 +1,8 @@
 export default function Logo() {
   return (
     <svg
-      height="32"
-      width="32"
+      height="25"
+      width="25"
       viewBox="0 0 24 24"
       aria-label="Pornonly"
       role="img"

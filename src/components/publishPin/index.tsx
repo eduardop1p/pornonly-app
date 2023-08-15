@@ -1,7 +1,7 @@
 'use client';
 
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { ChangeEvent, useState, useRef } from 'react';
+import { ChangeEvent, useState, useRef, ReactNode } from 'react';
 import Image from 'next/image';
 import isAlphanumeric from 'validator/lib/isAlphanumeric';
 
@@ -14,7 +14,7 @@ export interface BodyFile {
   description: string;
 }
 
-export default function PublishPin() {
+export default function PublishPin({ children }: { children: ReactNode }) {
   const {
     register,
     handleSubmit,
@@ -204,7 +204,7 @@ export default function PublishPin() {
             )}
             {errors.title && <ErrorMsg errorMsg={errors.title.message} />}
           </div>
-          <div className="user">Foto e nome de usuário adcionar aqui</div>
+          <div className="user">{children}</div>
           <div>
             <textarea
               style={{ maxHeight: '138px' }}

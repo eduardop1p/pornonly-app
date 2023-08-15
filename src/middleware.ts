@@ -12,7 +12,10 @@ export function middleware(req: NextRequest, res: NextResponse) {
   ) {
     return NextResponse.redirect(new URL('/', req.url));
   }
-  if (!isAuth && pathname.startsWith('/publish-pin')) {
+  if (
+    !isAuth &&
+    (pathname.startsWith('/publish-pin') || pathname.startsWith('/user'))
+  ) {
     return NextResponse.redirect(new URL('/login', req.url));
   }
 

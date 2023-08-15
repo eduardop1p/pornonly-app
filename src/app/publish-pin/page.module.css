@@ -12,3 +12,26 @@
   border-radius: 1rem;
   padding: 2.5rem;
 }
+
+.container-user{
+  display: flex;
+  align-items: center;
+}
+.user-avatar{
+ width: 48px;
+ height: 48px;
+ margin-right: 10px;
+ border-radius: 100%;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ background-color: var(--g-colore9e9e9);
+ font-size: var(--font-size-1rem);
+ font-weight: var(--font-weight-500);
+ color: var(--g-colorGray400);
+}
+.container-user > h3{
+  font-size: var(--font-size-1rem);
+  font-weight: var(--font-weight-500);
+  color: var(--g-colorGray400);
+}
