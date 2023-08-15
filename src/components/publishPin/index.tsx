@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -22,8 +23,8 @@ export default function PublishPin({ children }: { children: ReactNode }) {
     setError,
   } = useForm<BodyFile>();
 
-  const [imgSrc, setImgSrc] = useState('');
-  const [videoSrc, setVideoSrc] = useState('');
+  const [fileSrc, setFileSrc] = useState('');
+  const [fileType, setFileType] = useState('');
   const [inputTitleInFocus, setInputTitleInFocus] = useState(false);
   const [inputTitleLength, setInputTitleLength] = useState(0);
   const [inputDescriptionInFocus, setInputDescriptionInFocus] = useState(false);
@@ -31,17 +32,23 @@ export default function PublishPin({ children }: { children: ReactNode }) {
   const [valueInputTags, setValueInputTags] = useState<any[]>([]);
   const [valueTag, setValueTag] = useState('');
   const [inputTagFocus, setInputTagsFocus] = useState(false);
+  const [typeBtn, setTypeBtn] = useState<'submit' | 'button' | 'reset'>(
+    'submit'
+  );
 
   const divIconUploadPhoto = useRef<HTMLDivElement | null>(null);
   const divBorderDashed = useRef<HTMLDivElement | null>(null);
 
-  const handleSubmitFile: SubmitHandler<BodyFile> = async body => {
+  const handleSubmitFile: SubmitHandler<BodyFile> = async (body, event) => {
+    event?.preventDefault();
+
     let submit = true;
     const title = body.title.trim();
+    const description = body.description.trim();
 
-    if (!imgSrc || !videoSrc) {
-      divBorderDashed.current?.classList.add('border-dashed-no-upload-img');
-      divIconUploadPhoto.current?.classList.add('no-img-upload');
+    if (!fileSrc) {
+      divBorderDashed.current?.classList.add('border-dashed-no-upload-file');
+      divIconUploadPhoto.current?.classList.add('no-file-upload');
       submit = false;
     }
     if (title.length < 4) {
@@ -69,9 +76,10 @@ export default function PublishPin({ children }: { children: ReactNode }) {
 
     const file = event.target.files[0];
     const src = URL.createObjectURL(file);
-    file.type.includes('video') ? setVideoSrc(src) : setImgSrc(src);
-    divBorderDashed.current?.classList.remove('border-dashed-no-upload-img');
-    divIconUploadPhoto.current?.classList.remove('no-img-upload');
+    setFileSrc(src);
+    setFileType(file.type);
+    divBorderDashed.current?.classList.remove('border-dashed-no-upload-file');
+    divIconUploadPhoto.current?.classList.remove('no-file-upload');
   };
 
   const handleChangeTextatera = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -84,10 +92,11 @@ export default function PublishPin({ children }: { children: ReactNode }) {
   };
 
   const handleAddTag = () => {
-    if (!valueTag) return;
+    const value = valueTag.trim();
+    if (!value) return;
     if (valueInputTags.length >= 5) return;
 
-    setValueInputTags(state => [...state, valueTag.trim()]);
+    setValueInputTags(state => [...state, value]);
     setValueTag('');
   };
 
@@ -102,9 +111,9 @@ export default function PublishPin({ children }: { children: ReactNode }) {
       <form onSubmit={handleSubmit(handleSubmitFile)}>
         <div className="publish-and-btn">
           <div className="publish">
-            {imgSrc && (
+            {fileSrc && (
               <div className="preview">
-                <button type="button" onClick={() => setImgSrc('')}>
+                <button type="button" onClick={() => setFileSrc('')}>
                   <svg
                     height="18"
                     width="18"
@@ -116,33 +125,20 @@ export default function PublishPin({ children }: { children: ReactNode }) {
                     <path d="M4.878 22.116A2 2 0 0 0 6.875 24h10.229a2 2 0 0 0 1.995-1.881L20 7H4l.88 15.116zM22 3.5A1.5 1.5 0 0 1 20.5 5h-17a1.5 1.5 0 0 1 0-3h6V1a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v1h6A1.5 1.5 0 0 1 22 3.5z"></path>
                   </svg>
                 </button>
-                <Image
-                  src={imgSrc}
-                  alt="preview-img"
-                  fill={true}
-                  sizes="100%"
-                />
-              </div>
-            )}
-            {videoSrc && (
-              <div className="preview">
-                <button type="button" onClick={() => setVideoSrc('')}>
-                  <svg
-                    height="18"
-                    width="18"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                    aria-label=""
-                    role="img"
-                  >
-                    <path d="M4.878 22.116A2 2 0 0 0 6.875 24h10.229a2 2 0 0 0 1.995-1.881L20 7H4l.88 15.116zM22 3.5A1.5 1.5 0 0 1 20.5 5h-17a1.5 1.5 0 0 1 0-3h6V1a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v1h6A1.5 1.5 0 0 1 22 3.5z"></path>
-                  </svg>
-                </button>
-                <video src={videoSrc} controls={true}></video>
+                {fileType.includes('image') ? (
+                  <Image
+                    src={fileSrc}
+                    alt="preview-img"
+                    fill={true}
+                    sizes="100%"
+                  />
+                ) : (
+                  <video src={fileSrc} controls={true}></video>
+                )}
               </div>
             )}
             <div
-              className={!imgSrc ? 'border-dashed' : ''}
+              className={!fileSrc ? 'border-dashed' : ''}
               ref={divBorderDashed}
             >
               <label htmlFor="file">
@@ -174,7 +170,7 @@ export default function PublishPin({ children }: { children: ReactNode }) {
               </span>
             </div>
           </div>
-          <button type="submit">Publicar</button>
+          <button type={typeBtn}>Publicar</button>
         </div>
         <div className="title-description-tags">
           <div style={{ height: '105px', marginBottom: '10px' }}>
@@ -259,12 +255,19 @@ export default function PublishPin({ children }: { children: ReactNode }) {
                   placeholder="Adcione tags a seu pin"
                   maxLength={10}
                   onChange={event => setValueTag(event.target.value)}
-                  onFocus={() => setInputTagsFocus(true)}
-                  onBlur={() => setInputTagsFocus(false)}
+                  onFocus={() => {
+                    setTypeBtn('button');
+                    setInputTagsFocus(true);
+                  }}
+                  onBlur={() => {
+                    setTypeBtn('submit');
+                    setInputTagsFocus(false);
+                    handleAddTag();
+                  }}
                 />
               )}
               {valueInputTags.length !== 5 && (
-                <button type="button" onClick={handleAddTag}>
+                <button type="button">
                   <svg
                     height="16"
                     width="16"

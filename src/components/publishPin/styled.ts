@@ -71,7 +71,7 @@ export const Container = styled.div<TypeTheme>`
           & > .border-dashed {
             border: 2px dashed ${theme.colors.g_colorGray150Hovered};
 
-            &.border-dashed-no-upload-img {
+            &.border-dashed-no-upload-file {
               border: 2px dashed ${theme.colors.g_colorRed100};
 
               & > span {
@@ -114,7 +114,7 @@ export const Container = styled.div<TypeTheme>`
                 align-items: center;
                 text-align: center;
 
-                &.no-img-upload {
+                &.no-file-upload {
                   & > div {
                     animation-name: noImgUpload;
                     animation-duration: 100ms;

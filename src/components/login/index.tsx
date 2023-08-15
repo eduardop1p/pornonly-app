@@ -35,7 +35,8 @@ export default function Login() {
     setError,
   } = useForm<BodyLogin>();
 
-  const handleFormSubmit: SubmitHandler<BodyLogin> = async body => {
+  const handleFormSubmit: SubmitHandler<BodyLogin> = async (body, event) => {
+    event?.preventDefault();
     if (isLoading) return;
 
     const email = body.email.trim();

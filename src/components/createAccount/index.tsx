@@ -38,7 +38,12 @@ export default function CreateAccount() {
     setError,
   } = useForm<BodyCreateAccount>();
 
-  const handleFormSubmit: SubmitHandler<BodyCreateAccount> = async body => {
+  const handleFormSubmit: SubmitHandler<BodyCreateAccount> = async (
+    body,
+    event
+  ) => {
+    event?.preventDefault();
+
     const username = body.username.trim();
     const email = body.email.trim();
     const password = body.password.trim();
