@@ -125,7 +125,7 @@ export default function CreateAccount() {
       <GlobalError errorMsg={msgGlobalError} showError={showGlobalError} />
       <h1 className="title-login">Bem vind@ a Pornonly</h1>
       <p className={styles.param}>
-        Crie uma conta aqui grátes e aproveite o máximo do nosso site
+        Crie uma conta grátes e aproveite o máximo do nosso site
       </p>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <Input

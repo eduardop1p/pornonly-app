@@ -12,7 +12,6 @@ import ErrorMsg from '../errorMsg';
 
 export interface BodyFile {
   title: string;
-  description: string;
 }
 
 export default function PublishPin({ children }: { children: ReactNode }) {
@@ -35,6 +34,7 @@ export default function PublishPin({ children }: { children: ReactNode }) {
   const [typeBtn, setTypeBtn] = useState<'submit' | 'button' | 'reset'>(
     'submit'
   );
+  const [descriptionValue, setDescriptionValue] = useState('');
 
   const divIconUploadPhoto = useRef<HTMLDivElement | null>(null);
   const divBorderDashed = useRef<HTMLDivElement | null>(null);
@@ -44,7 +44,8 @@ export default function PublishPin({ children }: { children: ReactNode }) {
 
     let submit = true;
     const title = body.title.trim();
-    const description = body.description.trim();
+    const description = descriptionValue.trim();
+    const tags = valueInputTags.join(' ');
 
     if (!fileSrc) {
       divBorderDashed.current?.classList.add('border-dashed-no-upload-file');
@@ -69,6 +70,9 @@ export default function PublishPin({ children }: { children: ReactNode }) {
     }
 
     if (!submit) return;
+    console.log(title);
+    console.log(description);
+    console.log(tags);
   };
 
   const handleChangeFile = (event: ChangeEvent<HTMLInputElement>) => {
@@ -84,8 +88,10 @@ export default function PublishPin({ children }: { children: ReactNode }) {
 
   const handleChangeTextatera = (event: ChangeEvent<HTMLTextAreaElement>) => {
     if (event.target.value == '\n') event.target.value = ''; // bug das linhas infinitas apertando o enter consertado aqui
+    if (!event.target.value) return;
 
     setInputDescriptionLength(event.target.value.length);
+    setDescriptionValue(event.target.value);
     event.currentTarget.style.height = '5px';
     event.currentTarget.style.paddingBottom = '10px';
     event.currentTarget.style.height = `${event.currentTarget.scrollHeight}px`;
@@ -205,9 +211,9 @@ export default function PublishPin({ children }: { children: ReactNode }) {
             <textarea
               style={{ maxHeight: '138px' }}
               id="description"
+              name="description"
               placeholder="Adcione uma descrição"
               maxLength={500}
-              {...register('description')}
               onChange={handleChangeTextatera}
               onFocus={() => setInputDescriptionInFocus(true)}
               onBlur={() => setInputDescriptionInFocus(false)}
