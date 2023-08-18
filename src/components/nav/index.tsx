@@ -1,16 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { ReactNode } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 import styles from './styles.module.css';
 
 import Search from '../search';
-import Loading from '../loadingClient';
-import { GlobalErrorClient as GlobalError } from '../globalErrorClient';
-import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
+import Logout from '../form/logout';
 
 interface Props {
   isAuth: boolean;
@@ -18,38 +15,11 @@ interface Props {
 }
 
 export default function Nav({ isAuth, children }: Props) {
-  const pathName = usePathname();
-  const redirect = useRouter();
-
   const [publishActive, setPublishActive] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const { handleServerError, showGlobalError, msgGlobalError } =
-    useGlobalErrorTime();
-
-  const handleLogout = async () => {
-    if (isLoading) return;
-
-    try {
-      setIsLoading(true);
-      await fetch(`${process.env.NEXT_PUBLIC_URL_API}/logout`, {
-        method: 'GET',
-        credentials: 'include',
-      });
-      redirect.refresh();
-      redirect.push('/login');
-    } catch {
-      handleServerError('O logout falhou. Tente novalmente.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // 'O logout falhou. Tente novalmente.'
+  const pathName = usePathname();
 
   return (
     <>
-      {isLoading && <Loading />}
-      <GlobalError errorMsg={msgGlobalError} showError={showGlobalError} />
       <nav className={styles.nav}>
         <Link
           className={pathName === '/' ? styles['link-active'] : ''}
@@ -123,13 +93,7 @@ export default function Nav({ isAuth, children }: Props) {
         ) : (
           <div className={styles['links-auth']}>
             {children}
-            <button
-              type="button"
-              className={styles.logout}
-              onClick={handleLogout}
-            >
-              Sair
-            </button>
+            <Logout />
           </div>
         )}
       </nav>

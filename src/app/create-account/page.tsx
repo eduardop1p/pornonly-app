@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 import Header from '@/components/header';
-import CreateAccount from '@/components/createAccount';
+import CreateAccount from '@/components/form/createAccount';
 
 export default function Page() {
   return (

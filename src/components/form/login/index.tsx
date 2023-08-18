@@ -1,25 +1,34 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import isEmail from 'validator/lib/isEmail';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 
 import { FormContainer } from '../formContainer/styles';
-import Loading from '../loadingClient';
-import { GlobalErrorClient as GlobalError } from '../globalErrorClient';
-
-import Logo from '../logo';
+import Loading from '../loading';
+import { GlobalError } from '../globalError';
+import Logo from '../../logo';
 import Input from './input';
 import ShowPassword from '../showPassword';
 import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
+import useGlobalContext from '@/utils/useGlobalContext';
+import { dataFailure, dataSuccess } from '@/utils/appContextUser/actions';
 
-export interface BodyLogin {
-  email: string;
-  password: string;
-}
+const ZodLoginSchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .nonempty('E-mail não pode está vazio.')
+    .email('E-mail inválido.'),
+  password: z.string().trim().nonempty('Digite sua senha pra fazer login.'),
+});
+
+// z.infer vai pegar toda a tipagem do nosso scheme setado no zod acima que é o nosso ZodLoginSchema
+export type BodyLogin = z.infer<typeof ZodLoginSchema>;
 
 export default function Login() {
   const redirect = useRouter();
@@ -27,28 +36,24 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const { handleServerError, showGlobalError, msgGlobalError } =
     useGlobalErrorTime();
+  const { state, dispatch } = useGlobalContext();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     setError,
-  } = useForm<BodyLogin>();
+  } = useForm<BodyLogin>({ resolver: zodResolver(ZodLoginSchema) });
+
+  useEffect(() => {
+    console.log(state);
+    // dispatch(dataSuccess({ email: 'any', password: '123' }));
+  }, [state]);
 
   const handleFormSubmit: SubmitHandler<BodyLogin> = async (body, event) => {
     event?.preventDefault();
     if (isLoading) return;
-
-    const email = body.email.trim();
-    const password = body.password.trim();
-    let controllerError = true;
-
-    if (!isEmail(email)) {
-      setError('email', { message: 'E-mail inválido.' });
-      controllerError = false;
-    }
-
-    if (!controllerError) return;
+    const { email, password } = body;
 
     try {
       setIsLoading(true);
@@ -97,7 +102,6 @@ export default function Login() {
           name="email"
           placeholder="E-mail"
           type="email"
-          required={true}
           register={register}
           errors={{ message: errors.email?.message, classError: errors.email }}
         />
@@ -107,7 +111,6 @@ export default function Login() {
           name="password"
           placeholder="Senha"
           type={passwordType}
-          required={true}
           register={register}
           errors={{
             message: errors.password?.message,

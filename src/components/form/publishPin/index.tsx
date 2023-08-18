@@ -8,7 +8,7 @@ import isAlphanumeric from 'validator/lib/isAlphanumeric';
 
 import { Container } from './styled';
 
-import ErrorMsg from '../errorMsg';
+import ErrorMsg from '../form/errorMsg';
 
 export interface BodyFile {
   title: string;

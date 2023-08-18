@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 import Header from '@/components/header';
-import Login from '@/components/login';
+import Login from '@/components/form/login';
 
 export default function Page() {
   return (

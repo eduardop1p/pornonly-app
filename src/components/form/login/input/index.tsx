@@ -6,7 +6,7 @@ import styles from './styles.module.css';
 
 import { BodyLogin } from '..';
 
-import ErrorForm from '../../errorMsg';
+import ErrorMsg from '../../errorMsg';
 
 interface Props {
   label: string;
@@ -14,7 +14,6 @@ interface Props {
   name: keyof BodyLogin;
   id: string;
   placeholder: string;
-  required?: boolean;
   children?: ReactNode;
   register: UseFormRegister<BodyLogin>;
   errors: { message?: string; classError?: FieldError };
@@ -26,7 +25,6 @@ export default function Input({
   id,
   placeholder,
   label,
-  required = false,
   children,
   register,
   errors,
@@ -40,13 +38,12 @@ export default function Input({
           className={errors.classError ? styles['error-input-border'] : ''}
           id={id}
           placeholder={placeholder}
-          required={required}
           {...register(name)}
         />
         {children}
       </div>
 
-      <ErrorForm errorMsg={errors.message} />
+      <ErrorMsg errorMsg={errors.message} />
     </div>
   );
 }

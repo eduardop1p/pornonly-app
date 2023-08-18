@@ -2,7 +2,7 @@
 
 import { Container } from './styled';
 
-export function GlobalErrorClient({
+export function GlobalError({
   errorMsg,
   showError,
 }: {

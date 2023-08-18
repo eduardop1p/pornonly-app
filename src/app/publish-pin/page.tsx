@@ -5,7 +5,7 @@ import Link from 'next/link';
 import styles from './page.module.css';
 
 import Header from '@/components/header';
-import PublishPin from '@/components/publishPin';
+import PublishPin from '@/components/form/publishPin';
 import { User } from '../user/[name]/page';
 
 export const metadata: Metadata = {

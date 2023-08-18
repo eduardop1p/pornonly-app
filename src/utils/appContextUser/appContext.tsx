@@ -5,9 +5,10 @@ import React, { createContext, useReducer } from 'react';
 import reducer from './reducer';
 
 export interface GlobalState {
-  loginActive: boolean;
-  registerActive: boolean;
+  email: string;
+  password: string;
 }
+
 export const Context = createContext({});
 
 export default function AppContext({
@@ -16,11 +17,11 @@ export default function AppContext({
   children: React.ReactNode;
 }) {
   const [state, dispatch] = useReducer(reducer, {
-    loginActive: true,
-    registerActive: false,
+    email: '',
+    password: '',
   });
 
   return (
-    <Context.Provider value={{ state, dispatch }}> {children}</Context.Provider>
+    <Context.Provider value={{ state, dispatch }}>{children}</Context.Provider>
   );
 }

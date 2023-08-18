@@ -4,28 +4,76 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import isEmail from 'validator/lib/isEmail';
-import isAlphanumeric from 'validator/lib/isAlphanumeric';
-import isLowercase from 'validator/lib/isLowercase';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { useRouter } from 'next/navigation';
 
 import styles from './styles.module.css';
-import { FormContainer } from '../formContainer/styles';
-import Loading from '../loadingClient';
-import { GlobalErrorClient as GlobalError } from '../globalErrorClient';
 
-import Logo from '../logo';
+import { FormContainer } from '../formContainer/styles';
+import Loading from '../loading';
+import { GlobalError } from '../globalError';
+import Logo from '../../logo';
 import Input from './input';
 import ShowPassword from '../showPassword';
 import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
+import useGlobalContext from '@/utils/useGlobalContext';
+import { dataSuccess } from '@/utils/appContextUser/actions';
 
-export interface BodyCreateAccount {
-  username: string;
-  email: string;
-  password: string;
-  repeatPassword: string;
-}
+const ZodCreateAccountSchema = z
+  .object({
+    username: z
+      .string()
+      .trim()
+      .superRefine((val, ctx) => {
+        if (!val.match('^[a-z0-9]*$')) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Usuário deve conter apenas letras minusculas e números.',
+          });
+        }
+        if (val.length < 4 || val.length > 15) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Usuário deve ter ao menos 4 caracteres e no máximo 15.',
+          });
+        }
+      }),
+    email: z
+      .string()
+      .trim()
+      .nonempty('E-mail não pode está vazio.')
+      .email('E-mail inválido.'),
+    password: z.string().superRefine((val, ctx) => {
+      if (val.length < 5 || val.length > 20) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Senha deve ter ao menos 5 caracteres e no máximo 20.',
+        });
+      }
+
+      const rgx = /[!@#$%^&*(),.?":{}|<>]/;
+      if (!rgx.test(val)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message:
+            'Senha deve ter ao menos 1 desses caracteres especiais: @#$!*&%^.',
+        });
+      }
+    }),
+    repeatPassword: z.string().trim(),
+  })
+  .refine(data => data.password === data.repeatPassword, {
+    message: 'As senhas não se coincidem.',
+    path: ['repeatPassword'],
+  });
+
+export type BodyCreateAccount = z.infer<typeof ZodCreateAccountSchema>;
 
 export default function CreateAccount() {
+  const redirect = useRouter();
+  const { dispatch } = useGlobalContext();
+
   const [passwordType, setPasswordType] = useState('password');
   const [isLoading, setIsLoading] = useState(false);
   const { handleServerError, showGlobalError, msgGlobalError } =
@@ -35,78 +83,56 @@ export default function CreateAccount() {
     register,
     handleSubmit,
     formState: { errors },
-    setError,
-  } = useForm<BodyCreateAccount>();
+  } = useForm<BodyCreateAccount>({
+    resolver: zodResolver(ZodCreateAccountSchema),
+  });
 
   const handleFormSubmit: SubmitHandler<BodyCreateAccount> = async (
     body,
     event
   ) => {
     event?.preventDefault();
-
-    const username = body.username.trim();
-    const email = body.email.trim();
-    const password = body.password.trim();
-    const repeatPassword = body.repeatPassword.trim();
-    let controllerError = true;
-
-    if (username.length < 4 || username.length > 15) {
-      setError('username', {
-        message: 'Usuário deve ter ao menos 4 caracteres e no máximo 15.',
-      });
-      controllerError = false;
-    }
-    if (!isAlphanumeric(username) || !isLowercase(username)) {
-      setError('username', {
-        message: 'Usuário deve conter apenas letras minusculas e números.',
-      });
-      controllerError = false;
-    }
-    if (!isEmail(email)) {
-      setError('email', { message: 'E-mail inválido.' });
-      controllerError = false;
-    }
-    const rgPassword = /[!@#$%^&*(),.?":{}|<>]/;
-    if (!rgPassword.test(password)) {
-      setError('password', {
-        message: 'Senha deve ter ao menos 1 caractere especial ex: @#$!*&%^.',
-      });
-      controllerError = false;
-    }
-    if (password !== repeatPassword) {
-      setError('password', { message: 'As senhas não se coincidem.' });
-      controllerError = false;
-    }
-    if (password.length < 5 || password.length > 20) {
-      setError('password', {
-        message: 'Senha deve ter ao menos 5 caracteres e no máximo 20.',
-      });
-      controllerError = false;
-    }
-
-    if (!controllerError) return;
+    if (isLoading) return;
+    const { username, email, password, repeatPassword } = body;
 
     try {
       setIsLoading(true);
-      const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/users`, {
+      // const resCreateUser = await fetch(
+      //   `${process.env.NEXT_PUBLIC_URL_API}/users`,
+      //   {
+      //     method: 'POST',
+      //     body: JSON.stringify({ username, email, password, repeatPassword }),
+      //     // para aplicações post json tenho q colocar headers 'Content-Type': 'application/json'
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //     },
+      //     cache: 'no-cache',
+      //   }
+      // );
+      // const jsonResCreateUser = await resCreateUser.json();
+      // if (!resCreateUser.ok) {
+      //   if (jsonResCreateUser.type === 'server') {
+      //     handleServerError(jsonResCreateUser.error as string);
+      //     return;
+      //   }
+      //   setError(jsonResCreateUser.type, { message: jsonResCreateUser.error });
+      //   return;
+      // }
+      const resLogin = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/login`, {
         method: 'POST',
-        body: JSON.stringify({ username, email, password, repeatPassword }),
+        body: JSON.stringify({ email, password }),
         // para aplicações post json tenho q colocar headers 'Content-Type': 'application/json'
         headers: {
           'Content-Type': 'application/json',
         },
         cache: 'no-cache',
+        credentials: 'include', // para setar os cookies no server tenho que colocar credentials: 'include'
       });
-      const jsonResponse = await response.json();
-      if (!response.ok) {
-        if (jsonResponse.type === 'server') {
-          handleServerError(jsonResponse.error as string);
-          return;
-        }
-        setError(jsonResponse.type, { message: jsonResponse.error });
+      if (!resLogin.ok) {
+        dispatch(dataSuccess({ email, password }));
+        redirect.push(`/login`);
         return;
       }
-      console.log('user criado.');
     } catch (err) {
       handleServerError('Erro interno no servidor.');
     } finally {
@@ -134,7 +160,6 @@ export default function CreateAccount() {
           name="username"
           placeholder="Nome de usuário"
           type="text"
-          required={true}
           register={register}
           errors={{
             message: errors.username?.message,
@@ -147,7 +172,6 @@ export default function CreateAccount() {
           name="email"
           placeholder="E-mail"
           type="email"
-          required={true}
           register={register}
           errors={{ message: errors.email?.message, classError: errors.email }}
         />
@@ -157,7 +181,6 @@ export default function CreateAccount() {
           name="password"
           placeholder="Senha"
           type={passwordType}
-          required={true}
           register={register}
           errors={{
             message: errors.password?.message,
@@ -177,7 +200,6 @@ export default function CreateAccount() {
           name="repeatPassword"
           placeholder="Repetir senha"
           type={passwordType}
-          required={true}
           register={register}
           errors={{
             message: errors.repeatPassword?.message,

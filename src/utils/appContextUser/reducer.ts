@@ -2,26 +2,26 @@
 import { GlobalState } from './appContext';
 import * as types from './types';
 
+const initialState: GlobalState = {
+  email: '',
+  password: '',
+};
+
 export default function reducer(
   state: unknown,
   action: { type: string; payload: GlobalState }
 ) {
   switch (action.type) {
-    case types.LOGIN_ACTIVE_SUCCESS: {
+    case types.DATA_SUCCESS: {
       const newState: GlobalState = {
-        loginActive: action.payload.loginActive,
-        registerActive: action.payload.registerActive,
+        email: action.payload.email,
+        password: action.payload.password,
       };
 
       return newState;
     }
-    case types.REGISTER_ACTIVE_SUCCESS: {
-      const newState: GlobalState = {
-        loginActive: action.payload.loginActive,
-        registerActive: action.payload.registerActive,
-      };
-
-      return newState;
+    case types.DATA_FAILURE: {
+      return initialState;
     }
     default: {
       return state;

@@ -3,7 +3,7 @@
 import { useState, useRef, FormEvent } from 'react';
 
 import { Container } from './styled';
-import Clear from '../clear';
+import Clear from './clear';
 
 export default function Search() {
   const [focusSearch, setFocusSearch] = useState(false);
