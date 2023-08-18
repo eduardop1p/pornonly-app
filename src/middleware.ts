@@ -16,7 +16,7 @@ export function middleware(req: NextRequest, res: NextResponse) {
     !isAuth &&
     (pathname.startsWith('/publish-pin') || pathname.startsWith('/user'))
   ) {
-    return NextResponse.redirect(new URL('/login', req.url));
+    return NextResponse.redirect(new URL(`/login?from=${pathname}`, req.url));
   }
 
   return response;

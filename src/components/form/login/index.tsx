@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { FormContainer } from '../formContainer/styles';
 import Loading from '../loading';
@@ -34,6 +34,7 @@ export type BodyLogin = z.infer<typeof ZodLoginSchema>;
 
 export default function Login() {
   const redirect = useRouter();
+  const searchParams = useSearchParams();
   const [passwordType, setPasswordType] = useState('password');
   const [isLoading, setIsLoading] = useState(false);
   const { handleServerError, showGlobalError, msgGlobalError } =
@@ -52,7 +53,7 @@ export default function Login() {
   useEffect(() => {
     state.email && handleServerSuccess('Faça o login pra poder continuar');
     return () => dispatch(dataFailure());
-  }, [state, handleServerSuccess, dispatch]);
+  }, [state, handleServerSuccess, dispatch, searchParams]);
 
   const handleFormSubmit: SubmitHandler<BodyLogin> = async (body, event) => {
     event?.preventDefault();
@@ -81,7 +82,9 @@ export default function Login() {
         return;
       }
       redirect.refresh(); // usar redirect.refresh() para atualizar os estados do react no client, esse refresh não irar carregar a pagina
-      redirect.push('/');
+      searchParams.get('from')
+        ? redirect.push(searchParams.get('from') as string)
+        : redirect.push('/');
     } catch (err) {
       handleServerError('Erro interno no servidor.');
     } finally {
