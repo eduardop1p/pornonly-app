@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import StyledComponentsRegistry from '@/lib/registry';
 
 import AppTheme from '@/utils/theme/themeProvider';
+import AppContext from '@/utils/appContextUser/appContext';
 
 export const metadata: Metadata = {
   title: 'Pornonly',
@@ -22,7 +23,9 @@ export default function RootLayout({
       </head>
       <body>
         <StyledComponentsRegistry>
-          <AppTheme>{children}</AppTheme>
+          <AppTheme>
+            <AppContext>{children}</AppContext>
+          </AppTheme>
         </StyledComponentsRegistry>
       </body>
     </html>

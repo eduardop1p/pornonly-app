@@ -9,7 +9,7 @@ export function dataSuccess(payload: GlobalState) {
   };
 }
 
-export function dataFailure(payload: GlobalState) {
+export function dataFailure(payload?: GlobalState) {
   return {
     type: types.DATA_FAILURE,
     payload,

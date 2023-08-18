@@ -15,8 +15,10 @@ import Logo from '../../logo';
 import Input from './input';
 import ShowPassword from '../showPassword';
 import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
+import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
 import useGlobalContext from '@/utils/useGlobalContext';
-import { dataFailure, dataSuccess } from '@/utils/appContextUser/actions';
+import { dataFailure } from '@/utils/appContextUser/actions';
+import { GlobalSuccess } from '../globalSuccess';
 
 const ZodLoginSchema = z.object({
   email: z
@@ -36,6 +38,8 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const { handleServerError, showGlobalError, msgGlobalError } =
     useGlobalErrorTime();
+  const { handleServerSuccess, showGlobalSuccess, msgGlobalSuccess } =
+    useGlobalSuccessTime();
   const { state, dispatch } = useGlobalContext();
 
   const {
@@ -46,9 +50,9 @@ export default function Login() {
   } = useForm<BodyLogin>({ resolver: zodResolver(ZodLoginSchema) });
 
   useEffect(() => {
-    console.log(state);
-    // dispatch(dataSuccess({ email: 'any', password: '123' }));
-  }, [state]);
+    state.email && handleServerSuccess('Faça o login pra poder continuar');
+    return () => dispatch(dataFailure());
+  }, [state, handleServerSuccess, dispatch]);
 
   const handleFormSubmit: SubmitHandler<BodyLogin> = async (body, event) => {
     event?.preventDefault();
@@ -94,9 +98,14 @@ export default function Login() {
       <Logo />
       {isLoading && <Loading />}
       <GlobalError errorMsg={msgGlobalError} showError={showGlobalError} />
+      <GlobalSuccess
+        errorMsg={msgGlobalSuccess}
+        showError={showGlobalSuccess}
+      />
       <h1 className="title-login">Bem vind@ a Pornonly</h1>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <Input
+          value={state.email}
           id="email"
           label="E-mail"
           name="email"
@@ -106,6 +115,7 @@ export default function Login() {
           errors={{ message: errors.email?.message, classError: errors.email }}
         />
         <Input
+          value={state.password}
           id="password"
           label="Senha"
           name="password"

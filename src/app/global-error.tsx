@@ -18,7 +18,7 @@ export default function GlobalError({
     <html>
       <body style={{ textAlign: 'center' }}>
         <title>Pornonly</title>
-        <div style={{ marginTop: '2rem', fontSize: '1rem' }}>
+        <div style={{ marginTop: '1rem', fontSize: '1rem' }}>
           Erro interno na aplicação {':('}
         </div>
         {/* <button onClick={() => reset()}>Try again</button> */}

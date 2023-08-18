@@ -12,6 +12,7 @@ const myTheme = {
     g_colorGray150: '#ddd',
     g_colorGray200: '#767676',
     g_colorGray300: '#111',
+    g_colorGray222: '#222',
     g_colorGray111111: '#111111',
     g_colorGray400: ' #000',
     g_colorGray333333: ' #333333',

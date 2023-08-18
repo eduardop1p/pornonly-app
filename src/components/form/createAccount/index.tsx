@@ -83,6 +83,7 @@ export default function CreateAccount() {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<BodyCreateAccount>({
     resolver: zodResolver(ZodCreateAccountSchema),
   });
@@ -97,27 +98,27 @@ export default function CreateAccount() {
 
     try {
       setIsLoading(true);
-      // const resCreateUser = await fetch(
-      //   `${process.env.NEXT_PUBLIC_URL_API}/users`,
-      //   {
-      //     method: 'POST',
-      //     body: JSON.stringify({ username, email, password, repeatPassword }),
-      //     // para aplicações post json tenho q colocar headers 'Content-Type': 'application/json'
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //     },
-      //     cache: 'no-cache',
-      //   }
-      // );
-      // const jsonResCreateUser = await resCreateUser.json();
-      // if (!resCreateUser.ok) {
-      //   if (jsonResCreateUser.type === 'server') {
-      //     handleServerError(jsonResCreateUser.error as string);
-      //     return;
-      //   }
-      //   setError(jsonResCreateUser.type, { message: jsonResCreateUser.error });
-      //   return;
-      // }
+      const resCreateUser = await fetch(
+        `${process.env.NEXT_PUBLIC_URL_API}/users`,
+        {
+          method: 'POST',
+          body: JSON.stringify({ username, email, password, repeatPassword }),
+          // para aplicações post json tenho q colocar headers 'Content-Type': 'application/json'
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          cache: 'no-cache',
+        }
+      );
+      const jsonResCreateUser = await resCreateUser.json();
+      if (!resCreateUser.ok) {
+        if (jsonResCreateUser.type === 'server') {
+          handleServerError(jsonResCreateUser.error as string);
+          return;
+        }
+        setError(jsonResCreateUser.type, { message: jsonResCreateUser.error });
+        return;
+      }
       const resLogin = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/login`, {
         method: 'POST',
         body: JSON.stringify({ email, password }),
@@ -130,9 +131,11 @@ export default function CreateAccount() {
       });
       if (!resLogin.ok) {
         dispatch(dataSuccess({ email, password }));
-        redirect.push(`/login`);
+        redirect.push('/login');
         return;
       }
+      redirect.refresh();
+      redirect.push('/');
     } catch (err) {
       handleServerError('Erro interno no servidor.');
     } finally {

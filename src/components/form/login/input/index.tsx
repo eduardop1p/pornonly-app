@@ -9,6 +9,7 @@ import { BodyLogin } from '..';
 import ErrorMsg from '../../errorMsg';
 
 interface Props {
+  value?: string;
   label: string;
   type: string;
   name: keyof BodyLogin;
@@ -20,6 +21,7 @@ interface Props {
 }
 
 export default function Input({
+  value,
   type,
   name,
   id,
@@ -34,6 +36,7 @@ export default function Input({
       <div className={styles['container-input']}>
         <label htmlFor={id}>{upperFirst(label)}</label>
         <input
+          defaultValue={value}
           type={type}
           className={errors.classError ? styles['error-input-border'] : ''}
           id={id}

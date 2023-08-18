@@ -4,11 +4,11 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { ChangeEvent, useState, useRef, ReactNode } from 'react';
 import Image from 'next/image';
-import isAlphanumeric from 'validator/lib/isAlphanumeric';
+// import isAlphanumeric from 'validator/lib/isAlphanumeric';
 
 import { Container } from './styled';
 
-import ErrorMsg from '../form/errorMsg';
+import ErrorMsg from '../errorMsg';
 
 export interface BodyFile {
   title: string;
