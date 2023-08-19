@@ -2,27 +2,58 @@
 'use client';
 
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { ChangeEvent, useState, useRef, ReactNode } from 'react';
+import { ChangeEvent, useState, ReactNode } from 'react';
 import Image from 'next/image';
-// import isAlphanumeric from 'validator/lib/isAlphanumeric';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 
 import { Container } from './styled';
 
 import ErrorMsg from '../errorMsg';
+import { GlobalError } from '../globalError';
+import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
+import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
 
-export interface BodyFile {
-  title: string;
-}
+const ZodUserSchema = z.object({
+  title: z
+    .string()
+    .trim()
+    .superRefine((val, ctx) => {
+      if (val.length < 4) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Titulo muito curto.',
+        });
+      }
+      if (!val.match('^[a-z0-9]*$')) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Titulo deve conter apenas letras e números.',
+        });
+      }
+    }),
+  midia: z
+    .instanceof(FileList)
+    .transform(val => val.item(0))
+    .refine(val => val instanceof File, 'Nenhum arquivo adcionado.'),
+});
+
+export type BodyFile = z.infer<typeof ZodUserSchema>;
 
 export default function PublishPin({ children }: { children: ReactNode }) {
   const {
     register,
     handleSubmit,
     formState: { errors },
-    setError,
-  } = useForm<BodyFile>();
+    resetField,
+  } = useForm<BodyFile>({
+    resolver: zodResolver(ZodUserSchema),
+  });
 
-  const [fileSrc, setFileSrc] = useState('');
+  const [fileContent, setFileContent] = useState<{ src: string; file: any }>({
+    src: '',
+    file: null,
+  });
   const [fileType, setFileType] = useState('');
   const [inputTitleInFocus, setInputTitleInFocus] = useState(false);
   const [inputTitleLength, setInputTitleLength] = useState(0);
@@ -35,55 +66,33 @@ export default function PublishPin({ children }: { children: ReactNode }) {
     'submit'
   );
   const [descriptionValue, setDescriptionValue] = useState('');
-
-  const divIconUploadPhoto = useRef<HTMLDivElement | null>(null);
-  const divBorderDashed = useRef<HTMLDivElement | null>(null);
+  const { handleServerError, msgGlobalError, showGlobalError } =
+    useGlobalErrorTime();
 
   const handleSubmitFile: SubmitHandler<BodyFile> = async (body, event) => {
     event?.preventDefault();
 
-    let submit = true;
-    const title = body.title.trim();
+    const { title, midia } = body;
     const description = descriptionValue.trim();
     const tags = valueInputTags.join(' ');
 
-    if (!fileSrc) {
-      divBorderDashed.current?.classList.add('border-dashed-no-upload-file');
-      divIconUploadPhoto.current?.classList.add('no-file-upload');
-      submit = false;
-    }
-    if (title.length < 4) {
-      setError('title', { message: 'Titulo muito curto.' });
-      submit = false;
-    }
-    if (!isAlphanumeric(title)) {
-      setError('title', {
-        message: 'Titulo deve conter apenas letras e números.',
-      });
-      submit = false;
-    }
-    if (!title) {
-      setError('title', {
-        message: 'Titulo não pode está vazio.',
-      });
-      submit = false;
-    }
-
-    if (!submit) return;
-    console.log(title);
-    console.log(description);
-    console.log(tags);
+    console.log(title, midia, description, tags);
   };
 
   const handleChangeFile = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files === null) return;
 
     const file = event.target.files[0];
+    const maxFileSize = 500 * 1024 * 1024;
+    // console.log(`${size}MB`);
+    if (file.size > maxFileSize) {
+      handleServerError('Arquivo muito grande.');
+      return;
+    }
+
     const src = URL.createObjectURL(file);
-    setFileSrc(src);
+    setFileContent({ src, file });
     setFileType(file.type);
-    divBorderDashed.current?.classList.remove('border-dashed-no-upload-file');
-    divIconUploadPhoto.current?.classList.remove('no-file-upload');
   };
 
   const handleChangeTextatera = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -114,12 +123,19 @@ export default function PublishPin({ children }: { children: ReactNode }) {
 
   return (
     <Container>
+      <GlobalError errorMsg={msgGlobalError} showError={showGlobalError} />
       <form onSubmit={handleSubmit(handleSubmitFile)}>
         <div className="publish-and-btn">
           <div className="publish">
-            {fileSrc && (
+            {fileContent.file && (
               <div className="preview">
-                <button type="button" onClick={() => setFileSrc('')}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFileContent({ src: '', file: null });
+                    resetField('midia');
+                  }}
+                >
                   <svg
                     height="18"
                     width="18"
@@ -133,22 +149,24 @@ export default function PublishPin({ children }: { children: ReactNode }) {
                 </button>
                 {fileType.includes('image') ? (
                   <Image
-                    src={fileSrc}
+                    src={fileContent.src}
                     alt="preview-img"
                     fill={true}
                     sizes="100%"
                   />
                 ) : (
-                  <video src={fileSrc} controls={true}></video>
+                  <video src={fileContent.src} controls={true}></video>
                 )}
               </div>
             )}
             <div
-              className={!fileSrc ? 'border-dashed' : ''}
-              ref={divBorderDashed}
+              className={
+                errors.midia ? 'border-dashed-no-upload-file' : 'border-dashed'
+              }
             >
               <label htmlFor="file">
-                <div className="upload-photo" ref={divIconUploadPhoto}>
+                {/* eslint-disable-next-line */}
+                <div className={`upload-photo ${errors.midia ? 'no-file-upload' : ''}`}>
                   <div>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -165,8 +183,12 @@ export default function PublishPin({ children }: { children: ReactNode }) {
               <input
                 type="file"
                 id="file"
+                {...register('midia', {
+                  onChange(event) {
+                    handleChangeFile(event);
+                  },
+                })}
                 onClick={event => (event.currentTarget.value = '')}
-                onChange={handleChangeFile}
                 accept="image/*, video/*"
                 multiple={false}
               />

@@ -70,13 +70,13 @@ export const Container = styled.div<TypeTheme>`
 
           & > .border-dashed {
             border: 2px dashed ${theme.colors.g_colorGray150Hovered};
+          }
 
-            &.border-dashed-no-upload-file {
-              border: 2px dashed ${theme.colors.g_colorRed100};
+          & > .border-dashed-no-upload-file {
+            border: 2px dashed ${theme.colors.g_colorRed100};
 
-              & > span {
-                color: ${theme.colors.g_colorRed100};
-              }
+            & > span {
+              color: ${theme.colors.g_colorRed100};
             }
           }
 
