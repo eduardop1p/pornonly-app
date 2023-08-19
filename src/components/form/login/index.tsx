@@ -82,9 +82,8 @@ export default function Login() {
         return;
       }
       redirect.refresh(); // usar redirect.refresh() para atualizar os estados do react no client, esse refresh não irar carregar a pagina
-      searchParams.get('from')
-        ? redirect.push(searchParams.get('from') as string)
-        : redirect.push('/');
+      const from = searchParams.get('from');
+      from ? redirect.push(from as string) : redirect.push('/');
     } catch (err) {
       handleServerError('Erro interno no servidor.');
     } finally {

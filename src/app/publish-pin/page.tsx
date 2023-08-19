@@ -6,7 +6,7 @@ import styles from './page.module.css';
 
 import Header from '@/components/header';
 import PublishPin from '@/components/form/publishPin';
-import { User } from '../user/[name]/page';
+import { User } from '../[user]/page';
 
 export const metadata: Metadata = {
   title: 'Pornonly - Criar pin',
@@ -42,8 +42,8 @@ async function UserAvatarName() {
 
   return (
     <div className={styles['container-user']}>
-      <Link href={`/user/${data.username}`} className={styles['user-avatar']}>
-        {data.username.at(0)?.toUpperCase()}
+      <Link href={`/${data.username}`} className={styles['user-avatar']}>
+        {data.username?.at(0)?.toUpperCase()}
       </Link>
       <h3>{data.username}</h3>
     </div>

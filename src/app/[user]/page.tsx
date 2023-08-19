@@ -7,7 +7,7 @@ import { upperFirst } from 'lodash';
 import styles from './styles.module.css';
 
 interface Props {
-  params: { name: string };
+  params: { user: string };
 }
 export interface User {
   id: string;
@@ -37,22 +37,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function Page({ params }: Props) {
-  const token = cookies().get('token')?.value;
+  // const token = cookies().get('token')?.value;
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/users`, {
-    method: 'GET',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    // cache: 'no-cache',
-  });
-  const data = (await response.json()) as User;
+  // const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/users`, {
+  //   method: 'GET',
+  //   headers: {
+  //     Authorization: `Bearer ${token}`,
+  //   },
+  //   // cache: 'no-cache',
+  // });
+  // const data = (await response.json()) as User;
 
   return (
     <>
       <Header />
       <main className={styles.main}>
-        <h1>{data.username}</h1>
+        <h1>{params.user}</h1>
       </main>
     </>
   );

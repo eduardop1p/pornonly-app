@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 import styles from './styles.module.css';
 
-import { User } from '@/app/user/[name]/page';
+import { User } from '@/app/[user]/page';
 
 export default async function UserLogo() {
   const token = cookies().get('token')?.value;
@@ -20,8 +20,8 @@ export default async function UserLogo() {
 
   return (
     <div className={styles.container}>
-      <Link href={`/user/${data.username}`}>
-        {data.username.at(0)?.toUpperCase()}
+      <Link href={`/${data.username}`}>
+        {data.username?.at(0)?.toUpperCase()}
       </Link>
     </div>
   );
