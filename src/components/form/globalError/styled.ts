@@ -9,7 +9,9 @@ export const Container = styled.div<TypeTheme>`
     position: fixed;
     background-color: ${theme.colors.g_colorRed100};
     justify-content: center;
-    left: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    min-height: 45px;
     bottom: 1.5rem;
     padding: 8px 1rem;
     border-radius: 5px;

@@ -26,7 +26,7 @@ const ZodCreateAccountSchema = z
       .string()
       .trim()
       .superRefine((val, ctx) => {
-        if (!val.match('^[a-z0-9]*$')) {
+        if (!val.match(/^[a-z0-9\s]*$/)) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: 'Usuário deve conter apenas letras minusculas e números.',

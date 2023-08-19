@@ -9,9 +9,10 @@ export const Container = styled.div<TypeTheme>`
     position: fixed;
     background-color: ${theme.colors.g_colorGray222};
     justify-content: center;
-    left: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    min-height: 45px;
     bottom: 1.5rem;
-    min-height: 41px;
     padding: 8px 1rem;
     border-radius: 5px;
     margin-bottom: 0 !important;
@@ -20,6 +21,15 @@ export const Container = styled.div<TypeTheme>`
 
     &[data-show-error='true'] {
       transform: translateY(0);
+    }
+
+    & > img,
+    & > video {
+      margin-right: 10px;
+      flex: none;
+      border-radius: 5px;
+      object-fit: contain;
+      max-height: 25px !important;
     }
 
     & > span {

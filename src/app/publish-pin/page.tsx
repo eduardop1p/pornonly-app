@@ -14,12 +14,14 @@ export const metadata: Metadata = {
 };
 
 export default function Publish() {
+  const token = cookies().get('token')?.value;
+
   return (
     <>
       <Header />
       <main className={styles.main}>
         <div className={styles['container-publish']}>
-          <PublishPin>
+          <PublishPin token={token as string}>
             <UserAvatarName />
           </PublishPin>
         </div>

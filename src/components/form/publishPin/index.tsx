@@ -11,8 +11,10 @@ import { Container } from './styled';
 
 import ErrorMsg from '../errorMsg';
 import { GlobalError } from '../globalError';
+import { GlobalSuccess } from '../globalSuccess';
 import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
 import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
+import Loading from '../loading';
 
 const ZodUserSchema = z.object({
   title: z
@@ -25,7 +27,8 @@ const ZodUserSchema = z.object({
           message: 'Titulo muito curto.',
         });
       }
-      if (!val.match('^[a-z0-9]*$')) {
+      // eslint-disable-next-line
+      if (!val.match(/^[a-z0-9\s]*$/)) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: 'Titulo deve conter apenas letras e números.',
@@ -40,7 +43,13 @@ const ZodUserSchema = z.object({
 
 export type BodyFile = z.infer<typeof ZodUserSchema>;
 
-export default function PublishPin({ children }: { children: ReactNode }) {
+export default function PublishPin({
+  children,
+  token,
+}: {
+  children: ReactNode;
+  token: string;
+}) {
   const {
     register,
     handleSubmit,
@@ -66,17 +75,44 @@ export default function PublishPin({ children }: { children: ReactNode }) {
     'submit'
   );
   const [descriptionValue, setDescriptionValue] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const { handleServerError, msgGlobalError, showGlobalError } =
     useGlobalErrorTime();
+  const { handleServerSuccess, msgGlobalSuccess, showGlobalSuccess } =
+    useGlobalSuccessTime();
 
   const handleSubmitFile: SubmitHandler<BodyFile> = async (body, event) => {
     event?.preventDefault();
+    if (isLoading) return;
 
-    const { title, midia } = body;
+    const { title } = body;
     const description = descriptionValue.trim();
     const tags = valueInputTags.join(' ');
 
-    console.log(title, midia, description, tags);
+    const midia = new FormData();
+    midia.append('midia', body.midia as any);
+
+    try {
+      setIsLoading(true);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/midia`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          ['Content-Type']: 'multipart/form-data',
+        },
+        body: JSON.stringify({ midia, title, description, tags }),
+      });
+      const jsonRes = await res.json();
+      if (!res.ok) {
+        handleServerError(jsonRes.error as string);
+        return;
+      }
+      handleServerSuccess('Pin adcionado');
+    } catch {
+      handleServerError('Erro interno no servidor.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleChangeFile = (event: ChangeEvent<HTMLInputElement>) => {
@@ -123,7 +159,16 @@ export default function PublishPin({ children }: { children: ReactNode }) {
 
   return (
     <Container>
+      {isLoading && <Loading />}
       <GlobalError errorMsg={msgGlobalError} showError={showGlobalError} />
+      <GlobalSuccess errorMsg={msgGlobalSuccess} showError={showGlobalSuccess}>
+        {fileType.includes('image') ? (
+          <Image src={fileContent.src} alt="preview" width={45} height={45} />
+        ) : (
+          <video src={fileContent.src} controls={false}></video>
+        )}
+      </GlobalSuccess>
+
       <form onSubmit={handleSubmit(handleSubmitFile)}>
         <div className="publish-and-btn">
           <div className="publish">
