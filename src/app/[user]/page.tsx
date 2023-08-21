@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import Header from '@/components/header';
 import { cookies } from 'next/headers';
 import { Metadata } from 'next';
 import { upperFirst } from 'lodash';
+import { notFound } from 'next/navigation';
+
+import Header from '@/components/header';
 
 import styles from './styles.module.css';
 
@@ -30,6 +32,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // cache: 'no-cache',
   });
   const data = (await response.json()) as User;
+  if (params.user !== data.username) {
+    notFound();
+  }
 
   return {
     title: `Pornonly - ${upperFirst(data.username)}`,

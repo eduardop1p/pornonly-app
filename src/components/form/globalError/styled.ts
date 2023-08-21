@@ -10,17 +10,16 @@ export const Container = styled.div<TypeTheme>`
     background-color: ${theme.colors.g_colorRed100};
     justify-content: center;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, 125px);
     min-height: 45px;
     bottom: 1.5rem;
     padding: 8px 1rem;
     border-radius: 5px;
     margin-bottom: 0 !important;
-    transform: translateY(125px);
     transition: transform 500ms ease-in-out;
 
     &[data-show-error='true'] {
-      transform: translateY(0);
+      transform: translate(-50%, 0);
     }
 
     & > svg {

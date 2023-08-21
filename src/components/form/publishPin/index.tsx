@@ -85,12 +85,15 @@ export default function PublishPin({
     event?.preventDefault();
     if (isLoading) return;
 
-    const { title } = body;
+    const { title, midia } = body;
     const description = descriptionValue.trim();
     const tags = valueInputTags.join(' ');
 
-    const midia = new FormData();
-    midia.append('midia', body.midia as any);
+    const formData = new FormData();
+    formData.append('midia', midia as Blob);
+    formData.append('title', title);
+    formData.append('description', description);
+    formData.append('tags', tags);
 
     try {
       setIsLoading(true);
@@ -98,16 +101,15 @@ export default function PublishPin({
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
-          ['Content-Type']: 'multipart/form-data',
         },
-        body: JSON.stringify({ midia, title, description, tags }),
+        body: formData,
       });
       const jsonRes = await res.json();
       if (!res.ok) {
         handleServerError(jsonRes.error as string);
         return;
       }
-      handleServerSuccess('Pin adcionado');
+      handleServerSuccess('Pin adcionado ao feed');
     } catch {
       handleServerError('Erro interno no servidor.');
     } finally {
