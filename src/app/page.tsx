@@ -18,6 +18,7 @@ export interface MidiaResults {
   midiaType: 'img' | 'gif' | 'video';
   width: number;
   height: number;
+  duration?: string;
   description: string;
   userId: unknown[];
   url: string;
@@ -29,7 +30,9 @@ export default async function Home() {
     `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all/${process.env.API_KEY}?page=1`,
     {
       method: 'GET',
-      cache: 'no-cache',
+      cache: 'default',
+      next: { revalidate: 60 },
+      // cache: 'no-cache',
     }
   );
   const {

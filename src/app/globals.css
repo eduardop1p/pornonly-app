@@ -68,6 +68,7 @@
   --font-size-3_75rem: 3.75rem;
   --font-size-0_90rem: 0.90rem;
   --font-size-0_75rem: 0.75rem;
+  --font-size-0_7rem: 0.7rem;
 
   --box-shadow_01: 0px 0px 15px -3px rgba(0,0,0,0.1);
   --box-shadow_02: 0 0 0 4px rgb(0 132 255/.5);
@@ -113,4 +114,7 @@ button{
 .not-found > span{
   font-weight: var(--font-weight-400);
   font-size: var(--font-size-1rem);
+}
+.on-scrollY-header{
+  box-shadow: var(--box-shadow_03);
 }

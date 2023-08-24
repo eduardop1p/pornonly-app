@@ -1,10 +1,10 @@
 import { styled } from 'styled-components';
 
-export const LoadingPinContainer = styled.div`
+export const LoadingPinContainer = styled.div<{ $backgroundRamdom: string }>`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #333;
+  background-color: ${({ $backgroundRamdom }) => $backgroundRamdom};
   width: 100%;
   height: 100%;
   position: absolute;

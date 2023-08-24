@@ -8,7 +8,7 @@ interface Props {
 }
 
 export const MasonryContainer = styled.div<TypeTheme & Props>`
-  ${({ $marginColumn, $columnWidth }) => css`
+  ${({ theme, $marginColumn, $columnWidth }) => css`
     display: flex;
     justify-content: center;
     flex-wrap: nowrap;
@@ -36,6 +36,22 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
           position: relative;
           overflow: hidden;
           border-radius: 1rem;
+
+          & > .video-time {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: ${theme.colors.g_colore9e9e9};
+            padding: 5px 8px;
+            border-radius: 2rem;
+            font-size: ${theme.font_size.font_size_0_7rem};
+            font-weight: ${theme.font_weight.font_weight_500};
+
+            &.hidden-video-time {
+              visibility: hidden;
+              opacity: 0;
+            }
+          }
 
           & > img,
           & > video {

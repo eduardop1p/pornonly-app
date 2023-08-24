@@ -2,64 +2,93 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 
 import { MasonryContainer } from './styled';
 import { MidiaResults } from '@/app/page';
 import calHeight from '@/config/calcHeight';
+import videoDuration from '@/config/calcDuration';
 import LoadingPin from './LoadingPin';
 
 export default function Masonry({ results }: { results: MidiaResults[] }) {
   const [columnCount] = useState(6);
   const [columnWidth] = useState(window.innerWidth / 6.5);
+  const [newResults, setNewResults] = useState<any[]>([]);
+  const [initialRender, setInitialRender] = useState(true);
 
-  const newResults = [];
-  const resultsLength = Math.ceil(results.length / columnCount);
-  for (let i = 0; i < results.length; i += resultsLength) {
-    newResults.push(results.slice(i, i + resultsLength));
-  }
-
-  // const handleLoadImg = useCallback(
-  //   (img: HTMLImageElement) => {
-  //     const parent = img.parentElement as HTMLDivElement;
-  //     const windowWidth = window.innerWidth;
-  //     const aspectoRatio = img.naturalWidth / img.naturalHeight;
-  //     const parentWidth = windowWidth / columnWidth;
-  //     const parentHeight = parentWidth / aspectoRatio;
-
-  //     // parent.style.width = `${parentWidth.toFixed(2)}px`;
-  //     parent.style.width = `100%`;
-  //     parent.style.height = `${parentHeight.toFixed(2)}px`;
-  //   },
-  //   [columnWidth]
-  // );
-
-  // useEffect(() => {
-  //   window.onresize = () => {
-  //     document.querySelectorAll('.pin').forEach((img: Element) => {
-  //       handleLoadImg(img as HTMLImageElement);
-  //     });
-  //   };
-  // }, [handleLoadImg]);
+  useEffect(() => {
+    if (initialRender) {
+      const resultsLength = Math.ceil(results.length / columnCount);
+      for (let i = 0; i < results.length; i += resultsLength) {
+        setNewResults(state => [...state, results.slice(i, i + resultsLength)]);
+      }
+      setInitialRender(false);
+    }
+  }, [columnCount, results, initialRender]);
 
   const handleRemoveLoading = (elementPin: Element) => {
     elementPin.nextSibling?.remove();
   };
 
+  const handleVideoCompleteLoad = (
+    video: HTMLVideoElement,
+    resultIndex: number,
+    midiaIndex: number
+  ) => {
+    handleAddDurationVideo(
+      resultIndex,
+      midiaIndex,
+      videoDuration(video.duration)
+    );
+    handleRemoveLoading(video);
+  };
+
+  const handleAddDurationVideo = (
+    resultIndex: number,
+    midiaIndex: number,
+    duration: string
+  ) => {
+    const updateNewResults = [...newResults];
+    updateNewResults[resultIndex][midiaIndex].duration = duration;
+    setNewResults(updateNewResults);
+  };
+
+  const handleHidderDuration = (video: HTMLVideoElement) => {
+    const videoTime = video.previousSibling as HTMLSpanElement;
+    videoTime.classList.add('hidden-video-time');
+  };
+
   return (
     <MasonryContainer $columnWidth={columnWidth} $marginColumn="1rem">
-      {newResults.map((midia: any[], index: number) => (
-        <div key={index} className="masonry-column">
-          {midia.map((midiaValue: MidiaResults) =>
+      {newResults.map((midia, resultIndex: number) => (
+        <div key={resultIndex} className="masonry-column">
+          {midia.map((midiaValue: MidiaResults, midiaIndex: number) =>
             midiaValue.midiaType === 'video' ? (
               <div className="pin-container" key={midiaValue._id}>
                 <div className="pin">
+                  <span className="video-time">{midiaValue.duration}</span>
                   <video
                     src={midiaValue.url}
                     width={+columnWidth.toFixed(0)}
-                    preload="metadata"
+                    preload="auto"
+                    onPlay={event =>
+                      handleHidderDuration(
+                        event.currentTarget as HTMLVideoElement
+                      )
+                    }
                     onLoadedData={event =>
-                      handleRemoveLoading(event.currentTarget)
+                      handleVideoCompleteLoad(
+                        event.currentTarget as HTMLVideoElement,
+                        resultIndex,
+                        midiaIndex
+                      )
+                    }
+                    onError={event =>
+                      handleVideoCompleteLoad(
+                        event.currentTarget as HTMLVideoElement,
+                        resultIndex,
+                        midiaIndex
+                      )
                     }
                     height={calHeight({
                       customWidth: columnWidth,

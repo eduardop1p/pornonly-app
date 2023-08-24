@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 
 import styles from './styles.module.css';
@@ -17,6 +17,17 @@ interface Props {
 export default function Nav({ isAuth, children }: Props) {
   const [publishActive, setPublishActive] = useState(false);
   const pathName = usePathname();
+
+  useEffect(() => {
+    const header = document.querySelector('header');
+    window.onscroll = () => {
+      if (window.scrollY > 1) {
+        header?.classList.add('on-scrollY-header');
+      } else {
+        header?.classList.remove('on-scrollY-header');
+      }
+    };
+  }, []);
 
   return (
     <>
