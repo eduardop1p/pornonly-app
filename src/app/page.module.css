@@ -1,13 +1,6 @@
 .main{
-  margin: 7rem auto 1rem;
-  width: calc(100% - 7rem);
-  /* column-count: 6;
-  column-gap: 1rem;
-  column-width: 230px;
-  min-height: 100vh; */
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1rem;
+  margin: 6rem auto 3rem;
+  width: calc(100% - 1rem);
 
 }
 .info-pin {

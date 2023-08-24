@@ -8,7 +8,7 @@ export default async function Page() {
   // get popular collections
   const response = (await client.photos.search({
     query: 'car',
-    per_page: 20,
+    per_page: 24,
   })) as any;
   return (
     <div>
