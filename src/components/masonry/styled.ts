@@ -39,6 +39,7 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
 
           & > .video-time {
             position: absolute;
+            z-index: 2;
             top: 10px;
             left: 10px;
             background-color: ${theme.colors.g_colore9e9e9};
@@ -56,6 +57,10 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
           & > img,
           & > video {
             border-radius: 1rem;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
 
             &::-webkit-media-controls {
               visibility: hidden;

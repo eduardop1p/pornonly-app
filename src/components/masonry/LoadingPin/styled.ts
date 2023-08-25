@@ -8,7 +8,7 @@ export const LoadingPinContainer = styled.div<{ $backgroundRamdom: string }>`
   width: 100%;
   height: 100%;
   position: absolute;
-  z-index: 2;
+  z-index: 3;
   top: 0;
 
   & > p {
