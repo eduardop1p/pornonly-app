@@ -3,6 +3,7 @@
 
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { useMediaQuery } from 'react-responsive';
 
 import { MasonryContainer } from './styled';
 import { MidiaResults } from '@/app/page';
@@ -13,7 +14,7 @@ import WaitingPin from './waitingPin';
 
 export default function Masonry({ results }: { results: MidiaResults[] }) {
   const [columnCount] = useState(6);
-  const [columnWidth] = useState(window.innerWidth / 6.5);
+  const [columnWidth, setColumnWidth] = useState(window.innerWidth / 6.5);
   const [newResults, setNewResults] = useState<any[]>([]);
   const [initialRender, setInitialRender] = useState(true);
 
@@ -26,6 +27,21 @@ export default function Masonry({ results }: { results: MidiaResults[] }) {
       setInitialRender(false);
     }
   }, [columnCount, results, initialRender]);
+
+  useEffect(() => {
+    window.onresize = () => {
+      const windowWidth = window.innerWidth;
+      console.log(windowWidth);
+      document.querySelectorAll('.pin').forEach((el: Element) => {
+        const pin = el as HTMLDivElement;
+        const newPinWidth = windowWidth / 6.5;
+        const newPinHeigth = (newPinWidth * pin.clientHeight) / pin.clientWidth;
+        pin.style.width = `${newPinWidth.toFixed(0)}px`;
+        pin.style.height = `${newPinHeigth.toFixed(0)}px`;
+        setColumnWidth(newPinWidth);
+      });
+    };
+  }, []);
 
   const handleRemoveLoading = (elementPin: Element) => {
     const loading = elementPin.nextSibling as HTMLDivElement;
