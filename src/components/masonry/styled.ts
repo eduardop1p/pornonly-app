@@ -56,6 +56,13 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
           & > img,
           & > video {
             border-radius: 1rem;
+
+            &::-webkit-media-controls {
+              visibility: hidden;
+            }
+            &::-webkit-media-controls-enclosure {
+              visibility: visible;
+            }
           }
         }
       }

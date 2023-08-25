@@ -27,7 +27,8 @@ export default function Masonry({ results }: { results: MidiaResults[] }) {
   }, [columnCount, results, initialRender]);
 
   const handleRemoveLoading = (elementPin: Element) => {
-    elementPin.nextSibling?.remove();
+    const loading = elementPin.nextSibling as HTMLDivElement;
+    loading.style.zIndex = '-1';
   };
 
   const handleVideoCompleteLoad = (
@@ -70,13 +71,20 @@ export default function Masonry({ results }: { results: MidiaResults[] }) {
                   <video
                     src={midiaValue.url}
                     width={+columnWidth.toFixed(0)}
+                    height={calHeight({
+                      customWidth: columnWidth,
+                      originalHeight: midiaValue.height,
+                      originalWidth: midiaValue.width,
+                    })}
+                    onProgress={event => console.log('video carregando')}
+                    controls={true}
                     preload="auto"
                     onPlay={event =>
                       handleHidderDuration(
                         event.currentTarget as HTMLVideoElement
                       )
                     }
-                    onLoadedData={event =>
+                    onLoadedMetadata={event =>
                       handleVideoCompleteLoad(
                         event.currentTarget as HTMLVideoElement,
                         resultIndex,
@@ -90,12 +98,6 @@ export default function Masonry({ results }: { results: MidiaResults[] }) {
                         midiaIndex
                       )
                     }
-                    height={calHeight({
-                      customWidth: columnWidth,
-                      originalHeight: midiaValue.height,
-                      originalWidth: midiaValue.width,
-                    })}
-                    controls={true}
                   ></video>
                   <LoadingPin />
                 </div>
@@ -108,13 +110,13 @@ export default function Masonry({ results }: { results: MidiaResults[] }) {
                     src={midiaValue.url}
                     alt={midiaValue.title}
                     width={+columnWidth.toFixed(0)}
-                    onLoadingComplete={element => handleRemoveLoading(element)}
                     height={calHeight({
                       customWidth: columnWidth,
                       originalHeight: midiaValue.height,
                       originalWidth: midiaValue.width,
                     })}
                     priority
+                    onLoadingComplete={element => handleRemoveLoading(element)}
                   />
                   <LoadingPin />
                 </div>
