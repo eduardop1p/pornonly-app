@@ -5,18 +5,18 @@ import { ReactNode } from 'react';
 import { Container } from './styled';
 
 export function GlobalSuccess({
-  errorMsg,
-  showError,
+  successMsg,
+  showSuccess,
   children,
 }: {
-  errorMsg?: string;
-  showError?: boolean;
+  successMsg?: string;
+  showSuccess?: boolean;
   children?: ReactNode;
 }) {
   return (
-    <Container data-show-error={showError}>
+    <Container data-show-error={showSuccess}>
       {children}
-      <span>{errorMsg}</span>
+      <span>{successMsg}</span>
     </Container>
   );
 }

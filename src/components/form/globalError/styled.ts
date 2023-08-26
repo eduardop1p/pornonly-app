@@ -14,7 +14,7 @@ export const Container = styled.div<TypeTheme>`
     min-height: 45px;
     bottom: 1.5rem;
     padding: 8px 1rem;
-    border-radius: 5px;
+    border-radius: 10px;
     margin-bottom: 0 !important;
     transition: transform 500ms ease-in-out;
 

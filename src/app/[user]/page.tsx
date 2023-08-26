@@ -12,12 +12,16 @@ interface Props {
   params: { user: string };
 }
 export interface User {
-  id: string;
+  _id: string;
   username: string;
   email: string;
-  midia: unknown[];
-  profilePhoto: unknown[];
+  profilePhoto: ProfilePhoto[];
   createIn: string;
+}
+interface ProfilePhoto {
+  _id: string;
+  userId: unknown[];
+  url: string;
 }
 
 // pato borrachudo admin

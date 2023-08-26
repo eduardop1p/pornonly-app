@@ -7,7 +7,7 @@ import styles from './styles.module.css';
 
 import Logo from '../logo';
 import Nav from '../Nav';
-import UserLogo from '../userHeaderLogo';
+import UserAvatar from '../userAvatar';
 
 export default function Header() {
   const isAuth = cookies().has('token');
@@ -19,7 +19,7 @@ export default function Header() {
         <h2>Pornonly</h2>
       </Link>
       <Nav isAuth={isAuth}>
-        <UserLogo />
+        <UserAvatar containerWidth={25} containerHeight={25} />
       </Nav>
     </header>
   );

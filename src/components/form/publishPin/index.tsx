@@ -2,7 +2,7 @@
 'use client';
 
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { ChangeEvent, useState, ReactNode } from 'react';
+import { ChangeEvent, useState, ReactNode, useRef } from 'react';
 import Image from 'next/image';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -80,6 +80,7 @@ export default function PublishPin({
     useGlobalErrorTime();
   const { handleServerSuccess, msgGlobalSuccess, showGlobalSuccess } =
     useGlobalSuccessTime();
+  const fileScrRef = useRef('');
 
   const handleSubmitFile: SubmitHandler<BodyFile> = async (body, event) => {
     event?.preventDefault();
@@ -131,6 +132,7 @@ export default function PublishPin({
     const src = URL.createObjectURL(file);
     setFileContent({ src, file });
     setFileType(file.type);
+    fileScrRef.current = src;
   };
 
   const handleChangeTextatera = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -163,11 +165,19 @@ export default function PublishPin({
     <Container>
       {isLoading && <Loading />}
       <GlobalError errorMsg={msgGlobalError} showError={showGlobalError} />
-      <GlobalSuccess errorMsg={msgGlobalSuccess} showError={showGlobalSuccess}>
+      <GlobalSuccess
+        successMsg={msgGlobalSuccess}
+        showSuccess={showGlobalSuccess}
+      >
         {fileType.includes('image') ? (
-          <Image src={fileContent.src} alt="preview" width={45} height={45} />
+          <Image
+            src={fileScrRef.current}
+            alt="preview"
+            width={30}
+            height={25}
+          />
         ) : (
-          <video src={fileContent.src} controls={false}></video>
+          <video src={fileScrRef.current} controls={false}></video>
         )}
       </GlobalSuccess>
 

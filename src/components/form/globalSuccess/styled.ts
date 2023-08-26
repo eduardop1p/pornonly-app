@@ -14,7 +14,7 @@ export const Container = styled.div<TypeTheme>`
     min-height: 45px;
     bottom: 1.5rem;
     padding: 8px 1rem;
-    border-radius: 5px;
+    border-radius: 10px;
     margin-bottom: 0 !important;
     transition: transform 500ms ease-in-out;
 
@@ -24,11 +24,12 @@ export const Container = styled.div<TypeTheme>`
 
     & > img,
     & > video {
-      margin-right: 10px;
+      margin-right: 5px;
       flex: none;
       border-radius: 5px;
       object-fit: contain;
-      max-height: 25px !important;
+      max-width: 30px !important;
+      height: 25px !important;
     }
 
     & > span {

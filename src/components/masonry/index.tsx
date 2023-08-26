@@ -31,7 +31,6 @@ export default function Masonry({ results }: { results: MidiaResults[] }) {
   useEffect(() => {
     window.onresize = () => {
       const windowWidth = window.innerWidth;
-      console.log(windowWidth);
       document.querySelectorAll('.pin').forEach((el: Element) => {
         const pin = el as HTMLDivElement;
         const newPinWidth = windowWidth / 6.5;

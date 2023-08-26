@@ -31,7 +31,7 @@ export default async function Home() {
     {
       method: 'GET',
       cache: 'default',
-      next: { revalidate: 60 },
+      next: { revalidate: 10 },
       // cache: 'no-cache',
     }
   );
