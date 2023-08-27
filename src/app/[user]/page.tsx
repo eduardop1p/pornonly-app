@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    title: `Pornonly - ${upperFirst(data.username)}`,
+    title: `Pornonly - ${data.username}`,
   };
 }
 

@@ -23,7 +23,7 @@ export default async function UserAvatar({
     headers: {
       Authorization: `Bearer ${token}`,
     },
-    // cache: 'no-cache',
+    cache: 'no-cache',
   });
   const user = (await response.json()) as User;
   const { profilePhoto } = user;
