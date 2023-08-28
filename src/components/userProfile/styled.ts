@@ -4,6 +4,12 @@ import { TypeTheme } from '@/utils/theme/myTheme';
 
 export const Container = styled.div<TypeTheme>`
   ${({ theme }) => css`
+    & > .errors-success {
+      bottom: 1.5rem;
+      position: absolute;
+      z-index: 8;
+    }
+
     & > .profile-container {
       background-color: ${theme.colors.g_colorTransparentGray800};
       position: fixed;
@@ -34,6 +40,36 @@ export const Container = styled.div<TypeTheme>`
           font-weight: ${theme.font_weight.font_weight_500};
           font-size: ${theme.font_size.font_size_2rem};
           margin-bottom: 1.5rem;
+        }
+
+        & > .photo {
+          border-radius: 100%;
+          overflow: hidden;
+          position: relative;
+          width: 172px;
+          cursor: pointer;
+          height: 172px;
+
+          & > label {
+            width: 100%;
+            display: inline-block;
+            height: 100%;
+            position: absolute;
+            z-index: 1;
+            cursor: pointer;
+            opacity: 0;
+
+            & > input[type='file'] {
+              display: none;
+              width: inherit;
+              height: inherit;
+            }
+          }
+
+          & > img {
+            object-fit: cover;
+            object-position: center;
+          }
         }
 
         & > span {

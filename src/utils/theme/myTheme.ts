@@ -63,7 +63,7 @@ const myTheme = {
     font_size_0_90rem: '0.90rem',
     font_size_0_75rem: '0.75rem',
     font_size_0_7rem: '0.7rem',
-    font_size_2_4rem: '2.4rem',
+    font_size_2_5rem: '2.5rem',
   },
   box_shadow: {
     box_shadow_01: '0px 0px 15px -3px rgba(0,0,0,0.1)',

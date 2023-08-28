@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { cookies } from 'next/headers';
 import { Metadata } from 'next';
+import Image from 'next/image';
 import { upperFirst } from 'lodash';
 import { notFound } from 'next/navigation';
 
 import Header from '@/components/header';
 import UserProfile from '@/components/userProfile';
-import UserAvatar from '@/components/userAvatar';
 
 import styles from './styles.module.css';
 
@@ -20,7 +20,7 @@ export interface User {
   profilePhoto: ProfilePhoto[];
   createIn: string;
 }
-interface ProfilePhoto {
+export interface ProfilePhoto {
   _id: string;
   userId: unknown[];
   url: string;
@@ -48,24 +48,43 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function Page({ params }: Props) {
-  // const token = cookies().get('token')?.value;
+  const token = cookies().get('token')?.value;
 
-  // const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/users`, {
-  //   method: 'GET',
-  //   headers: {
-  //     Authorization: `Bearer ${token}`,
-  //   },
-  //   // cache: 'no-cache',
-  // });
-  // const data = (await response.json()) as User;
+  const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/users`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    // cache: 'no-cache',
+  });
+  const data = (await response.json()) as User;
+  const { profilePhoto, username } = data;
 
   return (
     <>
       <Header />
       <main className={styles.main}>
         <div className={styles['user-info']}>
-          <UserProfile>
-            <UserAvatar containerWidth={120} containerHeight={120} />
+          <UserProfile
+            token={token as string}
+            photo={{
+              profilePhoto,
+              username,
+            }}
+          >
+            <div className={styles['user-avatar']}>
+              {profilePhoto.length ? (
+                <Image
+                  src={profilePhoto[0].url}
+                  alt={username}
+                  fill
+                  priority
+                  sizes="100%"
+                />
+              ) : (
+                <span>{username?.at(0)?.toUpperCase()}</span>
+              )}
+            </div>
           </UserProfile>
         </div>
       </main>
