@@ -5,6 +5,8 @@ import { upperFirst } from 'lodash';
 import { notFound } from 'next/navigation';
 
 import Header from '@/components/header';
+import UserProfile from '@/components/userProfile';
+import UserAvatar from '@/components/userAvatar';
 
 import styles from './styles.module.css';
 
@@ -61,7 +63,11 @@ export default async function Page({ params }: Props) {
     <>
       <Header />
       <main className={styles.main}>
-        <h1>{params.user}</h1>
+        <div className={styles['user-info']}>
+          <UserProfile>
+            <UserAvatar containerWidth={120} containerHeight={120} />
+          </UserProfile>
+        </div>
       </main>
     </>
   );

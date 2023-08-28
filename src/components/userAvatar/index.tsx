@@ -18,6 +18,7 @@ export default async function UserAvatar({
   containerHeight,
 }: Props) {
   const token = cookies().get('token')?.value;
+  if (!token) return null;
   const response = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/users`, {
     method: 'GET',
     headers: {
