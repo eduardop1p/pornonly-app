@@ -44,7 +44,9 @@ export default function Masonry({ results }: { results: MidiaResults[] }) {
 
   const handleRemoveLoading = (elementPin: Element) => {
     const loading = elementPin.nextSibling as HTMLDivElement;
-    loading.style.zIndex = '-1';
+    setTimeout(() => {
+      loading.style.zIndex = '1';
+    }, 500);
   };
 
   const handleVideoCompleteLoad = (

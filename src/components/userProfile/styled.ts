@@ -4,6 +4,8 @@ import { TypeTheme } from '@/utils/theme/myTheme';
 
 export const Container = styled.div<TypeTheme>`
   ${({ theme }) => css`
+    cursor: default;
+
     & > .errors-success {
       bottom: 1.5rem;
       position: absolute;
@@ -95,7 +97,7 @@ export const Container = styled.div<TypeTheme>`
             font-weight: ${theme.font_weight.font_weight_500};
             border-radius: 24px;
             cursor: pointer;
-            transition: background 200ms ease-in-out;
+            transition: background 150ms ease-in-out;
           }
 
           & > .profile-update {
@@ -111,6 +113,10 @@ export const Container = styled.div<TypeTheme>`
           & > .profile-delete {
             background-color: ${theme.colors.g_colore9e9e9};
             color: ${theme.colors.g_colorGray300};
+
+            &:hover {
+              background-color: var(--g-colorGray100Hovered);
+            }
           }
         }
       }

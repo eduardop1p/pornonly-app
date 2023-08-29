@@ -3,7 +3,7 @@ import { useRef } from 'react';
 import { LoadingPinContainer } from './styled';
 
 export default function LoadingPin() {
-  const backgrounds = [
+  const backgrounds = useRef([
     '#333',
     '#eb3b3e',
     '#111',
@@ -20,11 +20,15 @@ export default function LoadingPin() {
     '#b59074',
     '#e9e9e9',
     // '#f8f8f8',
-  ];
-  const indexBgRamdom = useRef(Math.floor(Math.random() * backgrounds.length));
+  ]);
+  const indexBgRamdom = useRef(
+    Math.floor(Math.random() * backgrounds.current.length)
+  );
 
   return (
-    <LoadingPinContainer $backgroundRamdom={backgrounds[indexBgRamdom.current]}>
+    <LoadingPinContainer
+      $backgroundRamdom={backgrounds.current[indexBgRamdom.current]}
+    >
       {/* <p>Carregando...</p> */}
     </LoadingPinContainer>
   );

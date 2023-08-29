@@ -39,12 +39,12 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
 
           & > .video-time {
             position: absolute;
-            z-index: 2;
+            z-index: 3;
             top: 10px;
             left: 10px;
             background-color: ${theme.colors.g_colore9e9e9};
             padding: 5px 8px;
-            border-radius: 2rem;
+            border-radius: 3rem;
             font-size: ${theme.font_size.font_size_0_7rem};
             font-weight: ${theme.font_weight.font_weight_500};
 
@@ -60,7 +60,7 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
             position: absolute;
             width: 100%;
             height: 100%;
-            z-index: 1;
+            z-index: 2;
 
             &::-webkit-media-controls {
               visibility: hidden;

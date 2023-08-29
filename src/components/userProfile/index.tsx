@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { ChangeEvent, ReactNode, useState } from 'react';
+import { ChangeEvent, ReactNode, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { get } from 'lodash';
 
@@ -24,7 +24,6 @@ interface Props {
 
 export default function UserProfile({ children, token, photo }: Props) {
   const redirect = useRouter();
-
   const { profilePhoto, username } = photo;
   const [isLoading, setIsLoading] = useState(false);
   const [showAddPhotoProfile, setShowAddPhotoProfile] = useState(false);
@@ -121,6 +120,14 @@ export default function UserProfile({ children, token, photo }: Props) {
     });
   };
 
+  useEffect(() => {
+    // este elemento não existe neste component
+    const userSettings = document.querySelector(
+      '#id-user-settings'
+    ) as HTMLDivElement;
+    if (userSettings) userSettings.onclick = () => setShowAddPhotoProfile(true);
+  }, []);
+
   return (
     <Container>
       {isLoading && <Loading />}
@@ -132,7 +139,10 @@ export default function UserProfile({ children, token, photo }: Props) {
         />
       </div>
 
-      <div className="user-avatar" onClick={() => setShowAddPhotoProfile(true)}>
+      <div
+        className="user-children"
+        onClick={() => setShowAddPhotoProfile(true)}
+      >
         {children}
       </div>
       <div

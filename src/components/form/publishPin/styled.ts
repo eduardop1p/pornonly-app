@@ -7,11 +7,13 @@ export const Container = styled.div<TypeTheme>`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
 
     & > form {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      width: 100%;
 
       & > .publish-and-btn {
         display: flex;
@@ -299,7 +301,7 @@ export const Container = styled.div<TypeTheme>`
             padding-bottom: 10px;
 
             font-weight: ${theme.font_weight.font_weight_700};
-            font-size: ${theme.font_size.font_size_2_4rem};
+            font-size: ${theme.font_size.font_size_2_5rem};
           }
 
           & > #description {
