@@ -2,6 +2,7 @@ import styles from './page.module.css';
 
 import Header from '@/components/header';
 import Masonry from '@/components/masonry';
+import { UserIdResults } from '@/components/masonry/userPin';
 
 export interface MidiaType {
   midia: {
@@ -20,7 +21,7 @@ export interface MidiaResults {
   height: number;
   duration?: string;
   description: string;
-  userId: unknown[];
+  userId: UserIdResults;
   url: string;
   createIn: string;
 }

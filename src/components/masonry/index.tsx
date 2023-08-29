@@ -4,6 +4,8 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
+import Link from 'next/link';
+import { upperFirst } from 'lodash';
 
 import { MasonryContainer } from './styled';
 import { MidiaResults } from '@/app/page';
@@ -11,6 +13,7 @@ import calHeight from '@/config/calcHeight';
 import videoDuration from '@/config/calcDuration';
 import LoadingPin from './LoadingPin';
 import WaitingPin from './waitingPin';
+import UserPin from './userPin';
 
 export default function Masonry({ results }: { results: MidiaResults[] }) {
   const [columnCount] = useState(6);
@@ -29,16 +32,22 @@ export default function Masonry({ results }: { results: MidiaResults[] }) {
   }, [columnCount, results, initialRender]);
 
   useEffect(() => {
-    window.onresize = () => {
-      const windowWidth = window.innerWidth;
-      document.querySelectorAll('.pin').forEach((el: Element) => {
-        const pin = el as HTMLDivElement;
-        const newPinWidth = windowWidth / 6.5;
-        const newPinHeigth = (newPinWidth * pin.clientHeight) / pin.clientWidth;
-        pin.style.width = `${newPinWidth.toFixed(0)}px`;
-        pin.style.height = `${newPinHeigth.toFixed(0)}px`;
-        setColumnWidth(newPinWidth);
-      });
+    const prevWindowWidth = window.innerWidth;
+
+    window.onresize = event => {
+      const newWindowWidth = window.innerWidth;
+      if (newWindowWidth != prevWindowWidth) {
+        console.log(event);
+        document.querySelectorAll('.pin').forEach((el: Element) => {
+          const pin = el as HTMLDivElement;
+          const newPinWidth = newWindowWidth / 6.5;
+          const newPinHeigth =
+            (newPinWidth * pin.clientHeight) / pin.clientWidth;
+          pin.style.width = `${newPinWidth.toFixed(0)}px`;
+          pin.style.height = `${newPinHeigth.toFixed(0)}px`;
+          setColumnWidth(newPinWidth);
+        });
+      }
     };
   }, []);
 
@@ -141,7 +150,17 @@ export default function Masonry({ results }: { results: MidiaResults[] }) {
                   <LoadingPin />
                   <WaitingPin />
                 </div>
-                <h4 className="pin-title">{midiaValue.title}</h4>
+                <div className="pin-title-and-user">
+                  <h4
+                    title={upperFirst(midiaValue.title)}
+                    className="pin-title"
+                  >
+                    {upperFirst(midiaValue.title)}
+                  </h4>
+                  <Link href={`/${midiaValue.userId.username}`}>
+                    <UserPin {...midiaValue.userId} />
+                  </Link>
+                </div>
               </div>
             ) : (
               <div key={midiaValue._id} className="pin-container">
@@ -166,7 +185,17 @@ export default function Masonry({ results }: { results: MidiaResults[] }) {
                   />
                   <LoadingPin />
                 </div>
-                <h4 className="pin-title">{midiaValue.title}</h4>
+                <div className="pin-title-and-user">
+                  <h4
+                    title={upperFirst(midiaValue.title)}
+                    className="pin-title"
+                  >
+                    {upperFirst(midiaValue.title)}
+                  </h4>
+                  <Link href={`/${midiaValue.userId.username}`}>
+                    <UserPin {...midiaValue.userId} />
+                  </Link>
+                </div>
               </div>
             )
           )}

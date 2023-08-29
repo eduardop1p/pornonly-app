@@ -5,5 +5,5 @@ export default function videoDuration(duration: number) {
   const segunds = Math.floor(duration % 60);
   const zeroLeft = (value: number) => (value > 9 ? value : `0${value}`);
 
-  return `${zeroLeft(minutes)}:${zeroLeft(segunds)}`;
+  return `${minutes}:${zeroLeft(segunds)}`;
 }
