@@ -30,7 +30,7 @@ const ZodCreateAccountSchema = z
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message:
-              'Usuário deve conter: letras minusculas, números e espaços apenas com ( - ou _ ).',
+              'Nome de usuário deve conter apenas: letras minusculas, números e espaços com ( - ou _ ).',
           });
         }
         if (val.length < 4 || val.length > 15) {

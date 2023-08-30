@@ -27,13 +27,19 @@ const ZodUserSchema = z.object({
           message: 'Titulo muito curto.',
         });
       }
-      // eslint-disable-next-line
-      if (!val.match(/^[a-z0-9\s]*$/)) {
+      if (val.length > 100) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: 'Titulo deve conter apenas letras e números.',
+          message: 'Titulo muito grande.',
         });
       }
+      // eslint-disable-next-line
+      // if (!val.match(/^[a-z0-9\s]*$/)) {
+      //   ctx.addIssue({
+      //     code: z.ZodIssueCode.custom,
+      //     message: 'Titulo deve conter apenas letras e números.',
+      //   });
+      // }
     }),
   midia: z
     .instanceof(FileList)

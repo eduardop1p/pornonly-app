@@ -18,8 +18,8 @@ export default function GlobalError({
     <html>
       <body style={{ textAlign: 'center' }}>
         <title>Pornonly</title>
-        <div style={{ marginTop: '1rem', fontSize: '1rem' }}>
-          Erro interno na aplicação {':('}
+        <div style={{ marginTop: '10px', fontSize: '1rem' }}>
+          Houve um erro inesperado na aplicação {':('}
         </div>
         {/* <button onClick={() => reset()}>Try again</button> */}
       </body>

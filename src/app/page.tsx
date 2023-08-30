@@ -31,9 +31,7 @@ export default async function Home() {
     `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all/${process.env.API_KEY}?page=1`,
     {
       method: 'GET',
-      cache: 'default',
-      next: { revalidate: 10 },
-      // cache: 'no-cache',
+      cache: 'no-cache',
     }
   );
   const {

@@ -100,7 +100,9 @@ export default async function Page({ params }: Props) {
       <h1 className={styles['user-username']}>{username}</h1>
       <span className={styles['user-email']}>{email}</span>
       <span className={styles['user-total-midia']}>
-        {userTotalMidia.length} publicações
+        {userTotalMidia.length == 1
+          ? `${userTotalMidia.length} pubicalção`
+          : `${userTotalMidia.length} publicações`}
       </span>
       <div className={`${styles.settings} ${styles['user-edite-profile']}`}>
         <div className={styles['user-edite-profile']}>

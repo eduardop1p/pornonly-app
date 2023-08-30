@@ -17,12 +17,12 @@ export const Container = styled.div<TypeTheme>`
       border-radius: 100%;
       object-fit: cover;
       object-position: center;
-      margin-right: 5px;
+      margin-right: 6px;
       background-color: ${theme.colors.g_colorGray100};
     }
 
     & > span {
-      margin-right: 5px;
+      margin-right: 6px;
       width: 32px;
       height: 32px;
       background-color: ${theme.colors.g_colore9e9e9};
