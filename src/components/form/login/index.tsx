@@ -101,8 +101,8 @@ export default function Login() {
       {isLoading && <Loading />}
       <GlobalError errorMsg={msgGlobalError} showError={showGlobalError} />
       <GlobalSuccess
-        errorMsg={msgGlobalSuccess}
-        showError={showGlobalSuccess}
+        successMsg={msgGlobalSuccess}
+        showSuccess={showGlobalSuccess}
       />
       <h1 className="title-login">Bem vind@ a Pornonly</h1>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
