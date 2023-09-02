@@ -12,6 +12,10 @@ export const Container = styled.div<TypeTheme>`
       z-index: 8;
     }
 
+    & > .user-children {
+      cursor: pointer;
+    }
+
     & > .profile-container {
       background-color: ${theme.colors.g_colorTransparentGray800};
       position: fixed;

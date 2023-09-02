@@ -15,7 +15,17 @@ import LoadingPin from './LoadingPin';
 import WaitingPin from './waitingPin';
 import UserPin from './userPin';
 
-export default function Masonry({ results }: { results: MidiaResults[] }) {
+interface Props {
+  results: MidiaResults[];
+  justifyContent: 'center' | 'left';
+  visibleUserInfo?: boolean;
+}
+
+export default function Masonry({
+  results,
+  justifyContent,
+  visibleUserInfo,
+}: Props) {
   const [columnCount] = useState(6);
   const [columnWidth, setColumnWidth] = useState(window.innerWidth / 6.5);
   const [newResults, setNewResults] = useState<any[]>([]);
@@ -104,7 +114,11 @@ export default function Masonry({ results }: { results: MidiaResults[] }) {
   };
 
   return (
-    <MasonryContainer $columnWidth={columnWidth} $marginColumn="1rem">
+    <MasonryContainer
+      $columnWidth={columnWidth}
+      $marginColumn="1rem"
+      $justifyContent={justifyContent}
+    >
       {newResults.map((midia, resultIndex: number) => (
         <div key={resultIndex} className="masonry-column">
           {midia.map((midiaValue: MidiaResults, midiaIndex: number) =>
@@ -150,7 +164,10 @@ export default function Masonry({ results }: { results: MidiaResults[] }) {
                   <LoadingPin />
                   <WaitingPin />
                 </div>
-                <div className="pin-title-and-user">
+                <div
+                  className="pin-title-and-user"
+                  data-visible-user-info={visibleUserInfo}
+                >
                   <h4
                     title={upperFirst(midiaValue.title)}
                     className="pin-title"
@@ -185,7 +202,10 @@ export default function Masonry({ results }: { results: MidiaResults[] }) {
                   />
                   <LoadingPin />
                 </div>
-                <div className="pin-title-and-user">
+                <div
+                  className="pin-title-and-user"
+                  data-visible-user-info={visibleUserInfo}
+                >
                   <h4
                     title={upperFirst(midiaValue.title)}
                     className="pin-title"

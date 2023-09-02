@@ -5,7 +5,7 @@ import styles from './page.module.css';
 
 import Header from '@/components/header';
 import PublishPin from '@/components/form/publishPin';
-import { User } from '../[user]/page';
+import { User } from '../[usernameparam]/page';
 import UserAvatar from '@/components/userAvatar';
 
 export const metadata: Metadata = {

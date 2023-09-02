@@ -5,12 +5,13 @@ import { TypeTheme } from '@/utils/theme/myTheme';
 interface Props {
   $columnWidth: number;
   $marginColumn: string;
+  $justifyContent: string;
 }
 
 export const MasonryContainer = styled.div<TypeTheme & Props>`
-  ${({ theme, $marginColumn, $columnWidth }) => css`
+  ${({ theme, $marginColumn, $columnWidth, $justifyContent }) => css`
     display: flex;
-    justify-content: center;
+    justify-content: ${$justifyContent};
     flex-wrap: nowrap;
     width: 100%;
 
@@ -31,6 +32,11 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
 
         & > .pin-title-and-user {
           padding: 7px 6px 0;
+          display: block;
+
+          &[data-visible-user-info='false'] {
+            display: none;
+          }
 
           & > .pin-title {
             color: ${theme.colors.g_colorGray300};

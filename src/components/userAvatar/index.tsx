@@ -3,10 +3,11 @@ import 'server-only';
 import Image from 'next/image';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
+// import { notFound } from 'next/navigation';
 
 import styles from './styles.module.css';
 
-import { User } from '@/app/[user]/page';
+import { User } from '@/app/[usernameparam]/page';
 
 interface Props {
   containerWidth: number;
@@ -26,6 +27,9 @@ export default async function UserAvatar({
     },
     cache: 'no-cache',
   });
+  if (!response.ok) {
+    return;
+  }
   const user = (await response.json()) as User;
   const { profilePhoto } = user;
 

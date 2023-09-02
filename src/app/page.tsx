@@ -42,7 +42,7 @@ export default async function Home() {
     <>
       <Header />
       <main className={styles.main}>
-        <Masonry results={results} />
+        <Masonry results={results} justifyContent="center" />
       </main>
     </>
   );

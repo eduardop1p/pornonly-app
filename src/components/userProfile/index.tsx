@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { get } from 'lodash';
 
 import { Container } from './styled';
-import { ProfilePhoto } from '@/app/[user]/page';
+import { ProfilePhoto } from '@/app/[usernameparam]/page';
 import Loading from '../form/loading';
 import { GlobalError } from '../form/globalError';
 import { GlobalSuccess } from '../form/globalSuccess';
@@ -165,12 +165,19 @@ export default function UserProfile({ children, token, photo }: Props) {
               />
             </label>
             {filePhoto.file ? (
-              <Image src={filePhoto.src} alt={username} fill sizes="100%" />
+              <Image
+                priority
+                src={filePhoto.src}
+                alt={username}
+                fill
+                sizes="100%"
+              />
             ) : (
               <Image
                 src="/assets/imgs/no-photo.png"
                 alt="no-photo"
                 fill
+                priority
                 sizes="100%"
               />
             )}

@@ -1,5 +1,5 @@
 .main{
-  margin: 6rem auto 0;
+  margin: 6rem auto 2rem;
   width: calc(100% - 1rem);
 }
 
@@ -13,7 +13,6 @@
 }
 
 .user-avatar{
-  cursor: pointer;
   width: 120px;
   height: 120px;
   border-radius: 100%;
@@ -23,7 +22,7 @@
   position: relative;
   transition: box-shadow 200ms ease-in-out;
 }
-.user-avatar:hover{
+.user-avatar:not(.no-user-avatar-hover):hover{
   box-shadow: 0 0 0 8px var(--g-colore9e9e9);;
 }
 .user-avatar > span{
@@ -55,7 +54,14 @@
   font-weight: var(--font-weight-400);
   color: var(--g-color5f5f5f);
 }
-.user-total-midia{
+.user-total-publishs-and-saves{
+  display: flex;
+  align-items: center;
+}
+.user-total-publishs-and-saves > :first-child{
+  margin-right: 1rem;
+}
+.user-total-publishs-and-saves > span{
   font-size: var(--font-size-1rem);
   font-weight: var(--font-weight-400);
   color: var(--g-colorGray300);
