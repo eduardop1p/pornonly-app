@@ -5,7 +5,6 @@ import { LoadingPinContainer } from './styled';
 export default function LoadingPin() {
   const backgrounds = useRef([
     '#333',
-    '#eb3b3e',
     '#111',
     '#010101',
     '#756048',

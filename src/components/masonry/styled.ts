@@ -31,7 +31,7 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
         overflow: hidden;
 
         & > .pin-title-and-user {
-          padding: 7px 6px 0;
+          padding: 8px 6px 0;
           display: block;
 
           &[data-visible-user-info='false'] {
@@ -49,12 +49,24 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
             -webkit-box-orient: vertical;
             -webkit-line-clamp: 1; /* Define o número máximo de linhas exibidas */
             text-overflow: ellipsis;
-            cursor: default;
+            cursor: pointer;
+
+            &:hover {
+              text-decoration: underline;
+            }
           }
 
-          & > a {
+          & > .pin-original-user {
             display: inline-block;
             width: fit-content;
+            margin-top: 7px;
+            margin-left: -2px;
+
+            &:hover {
+              h4 {
+                text-decoration: underline;
+              }
+            }
           }
         }
 
@@ -66,6 +78,7 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
           & > .video-time {
             position: absolute;
             z-index: 3;
+            color: ${theme.colors.g_colorGray300};
             top: 10px;
             left: 10px;
             background-color: ${theme.colors.g_colore9e9e9};
@@ -82,6 +95,7 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
 
           & > img,
           & > video {
+            color: ${theme.colors.g_colorGray300};
             border-radius: 1rem;
             position: absolute;
             width: 100%;

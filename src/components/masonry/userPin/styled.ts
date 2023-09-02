@@ -6,8 +6,7 @@ export const Container = styled.div<TypeTheme>`
   ${({ theme }) => css`
     display: flex;
     align-items: center;
-    margin-top: 6px;
-    margin-left: -2px;
+
 
     & > * {
       flex: none;

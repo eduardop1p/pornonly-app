@@ -168,13 +168,17 @@ export default function Masonry({
                   className="pin-title-and-user"
                   data-visible-user-info={visibleUserInfo}
                 >
-                  <h4
+                  <Link
+                    href={`/pin/${midiaValue._id}`}
                     title={upperFirst(midiaValue.title)}
                     className="pin-title"
                   >
                     {upperFirst(midiaValue.title)}
-                  </h4>
-                  <Link href={`/${midiaValue.userId.username}`}>
+                  </Link>
+                  <Link
+                    className="pin-original-user"
+                    href={`/${midiaValue.userId.username}`}
+                  >
                     <UserPin {...midiaValue.userId} />
                   </Link>
                 </div>
@@ -206,13 +210,17 @@ export default function Masonry({
                   className="pin-title-and-user"
                   data-visible-user-info={visibleUserInfo}
                 >
-                  <h4
+                  <Link
+                    href={`/pin/${midiaValue._id}`}
                     title={upperFirst(midiaValue.title)}
                     className="pin-title"
                   >
                     {upperFirst(midiaValue.title)}
-                  </h4>
-                  <Link href={`/${midiaValue.userId.username}`}>
+                  </Link>
+                  <Link
+                    className="pin-original-user"
+                    href={`/${midiaValue.userId.username}`}
+                  >
                     <UserPin {...midiaValue.userId} />
                   </Link>
                 </div>
