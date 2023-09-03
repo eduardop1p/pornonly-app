@@ -30,6 +30,19 @@ export interface ProfilePhoto {
   userId: unknown[];
   url: string;
 }
+interface UserToUserName {
+  _id: string;
+  username: string;
+  email: string;
+  profilePhoto: ProfilePhoto[];
+  midia: {
+    results: MidiaResults[];
+    currentPage: number;
+    totalPages: number;
+    totalResults: number;
+  };
+  createIn: string;
+}
 
 // pato borrachudo admin
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -64,8 +77,10 @@ export default async function Page({ params }: Props) {
   if (!response.ok) {
     notFound();
   }
-  const data = (await response.json()) as User;
+  const data = (await response.json()) as UserToUserName;
   const { profilePhoto, username, email, midia } = data;
+  const { results } = midia;
+
   const userIsLoggedIn: any = token
     ? jwt.verify(token, process.env.TOKEN_SECRET as string)
     : false;
@@ -118,14 +133,14 @@ export default async function Page({ params }: Props) {
         {isUniqueUser && <span className={styles['user-email']}>{email}</span>}
         <div className={styles['user-total-publishs-and-saves']}>
           <span>
-            {midia.length == 1
-              ? `${midia.length} publicação`
-              : `${midia.length} publicações`}
+            {results.length == 1
+              ? `${results.length} publicação`
+              : `${results.length} publicações`}
           </span>
           <span>
-            {midia.length == 1
-              ? `${midia.length} Salvo`
-              : `${midia.length} Salvos`}
+            {results.length == 1
+              ? `${results.length} Salvo`
+              : `${results.length} Salvos`}
           </span>
         </div>
         {isUniqueUser && (
@@ -144,7 +159,7 @@ export default async function Page({ params }: Props) {
           </div>
         )}
       </div>
-      <UserPublishsSaves results={midia} />
+      <UserPublishsSaves results={results} />
     </main>
   );
 }
