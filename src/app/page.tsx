@@ -1,6 +1,5 @@
 import styles from './page.module.css';
 
-import Header from '@/components/header';
 import Masonry from '@/components/masonry';
 import { UserIdResults } from '@/components/masonry/userPin';
 
@@ -39,11 +38,8 @@ export default async function Home() {
   } = (await res.json()) as MidiaType;
 
   return (
-    <>
-      <Header />
-      <main className={styles.main}>
-        <Masonry results={results} justifyContent="center" />
-      </main>
-    </>
+    <main className={styles.main}>
+      <Masonry results={results} justifyContent="center" />
+    </main>
   );
 }

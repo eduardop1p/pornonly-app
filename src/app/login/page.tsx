@@ -8,16 +8,12 @@ export const metadata: Metadata = {
     'Pononly - Faça login aqui para poder adcionar publicações e fazer comentarios em fotos.',
 };
 
-import Header from '@/components/header';
 import Login from '@/components/form/login';
 
 export default function Page() {
   return (
-    <>
-      <Header />
-      <main className={styles.main}>
-        <Login />
-      </main>
-    </>
+    <main className={styles.main}>
+      <Login />
+    </main>
   );
 }

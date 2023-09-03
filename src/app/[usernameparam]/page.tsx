@@ -72,36 +72,17 @@ export default async function Page({ params }: Props) {
   const isUniqueUser = userIsLoggedIn && userIsLoggedIn._id === data._id;
 
   return (
-    <>
-      <Header />
-      <main className={styles.main}>
-        <div className={styles['user-info']}>
-          {isUniqueUser ? (
-            <UserProfile
-              token={token as string}
-              photo={{
-                profilePhoto,
-                username,
-              }}
-            >
-              <div className={styles['user-avatar']}>
-                {profilePhoto.length ? (
-                  <Image
-                    src={profilePhoto[0].url}
-                    alt={username}
-                    fill
-                    priority
-                    sizes="100%"
-                  />
-                ) : (
-                  <span>{username?.at(0)?.toUpperCase()}</span>
-                )}
-              </div>
-            </UserProfile>
-          ) : (
-            <div
-              className={`${styles['user-avatar']} ${styles['no-user-avatar-hover']}`}
-            >
+    <main className={styles.main}>
+      <div className={styles['user-info']}>
+        {isUniqueUser ? (
+          <UserProfile
+            token={token as string}
+            photo={{
+              profilePhoto,
+              username,
+            }}
+          >
+            <div className={styles['user-avatar']}>
               {profilePhoto.length ? (
                 <Image
                   src={profilePhoto[0].url}
@@ -114,47 +95,56 @@ export default async function Page({ params }: Props) {
                 <span>{username?.at(0)?.toUpperCase()}</span>
               )}
             </div>
-          )}
-
-          <h1 className={styles['user-username']}>{username}</h1>
-          {isUniqueUser && (
-            <span className={styles['user-email']}>{email}</span>
-          )}
-          <div className={styles['user-total-publishs-and-saves']}>
-            <span>
-              {midia.length == 1
-                ? `${midia.length} publicação`
-                : `${midia.length} publicações`}
-            </span>
-            <span>
-              {midia.length == 1
-                ? `${midia.length} Salvo`
-                : `${midia.length} Salvos`}
-            </span>
+          </UserProfile>
+        ) : (
+          <div
+            className={`${styles['user-avatar']} ${styles['no-user-avatar-hover']}`}
+          >
+            {profilePhoto.length ? (
+              <Image
+                src={profilePhoto[0].url}
+                alt={username}
+                fill
+                priority
+                sizes="100%"
+              />
+            ) : (
+              <span>{username?.at(0)?.toUpperCase()}</span>
+            )}
           </div>
-          {isUniqueUser && (
-            <div
-              className={`${styles.settings} ${styles['user-edite-profile']}`}
-            >
-              <div className={styles['user-edite-profile']}>
-                <button
-                  id="id-user-settings"
-                  className={styles['user-settings']}
-                >
-                  Editar Perfil
-                </button>
-              </div>
-              <Link
-                className={styles['user-settings']}
-                href={`/settings/${username}`}
-              >
-                Configurações
-              </Link>
-            </div>
-          )}
+        )}
+
+        <h1 className={styles['user-username']}>{username}</h1>
+        {isUniqueUser && <span className={styles['user-email']}>{email}</span>}
+        <div className={styles['user-total-publishs-and-saves']}>
+          <span>
+            {midia.length == 1
+              ? `${midia.length} publicação`
+              : `${midia.length} publicações`}
+          </span>
+          <span>
+            {midia.length == 1
+              ? `${midia.length} Salvo`
+              : `${midia.length} Salvos`}
+          </span>
         </div>
-        <UserPublishsSaves results={midia} />
-      </main>
-    </>
+        {isUniqueUser && (
+          <div className={`${styles.settings} ${styles['user-edite-profile']}`}>
+            <div className={styles['user-edite-profile']}>
+              <button id="id-user-settings" className={styles['user-settings']}>
+                Editar Perfil
+              </button>
+            </div>
+            <Link
+              className={styles['user-settings']}
+              href={`/settings/${username}`}
+            >
+              Configurações
+            </Link>
+          </div>
+        )}
+      </div>
+      <UserPublishsSaves results={midia} />
+    </main>
   );
 }

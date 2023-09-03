@@ -3,7 +3,6 @@ import { cookies } from 'next/headers';
 
 import styles from './page.module.css';
 
-import Header from '@/components/header';
 import PublishPin from '@/components/form/publishPin';
 import { User } from '../[usernameparam]/page';
 import UserAvatar from '@/components/userAvatar';
@@ -17,16 +16,13 @@ export default function Publish() {
   const token = cookies().get('token')?.value;
 
   return (
-    <>
-      <Header />
-      <main className={styles.main}>
-        <div className={styles['container-publish']}>
-          <PublishPin token={token as string}>
-            <UserAvatarName token={token as string} />
-          </PublishPin>
-        </div>
-      </main>
-    </>
+    <main className={styles.main}>
+      <div className={styles['container-publish']}>
+        <PublishPin token={token as string}>
+          <UserAvatarName token={token as string} />
+        </PublishPin>
+      </div>
+    </main>
   );
 }
 

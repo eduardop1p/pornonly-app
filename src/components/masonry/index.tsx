@@ -124,7 +124,8 @@ export default function Masonry({
           {midia.map((midiaValue: MidiaResults, midiaIndex: number) =>
             midiaValue.midiaType === 'video' ? (
               <div className="pin-container" key={midiaValue._id}>
-                <div
+                <Link
+                  href={`/pin/${midiaValue._id}`}
                   className="pin"
                   style={{
                     width: `${columnWidth.toFixed(0)}px`,
@@ -163,7 +164,7 @@ export default function Masonry({
                   ></video>
                   <LoadingPin />
                   <WaitingPin />
-                </div>
+                </Link>
                 <div
                   className="pin-title-and-user"
                   data-visible-user-info={visibleUserInfo}
@@ -185,7 +186,8 @@ export default function Masonry({
               </div>
             ) : (
               <div key={midiaValue._id} className="pin-container">
-                <div
+                <Link
+                  href={`/pin/${midiaValue._id}`}
                   className="pin"
                   style={{
                     width: `${columnWidth.toFixed(0)}px`,
@@ -205,7 +207,7 @@ export default function Masonry({
                     onLoadingComplete={element => handleRemoveLoading(element)}
                   />
                   <LoadingPin />
-                </div>
+                </Link>
                 <div
                   className="pin-title-and-user"
                   data-visible-user-info={visibleUserInfo}

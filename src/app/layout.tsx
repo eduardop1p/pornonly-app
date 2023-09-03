@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import StyledComponentsRegistry from '@/lib/registry';
 
 import AppTheme from '@/utils/theme/themeProvider';
+import Header from '@/components/header';
 import AppContext from '@/utils/appContextUser/appContext';
 
 export const metadata: Metadata = {
@@ -24,7 +25,10 @@ export default function RootLayout({
       <body>
         <StyledComponentsRegistry>
           <AppTheme>
-            <AppContext>{children}</AppContext>
+            <AppContext>
+              <Header />
+              {children}
+            </AppContext>
           </AppTheme>
         </StyledComponentsRegistry>
       </body>
