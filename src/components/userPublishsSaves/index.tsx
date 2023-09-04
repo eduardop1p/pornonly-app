@@ -3,13 +3,15 @@
 import { useState } from 'react';
 
 import Masonry from '../masonry';
-import { MidiaResults } from '@/app/page';
+import { MidiaResultsType } from '@/app/page';
 import styles from './styles.module.css';
 
 export default function UserPublishsSaves({
-  results,
+  publishsResults,
+  savesResults,
 }: {
-  results: MidiaResults[];
+  publishsResults: MidiaResultsType[];
+  savesResults: MidiaResultsType[];
 }) {
   const [showPublish, setShowPublish] = useState(true);
   const [showSaves, setShowSaves] = useState(false);
@@ -45,9 +47,9 @@ export default function UserPublishsSaves({
 
       <div className={styles['publishs-or-saves']}>
         <div data-active={showPublish}>
-          {results.length ? (
+          {publishsResults.length ? (
             <Masonry
-              results={results}
+              results={publishsResults}
               justifyContent="center"
               visibleUserInfo={false}
             />
@@ -58,7 +60,17 @@ export default function UserPublishsSaves({
           )}
         </div>
         <div data-active={showSaves}>
-          <div className={styles['none-results']}>Nenhuma publicação salva</div>
+          {savesResults.length ? (
+            <Masonry
+              results={savesResults}
+              justifyContent="center"
+              visibleUserInfo={true}
+            />
+          ) : (
+            <div className={styles['none-results']}>
+              Nenhuma publicação salva
+            </div>
+          )}
         </div>
       </div>
     </div>

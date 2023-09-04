@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { get } from 'lodash';
 
 import { Container } from './styled';
-import { ProfilePhoto } from '@/app/[usernameparam]/page';
+import { ProfilePhotoType } from '@/app/[usernameparam]/page';
 import Loading from '../form/loading';
 import { GlobalError } from '../form/globalError';
 import { GlobalSuccess } from '../form/globalSuccess';
@@ -17,7 +17,7 @@ interface Props {
   children: ReactNode;
   token: string;
   photo: {
-    profilePhoto: ProfilePhoto[];
+    profilePhoto: ProfilePhotoType[];
     username: string;
   };
 }

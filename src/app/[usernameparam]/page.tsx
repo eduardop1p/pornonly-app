@@ -4,12 +4,12 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Metadata } from 'next';
+import { ReactNode } from 'react';
 import jwt from 'jsonwebtoken';
 
 import UserProfile from '@/components/userProfile';
-import { MidiaResults } from '../page';
+import { MidiaType } from '../page';
 import UserPublishsSaves from '@/components/userPublishsSaves';
-import Header from '@/components/header';
 
 import styles from './styles.module.css';
 
@@ -17,31 +17,17 @@ interface Props {
   params: { usernameparam: string };
 }
 
-export interface User {
+export interface UserType {
   _id: string;
   username: string;
   email: string;
-  profilePhoto: ProfilePhoto[];
-  midia: MidiaResults[];
-  createIn: string;
+  profilePhoto: ProfilePhotoType[];
+  createIn?: string;
 }
-export interface ProfilePhoto {
+export interface ProfilePhotoType {
   _id: string;
   userId: unknown[];
   url: string;
-}
-interface UserToUserName {
-  _id: string;
-  username: string;
-  email: string;
-  profilePhoto: ProfilePhoto[];
-  midia: {
-    results: MidiaResults[];
-    currentPage: number;
-    totalPages: number;
-    totalResults: number;
-  };
-  createIn: string;
 }
 
 // pato borrachudo admin
@@ -56,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       cache: 'no-cache',
     }
   );
-  const data = (await response.json()) as User;
+  const data = (await response.json()) as UserType;
 
   return {
     title: `Pornonly - ${data.username}`,
@@ -67,24 +53,47 @@ export default async function Page({ params }: Props) {
   const token = cookies().get('token')?.value;
   const { usernameparam } = params;
 
-  const response = await fetch(
+  const resUser = await fetch(
     `${process.env.NEXT_PUBLIC_URL_API}/users/${usernameparam}`,
     {
       method: 'GET',
       cache: 'no-cache',
     }
   );
-  if (!response.ok) {
+  if (!resUser.ok) {
     notFound();
   }
-  const data = (await response.json()) as UserToUserName;
-  const { profilePhoto, username, email, midia } = data;
-  const { results } = midia;
+  const userData = (await resUser.json()) as UserType;
+  const { profilePhoto, username, email } = userData;
+
+  const resUserMidia = await fetch(
+    `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all-midia-userid/${userData._id}/?page=1`,
+    {
+      method: 'GET',
+      cache: 'no-cache',
+    }
+  );
+  const dataUserMidia = (await resUserMidia.json()) as MidiaType;
+  const userMidiaResults = dataUserMidia.midia.results;
+
+  const resUserSaves = await fetch(
+    `${process.env.NEXT_PUBLIC_URL_API}/saves/get-all-saves-userid/${userData._id}/?page=1`,
+    {
+      method: 'GET',
+      cache: 'no-cache',
+    }
+  );
+  const dataUserSaves = (await resUserSaves.json()) as MidiaType;
+  const userSavesResults = dataUserSaves.midia.results;
 
   const userIsLoggedIn: any = token
     ? jwt.verify(token, process.env.TOKEN_SECRET as string)
     : false;
-  const isUniqueUser = userIsLoggedIn && userIsLoggedIn._id === data._id;
+  const isUniqueUser = userIsLoggedIn && userIsLoggedIn._id === userData._id;
+  const createIn = new Date(userData.createIn as string).toLocaleDateString(
+    'pt-br',
+    { dateStyle: 'long' }
+  );
 
   return (
     <main className={styles.main}>
@@ -131,16 +140,19 @@ export default async function Page({ params }: Props) {
 
         <h1 className={styles['user-username']}>{username}</h1>
         {isUniqueUser && <span className={styles['user-email']}>{email}</span>}
+        <div className={styles['user-createin']}>
+          Conta ativa desde: {createIn}
+        </div>
         <div className={styles['user-total-publishs-and-saves']}>
           <span>
-            {results.length == 1
-              ? `${results.length} publicação`
-              : `${results.length} publicações`}
+            {userMidiaResults.length == 1
+              ? `${userMidiaResults.length} publicação`
+              : `${userMidiaResults.length} publicações`}
           </span>
           <span>
-            {results.length == 1
-              ? `${results.length} Salvo`
-              : `${results.length} Salvos`}
+            {userSavesResults.length == 1
+              ? `${userSavesResults.length} Salvo`
+              : `${userSavesResults.length} Salvos`}
           </span>
         </div>
         {isUniqueUser && (
@@ -159,7 +171,10 @@ export default async function Page({ params }: Props) {
           </div>
         )}
       </div>
-      <UserPublishsSaves results={results} />
+      <UserPublishsSaves
+        publishsResults={userMidiaResults}
+        savesResults={userSavesResults}
+      />
     </main>
   );
 }

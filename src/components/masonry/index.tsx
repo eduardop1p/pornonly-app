@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { upperFirst } from 'lodash';
 
 import { MasonryContainer } from './styled';
-import { MidiaResults } from '@/app/page';
+import { MidiaResultsType } from '@/app/page';
 import calHeight from '@/config/calcHeight';
 import videoDuration from '@/config/calcDuration';
 import LoadingPin from './LoadingPin';
@@ -16,7 +16,7 @@ import WaitingPin from './waitingPin';
 import UserPin from './userPin';
 
 interface Props {
-  results: MidiaResults[];
+  results: MidiaResultsType[];
   justifyContent: 'center' | 'left';
   visibleUserInfo?: boolean;
 }
@@ -121,7 +121,7 @@ export default function Masonry({
     >
       {newResults.map((midia, resultIndex: number) => (
         <div key={resultIndex} className="masonry-column">
-          {midia.map((midiaValue: MidiaResults, midiaIndex: number) =>
+          {midia.map((midiaValue: MidiaResultsType, midiaIndex: number) =>
             midiaValue.midiaType === 'video' ? (
               <div className="pin-container" key={midiaValue._id}>
                 <Link
@@ -165,24 +165,23 @@ export default function Masonry({
                   <LoadingPin />
                   <WaitingPin />
                 </Link>
-                <div
-                  className="pin-title-and-user"
-                  data-visible-user-info={visibleUserInfo}
-                >
-                  <Link
-                    href={`/pin/${midiaValue._id}`}
-                    title={upperFirst(midiaValue.title)}
-                    className="pin-title"
-                  >
-                    {upperFirst(midiaValue.title)}
-                  </Link>
-                  <Link
-                    className="pin-original-user"
-                    href={`/${midiaValue.userId.username}`}
-                  >
-                    <UserPin {...midiaValue.userId} />
-                  </Link>
-                </div>
+                {visibleUserInfo && (
+                  <div className="pin-title-and-user">
+                    <Link
+                      href={`/pin/${midiaValue._id}`}
+                      title={upperFirst(midiaValue.title)}
+                      className="pin-title"
+                    >
+                      {upperFirst(midiaValue.title)}
+                    </Link>
+                    <Link
+                      className="pin-original-user"
+                      href={`/${midiaValue.userId.username}`}
+                    >
+                      <UserPin {...midiaValue.userId} />
+                    </Link>
+                  </div>
+                )}
               </div>
             ) : (
               <div key={midiaValue._id} className="pin-container">
@@ -208,24 +207,23 @@ export default function Masonry({
                   />
                   <LoadingPin />
                 </Link>
-                <div
-                  className="pin-title-and-user"
-                  data-visible-user-info={visibleUserInfo}
-                >
-                  <Link
-                    href={`/pin/${midiaValue._id}`}
-                    title={upperFirst(midiaValue.title)}
-                    className="pin-title"
-                  >
-                    {upperFirst(midiaValue.title)}
-                  </Link>
-                  <Link
-                    className="pin-original-user"
-                    href={`/${midiaValue.userId.username}`}
-                  >
-                    <UserPin {...midiaValue.userId} />
-                  </Link>
-                </div>
+                {visibleUserInfo && (
+                  <div className="pin-title-and-user">
+                    <Link
+                      href={`/pin/${midiaValue._id}`}
+                      title={upperFirst(midiaValue.title)}
+                      className="pin-title"
+                    >
+                      {upperFirst(midiaValue.title)}
+                    </Link>
+                    <Link
+                      className="pin-original-user"
+                      href={`/${midiaValue.userId.username}`}
+                    >
+                      <UserPin {...midiaValue.userId} />
+                    </Link>
+                  </div>
+                )}
               </div>
             )
           )}

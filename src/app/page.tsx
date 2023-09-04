@@ -1,18 +1,18 @@
 import styles from './page.module.css';
 
 import Masonry from '@/components/masonry';
-import { UserIdResults } from '@/components/masonry/userPin';
+import { UserIdResultsType } from '@/components/masonry/userPin';
 
 export interface MidiaType {
   midia: {
-    results: MidiaResults[];
+    results: MidiaResultsType[];
     currentPage: number;
     totalPages: number;
     totalResults: number;
   };
 }
 
-export interface MidiaResults {
+export interface MidiaResultsType {
   _id: string;
   title: string;
   midiaType: 'img' | 'gif' | 'video';
@@ -20,7 +20,7 @@ export interface MidiaResults {
   height: number;
   duration?: string;
   description: string;
-  userId: UserIdResults;
+  userId: UserIdResultsType;
   url: string;
   createIn: string;
 }
@@ -39,7 +39,11 @@ export default async function Home() {
 
   return (
     <main className={styles.main}>
-      <Masonry results={results} justifyContent="center" />
+      <Masonry
+        results={results}
+        justifyContent="center"
+        visibleUserInfo={true}
+      />
     </main>
   );
 }

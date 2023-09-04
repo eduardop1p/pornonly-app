@@ -7,7 +7,7 @@ import Link from 'next/link';
 
 import styles from './styles.module.css';
 
-import { User } from '@/app/[usernameparam]/page';
+import { UserType } from '@/app/[usernameparam]/page';
 
 interface Props {
   containerWidth: number;
@@ -30,7 +30,7 @@ export default async function UserAvatar({
   if (!response.ok) {
     return;
   }
-  const user = (await response.json()) as User;
+  const user = (await response.json()) as UserType;
   const { profilePhoto } = user;
 
   return (

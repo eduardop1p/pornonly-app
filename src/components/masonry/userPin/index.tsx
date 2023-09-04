@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 import { Container } from './styled';
 
-export interface UserIdResults {
+export interface UserIdResultsType {
   _id: string;
   profilePhoto: {
     url: string;
@@ -11,7 +11,7 @@ export interface UserIdResults {
   username: string;
 }
 
-export default function UserPin({ username, profilePhoto }: UserIdResults) {
+export default function UserPin({ username, profilePhoto }: UserIdResultsType) {
   return (
     <Container>
       {profilePhoto.length ? (

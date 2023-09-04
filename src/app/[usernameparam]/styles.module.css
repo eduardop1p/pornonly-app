@@ -65,6 +65,11 @@
   font-weight: var(--font-weight-400);
   color: var(--g-colorGray300);
 }
+.user-createin{
+  font-size: var(--font-size-0_75rem);
+  font-weight: var(--font-weight-400);
+  color: var(--g-colorGray300);
+}
 
 .settings{
   display: flex;

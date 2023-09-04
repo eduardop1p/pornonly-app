@@ -34,10 +34,6 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
           padding: 8px 6px 0;
           display: block;
 
-          &[data-visible-user-info='false'] {
-            display: none;
-          }
-
           & > .pin-title {
             color: ${theme.colors.g_colorGray300};
             font-weight: ${theme.font_weight.font_weight_600};
