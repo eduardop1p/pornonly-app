@@ -1,3 +1,22 @@
 .main{
   margin: 6rem auto 2rem;
 }
+
+.container{
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.pin-default-container{
+  width: 1050px;
+  box-shadow: var(--box-shadow_07);
+  border-radius: 2rem;
+  overflow: hidden;
+  display: flex;
+  min-height: 500px;
+}
+.pin-default-container.pin-alternative-container{
+  width: 800px;
+  flex-direction: column;
+}

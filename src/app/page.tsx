@@ -27,7 +27,7 @@ export interface MidiaResultsType {
 
 export default async function Home() {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all/${process.env.API_KEY}?page=1`,
+    `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all?page=1`,
     {
       method: 'GET',
       cache: 'no-cache',

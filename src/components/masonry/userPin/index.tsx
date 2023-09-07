@@ -4,11 +4,11 @@ import { Container } from './styled';
 
 export interface UserIdResultsType {
   _id: string;
-  profilePhoto: {
-    url: string;
-    _id: string;
-  }[];
   username: string;
+  profilePhoto: {
+    _id: string;
+    url: string;
+  }[];
 }
 
 export default function UserPin({ username, profilePhoto }: UserIdResultsType) {

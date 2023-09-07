@@ -72,6 +72,7 @@ const myTheme = {
     box_shadow_04: '0 0 8px rgba(0,0,0,.1)',
     box_shadow_05: 'rgba(142, 142, 142, 0.5) 0px 1px 0px 0px',
     box_shadow_06: 'rgb(0, 116, 232) 0px 2px 0px 0px',
+    box_shadow_07: 'rgba(0, 0, 0, 0.1) 0px 1px 20px 0px',
   },
 };
 
