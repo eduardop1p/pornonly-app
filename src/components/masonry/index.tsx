@@ -2,7 +2,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import Link from 'next/link';
 import { upperFirst } from 'lodash';
@@ -32,13 +32,14 @@ export default function Masonry({
   const [initialRender, setInitialRender] = useState(true);
 
   useEffect(() => {
-    if (initialRender) {
-      const resultsLength = Math.ceil(results.length / columnCount);
-      for (let i = 0; i < results.length; i += resultsLength) {
-        setNewResults(state => [...state, results.slice(i, i + resultsLength)]);
-      }
-      setInitialRender(false);
+    // if (initialRender) {
+    setNewResults([]);
+    const resultsLength = Math.ceil(results.length / columnCount);
+    for (let i = 0; i < results.length; i += resultsLength) {
+      setNewResults(state => [...state, results.slice(i, i + resultsLength)]);
     }
+    // setInitialRender(false);
+    // }
   }, [columnCount, results, initialRender]);
 
   useEffect(() => {
@@ -60,57 +61,55 @@ export default function Masonry({
     };
   }, []);
 
-  const handleRemoveLoading = (elementPin: Element) => {
+  const handleRemoveLoading = useCallback((elementPin: Element) => {
     const loading = elementPin.nextSibling as HTMLDivElement;
     setTimeout(() => {
       loading.style.zIndex = '1';
     }, 500);
-  };
+  }, []);
 
-  const handleVideoCompleteLoad = (
-    video: HTMLVideoElement,
-    resultIndex: number,
-    midiaIndex: number
-  ) => {
-    handleAddDurationVideo(
-      resultIndex,
-      midiaIndex,
-      videoDuration(video.duration)
-    );
-    handleNoWaitingVideo(video);
-    handleRemoveLoading(video);
-  };
+  const handleAddDurationVideo = useCallback(
+    (resultIndex: number, midiaIndex: number, duration: string) => {
+      const updateNewResults = [...newResults];
+      updateNewResults[resultIndex][midiaIndex].duration = duration;
+      setNewResults(updateNewResults);
+    },
+    [newResults]
+  );
 
-  const handleAddDurationVideo = (
-    resultIndex: number,
-    midiaIndex: number,
-    duration: string
-  ) => {
-    const updateNewResults = [...newResults];
-    updateNewResults[resultIndex][midiaIndex].duration = duration;
-    setNewResults(updateNewResults);
-  };
-
-  const handleVideoPlay = (video: HTMLVideoElement) => {
-    const videoTime = video.previousSibling as HTMLSpanElement;
-    videoTime.classList.add('hidden-video-time');
-  };
-
-  const handleWaitingVideo = (video: HTMLVideoElement) => {
-    const parentVideo = video.parentElement;
-    const waitingPin = parentVideo?.querySelector(
-      '#waiting-pin'
-    ) as HTMLDivElement;
-    waitingPin.classList.add('waiting');
-  };
-
-  const handleNoWaitingVideo = (video: HTMLVideoElement) => {
+  const handleNoWaitingVideo = useCallback((video: HTMLVideoElement) => {
     const parentVideo = video.parentElement;
     const waitingPin = parentVideo?.querySelector(
       '#waiting-pin'
     ) as HTMLDivElement;
     waitingPin.classList.remove('waiting');
-  };
+  }, []);
+
+  const handleVideoCompleteLoad = useCallback(
+    (video: HTMLVideoElement, resultIndex: number, midiaIndex: number) => {
+      handleAddDurationVideo(
+        resultIndex,
+        midiaIndex,
+        videoDuration(video.duration)
+      );
+      handleNoWaitingVideo(video);
+      handleRemoveLoading(video);
+    },
+    [handleAddDurationVideo, handleNoWaitingVideo, handleRemoveLoading]
+  );
+
+  const handleVideoPlay = useCallback((video: HTMLVideoElement) => {
+    const videoTime = video.previousSibling as HTMLSpanElement;
+    videoTime.classList.add('hidden-video-time');
+  }, []);
+
+  const handleWaitingVideo = useCallback((video: HTMLVideoElement) => {
+    const parentVideo = video.parentElement;
+    const waitingPin = parentVideo?.querySelector(
+      '#waiting-pin'
+    ) as HTMLDivElement;
+    waitingPin.classList.add('waiting');
+  }, []);
 
   return (
     <MasonryContainer

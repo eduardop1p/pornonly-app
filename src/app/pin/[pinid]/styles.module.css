@@ -15,8 +15,14 @@
   overflow: hidden;
   display: flex;
   min-height: 500px;
+  justify-content: space-between;
 }
 .pin-default-container.pin-alternative-container{
   width: 800px;
   flex-direction: column;
+}
+
+.save-and-comments{
+  width: 100%;
+  margin: 2.5rem 2rem 2rem 2.5rem;
 }

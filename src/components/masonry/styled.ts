@@ -71,20 +71,6 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
           overflow: hidden;
           border-radius: 1rem;
 
-          /* & > .pin-save {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            color: ${theme.colors.g_colorGray0};
-            font-size: ${theme.font_size.font_size_0_90rem};
-            font-weight: ${theme.font_weight.font_weight_500};
-            padding: 8px 14px;
-            border-radius: 2rem;
-            background-color: ${theme.colors.g_colorRed100};
-            cursor: pointer;
-            z-index: 3;
-          } */
-
           & > .video-time {
             position: absolute;
             z-index: 3;

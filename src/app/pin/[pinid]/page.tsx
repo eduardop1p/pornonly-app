@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { notFound } from 'next/navigation';
+import { Metadata } from 'next';
 
 import styles from './styles.module.css';
 
@@ -7,9 +8,31 @@ import { MidiaResultsType } from '@/app/page';
 import Pin from '@/components/pin';
 import BackButton from '@/components/pin/backButton';
 import calHeight from '@/config/calcHeight';
+import SaveAndMore from '@/components/pin/saveAndMore';
 
 interface Props {
   params: { pinid: string };
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { pinid } = params
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_URL_API}/midia/get-midiaid/${pinid}`,
+    {
+      method: 'GET',
+      cache: 'no-cache',
+    }
+  );
+  if (!response.ok) {
+    notFound();
+  }
+  const data = (await response.json()) as MidiaResultsType;
+
+  return {
+    title: `Pornonly - ${data.title}`,
+    description: data.description
+  }
 }
 
 export default async function Page({ params }: Props) {
@@ -42,7 +65,9 @@ export default async function Page({ params }: Props) {
           className={`${styles['pin-default-container']} ${pinHeight < 460 ? styles['pin-alternative-container'] : ''}`}
         >
           <Pin data={data} />
-          {/* <div style={{ height: '500px' }}>Meus comentarios com 500ox</div> */}
+          <div className={styles['save-and-comments']}>
+            <SaveAndMore url={data.url} />
+          </div>
         </div>
       </div>
     </main>
