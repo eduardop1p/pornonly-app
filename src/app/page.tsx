@@ -18,7 +18,6 @@ export interface MidiaResultsType {
   midiaType: 'img' | 'gif' | 'video';
   width: number;
   height: number;
-  duration?: string;
   description: string;
   userId: UserIdResultsType;
   url: string;

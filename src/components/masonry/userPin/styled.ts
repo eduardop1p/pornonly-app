@@ -31,6 +31,7 @@ export const Container = styled.div<TypeTheme>`
       border-radius: 100%;
       font-size: ${theme.font_size.font_size_0_75rem};
       font-weight: ${theme.font_weight.font_weight_500};
+      color: ${theme.colors.g_colorGray400};
     }
 
     & > h4 {

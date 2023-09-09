@@ -69,12 +69,10 @@ export default function Masonry({
   }, []);
 
   const handleAddDurationVideo = useCallback(
-    (resultIndex: number, midiaIndex: number, duration: string) => {
-      const updateNewResults = [...newResults];
-      updateNewResults[resultIndex][midiaIndex].duration = duration;
-      setNewResults(updateNewResults);
+    (videoTime: HTMLSpanElement, duration: string) => {
+      videoTime.innerText = duration;
     },
-    [newResults]
+    []
   );
 
   const handleNoWaitingVideo = useCallback((video: HTMLVideoElement) => {
@@ -87,11 +85,10 @@ export default function Masonry({
 
   const handleVideoCompleteLoad = useCallback(
     (video: HTMLVideoElement, resultIndex: number, midiaIndex: number) => {
-      handleAddDurationVideo(
-        resultIndex,
-        midiaIndex,
-        videoDuration(video.duration)
-      );
+      const videoTime = video.parentElement?.querySelector(
+        '.video-time'
+      ) as HTMLSpanElement;
+      handleAddDurationVideo(videoTime, videoDuration(video.duration));
       handleNoWaitingVideo(video);
       handleRemoveLoading(video);
     },
@@ -134,7 +131,7 @@ export default function Masonry({
                     })}px`,
                   }}
                 >
-                  <span className="video-time">{midiaValue.duration}</span>
+                  <span className="video-time">0:00</span>
                   <video
                     src={midiaValue.url}
                     controls={true}
@@ -152,7 +149,7 @@ export default function Masonry({
                     onPlay={event =>
                       handleVideoPlay(event.currentTarget as HTMLVideoElement)
                     }
-                    onLoadedMetadata={event =>
+                    onLoadedData={event =>
                       handleVideoCompleteLoad(
                         event.currentTarget as HTMLVideoElement,
                         resultIndex,

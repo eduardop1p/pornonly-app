@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, FocusEvent } from 'react';
+import { saveAs } from 'file-saver';
 
 import { Container } from './styled';
 
@@ -15,14 +16,15 @@ export default function SaveAndMore({ url }: { url: string }) {
     }
   };
 
-  const handleDawnload = () => {
-    const link = document.createElement('a');
-    link.style.display = 'none';
-    document.body.appendChild(link);
-    link.href = url;
-    link.download = fileName;
-    link.click(); // link.click() vai simular um click no meu link
-    document.body.removeChild(link);
+  const handleDawnload = async () => {
+    saveAs(url, fileName);
+    // const link = document.createElement('a');
+    // link.style.display = 'none';
+    // link.href = url;
+    // link.download = fileName;
+    // document.body.appendChild(link);
+    // link.click(); // link.click() vai simular um click no meu link
+    // document.body.removeChild(link);
   };
 
   return (
@@ -55,7 +57,9 @@ export default function SaveAndMore({ url }: { url: string }) {
           data-more-options-active={showMoreOptions}
           onClick={event => event.stopPropagation()}
         >
-          <button onClick={handleDawnload}>Baixar pin</button>
+          <button type="button" onClick={handleDawnload}>
+            Baixar pin
+          </button>
           <button type="button">Excluir</button>
           <button type="button">Remover dos salvos</button>
         </div>
