@@ -5,13 +5,14 @@ import { TypeTheme } from '@/utils/theme/myTheme';
 interface Props {
   $columnWidth: number;
   $marginColumn: string;
-  $justifyContent: string;
+  $justifyContent: 'center' | 'left';
 }
 
 export const MasonryContainer = styled.div<TypeTheme & Props>`
   ${({ theme, $marginColumn, $columnWidth, $justifyContent }) => css`
     display: flex;
     justify-content: ${$justifyContent};
+    padding: 0 ${$justifyContent == 'left' ? '1rem' : 0};
     flex-wrap: nowrap;
     width: 100%;
 

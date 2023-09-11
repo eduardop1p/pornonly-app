@@ -27,7 +27,9 @@ export default function Masonry({
   visibleUserInfo,
 }: Props) {
   const [columnCount] = useState(6);
-  const [columnWidth, setColumnWidth] = useState(window.innerWidth / 6.5);
+  const [columnWidth, setColumnWidth] = useState(
+    (window.innerWidth - 16) / 6.5
+  );
   const [newResults, setNewResults] = useState<any[]>([]);
   const [initialRender, setInitialRender] = useState(true);
 

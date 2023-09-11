@@ -24,12 +24,18 @@ export const Container = styled.div<TypeTheme>`
 
     & > img,
     & > video {
-      margin-right: 5px;
+      margin-right: 7px;
       flex: none;
+      position: relative;
       border-radius: 5px;
+      width: auto;
+      height: 28px !important;
       object-fit: contain;
-      max-width: 30px !important;
-      height: 25px !important;
+
+      &[data-show-pin-img-preview='false'],
+      &[data-show-pin-video-preview='false'] {
+        display: none;
+      }
     }
 
     & > span {

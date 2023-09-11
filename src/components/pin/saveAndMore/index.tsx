@@ -1,14 +1,41 @@
 'use client';
 
 import { useState, useRef, FocusEvent } from 'react';
-import { saveAs } from 'file-saver';
+import { useRouter, usePathname } from 'next/navigation';
+import Image from 'next/image';
 
 import { Container } from './styled';
+import Loading from '../../form/loading';
+import { GlobalError } from '@/components/form/globalError';
+import { GlobalSuccess } from '@/components/form/globalSuccess';
+import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
+import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
 
-export default function SaveAndMore({ url }: { url: string }) {
+interface Props {
+  data: {
+    _id: string;
+    url: string;
+    title: string;
+    midiaType: string;
+    username: string;
+  };
+  isAuth: boolean;
+  token: string;
+}
+
+export default function SaveAndMore({ data, isAuth, token }: Props) {
+  const redirect = useRouter();
+  const pathName = usePathname();
+
   const [showMoreOptions, setShowMoreOptions] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { handleServerError, msgGlobalError, showGlobalError } =
+    useGlobalErrorTime();
+  const { handleServerSuccess, msgGlobalSuccess, showGlobalSuccess } =
+    useGlobalSuccessTime();
+
   const refMoreOptions = useRef<HTMLDivElement | null>(null);
-  const fileName = url.split('/').pop() as string;
+  const fileName = data.url.split('/').pop() as string;
 
   const handleOnBlur = (event: FocusEvent<HTMLDivElement>) => {
     if (!refMoreOptions.current?.contains(event.relatedTarget)) {
@@ -17,18 +44,74 @@ export default function SaveAndMore({ url }: { url: string }) {
   };
 
   const handleDawnload = async () => {
-    saveAs(url, fileName);
-    // const link = document.createElement('a');
-    // link.style.display = 'none';
-    // link.href = url;
-    // link.download = fileName;
-    // document.body.appendChild(link);
-    // link.click(); // link.click() vai simular um click no meu link
-    // document.body.removeChild(link);
+    const link = document.createElement('a');
+    link.style.display = 'none';
+    link.href = data.url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click(); // link.click() vai simular um click no meu link
+    document.body.removeChild(link);
+  };
+
+  const handleUserSavePin = () => {
+    if (!isAuth) {
+      redirect.push(`/login?from=${pathName}`);
+      return;
+    }
+    handleServerSuccess('Pin foi salvo');
+  };
+
+  const handleUniqueUserDeletePin = async () => {
+    if (isLoading) return;
+
+    try {
+      setIsLoading(true);
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_URL_API}/midia/delete-one/${data._id}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const jsonRes = await res.json();
+      if (!res.ok) {
+        handleServerError(jsonRes.error as string);
+        return;
+      }
+      handleServerSuccess('Pin foi excluido');
+      setTimeout(() => redirect.push(`/${data.username}`), 2500);
+    } catch (err) {
+      handleServerError('Erro interno no servidor.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <Container>
+      {isLoading && <Loading />}
+      <GlobalError showError={showGlobalError} errorMsg={msgGlobalError} />
+      <GlobalSuccess
+        showSuccess={showGlobalSuccess}
+        successMsg={msgGlobalSuccess}
+      >
+        <video
+          data-show-pin-video-preview={data.midiaType == 'video' ? true : false}
+          src={data.url}
+          controls={false}
+          preload="auto"
+        ></video>
+        <Image
+          src={data.url}
+          data-show-pin-img-preview={data.midiaType != 'video' ? true : false}
+          alt={data.title}
+          priority
+          width={25}
+          height={25}
+        />
+      </GlobalSuccess>
       <div
         className="more-options"
         onClick={() => setShowMoreOptions(!showMoreOptions)}
@@ -60,11 +143,13 @@ export default function SaveAndMore({ url }: { url: string }) {
           <button type="button" onClick={handleDawnload}>
             Baixar pin
           </button>
-          <button type="button">Excluir</button>
-          <button type="button">Remover dos salvos</button>
         </div>
       </div>
-      <button type="button" className="btn-pin-save">
+      <button
+        type="button"
+        className="btn-pin-save"
+        onClick={handleUserSavePin}
+      >
         Salvar
       </button>
     </Container>

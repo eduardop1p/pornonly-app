@@ -179,7 +179,8 @@ export default function PublishPin({
           <Image
             src={fileScrRef.current}
             alt="preview"
-            width={30}
+            width={25}
+            priority
             height={25}
           />
         ) : (

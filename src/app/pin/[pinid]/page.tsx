@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
+import { cookies } from 'next/headers';
 
 import styles from './styles.module.css';
 
@@ -37,6 +38,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Page({ params }: Props) {
   const { pinid } = params;
+  const token = cookies().get('token')?.value
+  const isAuth = cookies().has('token');
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_URL_API}/midia/get-midiaid/${pinid}`,
@@ -66,7 +69,7 @@ export default async function Page({ params }: Props) {
         >
           <Pin data={data} />
           <div className={styles['save-and-comments']}>
-            <SaveAndMore url={data.url} />
+            <SaveAndMore data={{ url: data.url, _id: data._id, title: data.title, midiaType: data.midiaType, username: data.userId.username }} isAuth={isAuth} token={token as string} />
           </div>
         </div>
       </div>

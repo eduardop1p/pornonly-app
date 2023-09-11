@@ -50,7 +50,7 @@ export default function UserPublishsSaves({
           {publishsResults.length ? (
             <Masonry
               results={publishsResults}
-              justifyContent="center"
+              justifyContent="left"
               visibleUserInfo={false}
             />
           ) : (
@@ -63,7 +63,7 @@ export default function UserPublishsSaves({
           {savesResults.length ? (
             <Masonry
               results={savesResults}
-              justifyContent="center"
+              justifyContent="left"
               visibleUserInfo={true}
             />
           ) : (
