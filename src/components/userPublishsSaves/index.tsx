@@ -19,10 +19,33 @@ export default function UserPublishsSaves({
   const [pinSelectMode, setPinSelectMode] = useState(false);
 
   const refBtnManageMoreOptions = useRef<HTMLDivElement | null>(null);
+  const pinsIdsRemoveArray = useRef<string[]>([]);
+  const refPinSelectMode = useRef<boolean | null>(null);
+  refPinSelectMode.current = pinSelectMode;
 
-  const handleGetAllPin = () => {
-    return document.querySelectorAll('.pin-container');
-  };
+  const handleGetAllPin = useCallback(() => {
+    return document.querySelectorAll('.pin-publishs-container');
+  }, []);
+
+  const handleSelectPin = useCallback(
+    (pinElement: HTMLDivElement) => {
+      pinElement.onclick = event => {
+        const currentTarget = event.currentTarget as HTMLDivElement;
+        const link = currentTarget.querySelector('.pin') as HTMLAnchorElement;
+        const pinId = link.href.split('/').pop() as string;
+        if (!currentTarget.classList.contains('selected')) {
+          pinsIdsRemoveArray.current.push(pinId);
+          currentTarget.classList.add('selected');
+        } else {
+          pinsIdsRemoveArray.current = pinsIdsRemoveArray.current.filter(
+            id => id != pinId
+          );
+          currentTarget.classList.remove('selected');
+        }
+      };
+    },
+    [pinsIdsRemoveArray]
+  );
 
   const handleAddSelectDiv = useCallback(() => {
     const allPin = handleGetAllPin();
@@ -36,7 +59,7 @@ export default function UserPublishsSaves({
       pinElement.appendChild(div);
       handleSelectPin(pinElement);
     });
-  }, []);
+  }, [handleSelectPin, handleGetAllPin]);
 
   const handleRemoveSelectDiv = useCallback(() => {
     const allPin = handleGetAllPin();
@@ -46,21 +69,11 @@ export default function UserPublishsSaves({
       if (!pinElement.contains(selectDiv)) return;
       if (pinElement.classList.contains('selected'))
         pinElement.classList.remove('selected');
+      if (pinsIdsRemoveArray.current.length) pinsIdsRemoveArray.current = [];
 
       pinElement.removeChild(selectDiv as HTMLDivElement);
     });
-  }, []);
-
-  const handleSelectPin = (pinElement: HTMLDivElement) => {
-    pinElement.onclick = event => {
-      const currentTarget = event.currentTarget as HTMLDivElement;
-      if (!currentTarget.classList.contains('selected')) {
-        currentTarget.classList.add('selected');
-      } else {
-        currentTarget.classList.remove('selected');
-      }
-    };
-  };
+  }, [handleGetAllPin]);
 
   const handleClickShowPublishs = () => {
     setShowPublish(true);
@@ -73,15 +86,21 @@ export default function UserPublishsSaves({
   };
 
   useEffect(() => {
+    const masonry = document.body.querySelector('#masonry') as HTMLDivElement;
     if (pinSelectMode) {
+      masonry.style.scale = '0.95';
       handleAddSelectDiv();
     } else {
+      masonry.style.scale = '1';
       handleRemoveSelectDiv();
     }
   }, [pinSelectMode, handleRemoveSelectDiv, handleAddSelectDiv]);
 
   const handleOnBlur = (event: FocusEvent<HTMLDivElement>) => {
-    if (!refBtnManageMoreOptions.current?.contains(event.relatedTarget)) {
+    if (
+      !refBtnManageMoreOptions.current?.contains(event.relatedTarget) &&
+      !refPinSelectMode.current
+    ) {
       setShowContainerSelectMode(false);
     }
   };
@@ -94,7 +113,7 @@ export default function UserPublishsSaves({
             className={styles['btn-manage-more-options']}
             ref={refBtnManageMoreOptions}
             data-user-options-active={showContainerSelectMode}
-            // tabIndex={0}
+            tabIndex={0}
             onBlur={handleOnBlur}
             onClick={() => setShowContainerSelectMode(!showContainerSelectMode)}
           >
@@ -155,6 +174,7 @@ export default function UserPublishsSaves({
               results={publishsResults}
               justifyContent="left"
               visibleUserInfo={false}
+              masonryPublishs
             />
           ) : (
             <div className={styles['none-results']}>

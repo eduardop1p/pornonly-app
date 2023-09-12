@@ -19,12 +19,14 @@ interface Props {
   results: MidiaResultsType[];
   justifyContent: 'center' | 'left';
   visibleUserInfo?: boolean;
+  masonryPublishs?: boolean;
 }
 
 export default function Masonry({
   results,
   justifyContent,
   visibleUserInfo,
+  masonryPublishs = false,
 }: Props) {
   const [columnCount] = useState(6);
   const [columnWidth, setColumnWidth] = useState(
@@ -115,12 +117,17 @@ export default function Masonry({
       $columnWidth={columnWidth}
       $marginColumn="1rem"
       $justifyContent={justifyContent}
+      id="masonry"
     >
       {newResults.map((midia, resultIndex: number) => (
         <div key={resultIndex} className="masonry-column">
           {midia.map((midiaValue: MidiaResultsType, midiaIndex: number) =>
             midiaValue.midiaType === 'video' ? (
-              <div className="pin-container" key={midiaValue._id}>
+              <div
+                // eslint-disable-next-line
+                className={`pin-container ${masonryPublishs ? 'pin-publishs-container' : ''}`}
+                key={midiaValue._id}
+              >
                 <Link
                   href={`/pin/${midiaValue._id}`}
                   className="pin"
@@ -181,7 +188,11 @@ export default function Masonry({
                 )}
               </div>
             ) : (
-              <div key={midiaValue._id} className="pin-container">
+              <div
+                key={midiaValue._id}
+                // eslint-disable-next-line
+                className={`pin-container ${masonryPublishs ? 'pin-publishs-container' : ''}`}
+              >
                 <Link
                   href={`/pin/${midiaValue._id}`}
                   className="pin"

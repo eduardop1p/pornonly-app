@@ -16,6 +16,10 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
     flex-wrap: nowrap;
     width: 100%;
 
+    &#masonry {
+      transition: scale 200ms ease-in-out;
+    }
+
     & > :not(:last-child) {
       margin-right: ${$marginColumn};
     }
