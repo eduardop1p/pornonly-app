@@ -21,11 +21,37 @@
   width: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
+  position: relative;
 }
-.btns-publishs-or-saves > :first-child{
-  margin-right: 1rem;
+
+.btn-manage-more-options{
+  position: absolute;
+  left: 1rem;
+  width: 45px;
+  height: 45px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 100%;
+  transition: background 150ms ease-in-out;
 }
-.btns-publishs-or-saves > button{
+.btn-manage-more-options:hover{
+  background-color: var(--g-colore9e9e9);
+}
+.btn-manage-more-options > svg{
+  flex: none;
+}
+.btn-manage-more-options[data-user-options-active='true']{
+  background-color: var(--g-colorGray400);
+}
+.btn-manage-more-options > svg[data-user-options-active='true']{
+  fill: var(--g-colorGray0);
+}
+
+.btns-publishs-or-saves > .btn-manage{
   background-color: transparent;
   font-size: var(--font-size-1rem);
   font-weight: var(--font-weight-500);
@@ -36,7 +62,10 @@
   min-height: 37px;
   position: relative;
 }
-.btns-publishs-or-saves > button[data-active-btn='true']::before{
+.btns-publishs-or-saves > .btn-manage:first-child{
+  margin-right: 1rem;
+}
+.btns-publishs-or-saves > .btn-manage[data-active-btn='true']::before{
   content: '';
   width: 80%;
   height: 3.5px;
@@ -47,6 +76,50 @@
   position: absolute;
   background-color: var(--g-colorGray300);
 }
-.btns-publishs-or-saves > button[data-active-btn='false']:hover{
+.btns-publishs-or-saves > .btn-manage[data-active-btn='false']:hover{
   background-color: var(--g-colore9e9e9);
+}
+
+.user-options-pin{
+  visibility: hidden;
+  opacity: 0;
+  width: 180px;
+  background-color: var(--g-colorGray0);
+  border-radius: 1rem;
+  position: absolute;
+  top: 3.2rem;
+  padding: 8px 10px;
+  left: 0;
+  box-shadow: var(--box-shadow_04);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: default;
+}
+.user-options-pin[data-user-options-active='true'] {
+  visibility: visible;
+  opacity: 1;
+}
+/* .user-options-pin > :not(:last-child) {
+  margin-bottom: 5px;
+} */
+.user-options-pin > button {
+  font-size: var(--font-size-1rem);
+  font-weight: var(--font-weight-500);
+  padding: 8px;
+  width: 100%;
+  text-align: left;
+  border-radius: 8px;
+  transition: background 200ms ease-in-out;
+}
+.user-options-pin > button:hover{
+  background-color: var(--g-colore9e9e9);
+  cursor: pointer;
+}
+
+.btn-user-save-pin{
+  color: var(--g-colorGray400);
+}
+.btn-user-delete-pin{
+  color: var(--g-colorRed0);
 }

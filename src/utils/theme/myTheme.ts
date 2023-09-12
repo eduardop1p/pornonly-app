@@ -45,7 +45,7 @@ const myTheme = {
     g_colorTransparentGray60: 'rgba(0,0,0,.06)',
     g_colorTransparentGray100: 'rgba(0,0,0,.1)',
     g_colorTransparentGray500: 'rgba(0,0,0,.1)',
-    g_colorTransparentGray800: 'rgba(0,0,0,.8)',
+    g_colorTransparentGray800: 'rgba(0,0,0,.5)',
     g_border_color01: '#cdcdcd',
   },
   font_weight: {

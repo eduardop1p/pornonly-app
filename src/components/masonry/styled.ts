@@ -30,6 +30,45 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
         display: flex;
         flex-direction: column;
         overflow: hidden;
+        transition: all 200ms ease-in-out;
+
+        &.selected {
+          scale: 0.95;
+          border-radius: 1rem;
+          position: relative;
+          cursor: pointer;
+
+          &::before {
+            content: '';
+            z-index: 4;
+            width: 100%;
+            height: 100%;
+            background-color: ${theme.colors.g_colorTransparentWhite};
+            position: absolute;
+          }
+
+          &::after {
+            content: '';
+            width: 30px;
+            height: 60px;
+            left: 35%;
+            top: 50%;
+            transform: rotate(42deg) translate(-35%, -50%);
+            position: absolute;
+            border-right: 8px solid ${theme.colors.g_colorGray400};
+            border-bottom: 8px solid ${theme.colors.g_colorGray400};
+            border-radius: 5px;
+            z-index: 4;
+          }
+        }
+
+        & > .select-pin {
+          z-index: 2;
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          cursor: pointer;
+        }
 
         & > .pin-title-and-user {
           padding: 8px 6px 0;
