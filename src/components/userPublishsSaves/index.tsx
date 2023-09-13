@@ -1,25 +1,41 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef, FocusEvent } from 'react';
+import { useRouter } from 'next/navigation';
+
+import styles from './styles.module.css';
 
 import Masonry from '../masonry';
 import { MidiaResultsType } from '@/app/page';
-import styles from './styles.module.css';
+import Loading from '../form/loading';
+import { GlobalSuccess } from '../form/globalSuccess';
+import { GlobalError } from '../form/globalError';
+import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
+import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
 
 export default function UserPublishsSaves({
   publishsResults,
   savesResults,
+  token,
 }: {
   publishsResults: MidiaResultsType[];
   savesResults: MidiaResultsType[];
+  token: string;
 }) {
+  const redirect = useRouter();
+
   const [showPublish, setShowPublish] = useState(true);
   const [showSaves, setShowSaves] = useState(false);
   const [showContainerSelectMode, setShowContainerSelectMode] = useState(false);
   const [pinSelectMode, setPinSelectMode] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { handleServerSuccess, msgGlobalSuccess, showGlobalSuccess } =
+    useGlobalSuccessTime();
+  const { handleServerError, msgGlobalError, showGlobalError } =
+    useGlobalErrorTime();
 
   const refBtnManageMoreOptions = useRef<HTMLDivElement | null>(null);
-  const pinsIdsRemoveArray = useRef<string[]>([]);
+  const pinsIdsRemoveArray = useRef<{ id: string; key: string }[]>([]);
   const refPinSelectMode = useRef<boolean | null>(null);
   refPinSelectMode.current = pinSelectMode;
 
@@ -31,20 +47,21 @@ export default function UserPublishsSaves({
     (pinElement: HTMLDivElement) => {
       pinElement.onclick = event => {
         const currentTarget = event.currentTarget as HTMLDivElement;
-        const link = currentTarget.querySelector('.pin') as HTMLAnchorElement;
-        const pinId = link.href.split('/').pop() as string;
+        const index = currentTarget.getAttribute('data-index') as unknown;
+        const { _id, url } = publishsResults[index as number];
+        const key = url.split('/').slice(-2).join('/');
         if (!currentTarget.classList.contains('selected')) {
-          pinsIdsRemoveArray.current.push(pinId);
+          pinsIdsRemoveArray.current.push({ id: _id, key });
           currentTarget.classList.add('selected');
         } else {
           pinsIdsRemoveArray.current = pinsIdsRemoveArray.current.filter(
-            id => id != pinId
+            value => value.id != _id
           );
           currentTarget.classList.remove('selected');
         }
       };
     },
-    [pinsIdsRemoveArray]
+    [pinsIdsRemoveArray, publishsResults]
   );
 
   const handleAddSelectDiv = useCallback(() => {
@@ -105,8 +122,47 @@ export default function UserPublishsSaves({
     }
   };
 
+  const handleUserDeletePin = async () => {
+    if (isLoading) return;
+    if (!pinsIdsRemoveArray.current.length) {
+      handleServerError('Nada foi selecionado');
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const res = await fetch(
+        // eslint-disable-next-line
+        `${process.env.NEXT_PUBLIC_URL_API}/midia/delete?midiaDelete=${JSON.stringify(pinsIdsRemoveArray.current)}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const jsonRes = await res.json();
+      if (!res.ok) {
+        handleServerError(jsonRes.error as string);
+        return;
+      }
+      handleServerSuccess('Selecionados excluidos');
+      redirect.refresh();
+    } catch (err) {
+      handleServerError('Erro interno no servidor.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className={styles['container']}>
+      {isLoading && <Loading />}
+      <GlobalSuccess
+        showSuccess={showGlobalSuccess}
+        successMsg={msgGlobalSuccess}
+      />
+      <GlobalError showError={showGlobalError} errorMsg={msgGlobalError} />
       <div className={styles['btns-publishs-or-saves']}>
         {showPublish && (
           <div
@@ -141,7 +197,11 @@ export default function UserPublishsSaves({
                 {!pinSelectMode ? 'Selecionar' : 'Sair'}
               </button>
               {pinSelectMode && (
-                <button type="button" className={styles['btn-user-delete-pin']}>
+                <button
+                  type="button"
+                  className={styles['btn-user-delete-pin']}
+                  onClick={handleUserDeletePin}
+                >
                   Excluir
                 </button>
               )}

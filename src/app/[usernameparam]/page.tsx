@@ -74,7 +74,9 @@ export default async function Page({ params }: Props) {
     }
   );
   const dataUserMidia = (await resUserMidia.json()) as MidiaType;
-  const userMidiaResults = dataUserMidia.midia.results;
+  const userMidiaResults = dataUserMidia.midia.results.map(
+    (value, index: number) => ({ ...value, index })
+  );
 
   const resUserSaves = await fetch(
     `${process.env.NEXT_PUBLIC_URL_API}/saves/get-all-saves-userid/${userData._id}/?page=1`,
@@ -174,6 +176,7 @@ export default async function Page({ params }: Props) {
       <UserPublishsSaves
         publishsResults={userMidiaResults}
         savesResults={userSavesResults}
+        token={token as string}
       />
     </main>
   );

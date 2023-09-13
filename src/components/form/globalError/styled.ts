@@ -10,6 +10,7 @@ export const Container = styled.div<TypeTheme>`
     background-color: ${theme.colors.g_colorRed100};
     justify-content: center;
     left: 50%;
+    z-index: 5;
     transform: translate(-50%, 125px);
     min-height: 45px;
     bottom: 1.5rem;

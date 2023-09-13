@@ -13,6 +13,7 @@ export interface MidiaType {
 }
 
 export interface MidiaResultsType {
+  index?: number;
   _id: string;
   title: string;
   midiaType: 'img' | 'gif' | 'video';

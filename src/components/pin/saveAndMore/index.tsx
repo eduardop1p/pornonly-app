@@ -61,34 +61,6 @@ export default function SaveAndMore({ data, isAuth, token }: Props) {
     handleServerSuccess('Pin foi salvo');
   };
 
-  const handleUniqueUserDeletePin = async () => {
-    if (isLoading) return;
-
-    try {
-      setIsLoading(true);
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_URL_API}/midia/delete-one/${data._id}`,
-        {
-          method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      const jsonRes = await res.json();
-      if (!res.ok) {
-        handleServerError(jsonRes.error as string);
-        return;
-      }
-      handleServerSuccess('Pin foi excluido');
-      setTimeout(() => redirect.push(`/${data.username}`), 2500);
-    } catch (err) {
-      handleServerError('Erro interno no servidor.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   return (
     <Container>
       {isLoading && <Loading />}

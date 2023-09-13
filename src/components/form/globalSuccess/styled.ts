@@ -17,6 +17,7 @@ export const Container = styled.div<TypeTheme>`
     border-radius: 10px;
     margin-bottom: 0 !important;
     transition: transform 500ms ease-in-out;
+    z-index: 5;
 
     &[data-show-error='true'] {
       transform: translate(-50%, 0);

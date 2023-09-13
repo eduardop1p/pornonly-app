@@ -127,6 +127,11 @@ export default function Masonry({
                 // eslint-disable-next-line
                 className={`pin-container ${masonryPublishs ? 'pin-publishs-container' : ''}`}
                 key={midiaValue._id}
+                data-index={
+                  typeof midiaValue.index != 'undefined'
+                    ? midiaValue.index
+                    : false
+                }
               >
                 <Link
                   href={`/pin/${midiaValue._id}`}
@@ -192,6 +197,11 @@ export default function Masonry({
                 key={midiaValue._id}
                 // eslint-disable-next-line
                 className={`pin-container ${masonryPublishs ? 'pin-publishs-container' : ''}`}
+                data-index={
+                  typeof midiaValue.index != 'undefined'
+                    ? midiaValue.index
+                    : false
+                }
               >
                 <Link
                   href={`/pin/${midiaValue._id}`}
