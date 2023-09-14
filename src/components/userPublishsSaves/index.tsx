@@ -44,7 +44,8 @@ export default function UserPublishsSaves({
   }, []);
 
   const handleSelectPin = useCallback(
-    (pinElement: HTMLDivElement) => {
+    (pinElement?: HTMLDivElement | null) => {
+      if (!pinElement) return;
       pinElement.onclick = event => {
         const currentTarget = event.currentTarget as HTMLDivElement;
         const index = currentTarget.getAttribute('data-index') as unknown;
@@ -88,6 +89,7 @@ export default function UserPublishsSaves({
         pinElement.classList.remove('selected');
       if (pinsIdsRemoveArray.current.length) pinsIdsRemoveArray.current = [];
 
+      pinElement.onclick = event => event.stopPropagation();
       pinElement.removeChild(selectDiv as HTMLDivElement);
     });
   }, [handleGetAllPin]);
