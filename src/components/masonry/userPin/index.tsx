@@ -9,6 +9,7 @@ export interface UserIdResultsType {
     _id: string;
     url: string;
   }[];
+  saves?: string[];
 }
 
 export default function UserPin({ username, profilePhoto }: UserIdResultsType) {

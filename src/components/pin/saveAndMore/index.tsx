@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
 import { useState, useRef, FocusEvent } from 'react';
@@ -16,19 +17,21 @@ interface Props {
     _id: string;
     url: string;
     title: string;
-    midiaType: string;
+    midiaType?: 'video' | 'img' | 'gif';
     username: string;
   };
   isAuth: boolean;
   token: string;
+  isSave: boolean;
 }
 
-export default function SaveAndMore({ data, isAuth, token }: Props) {
+export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
   const redirect = useRouter();
   const pathName = usePathname();
 
   const [showMoreOptions, setShowMoreOptions] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [pinIsSave, setPinIsSave] = useState(isSave);
   const { handleServerError, msgGlobalError, showGlobalError } =
     useGlobalErrorTime();
   const { handleServerSuccess, msgGlobalSuccess, showGlobalSuccess } =
@@ -53,12 +56,68 @@ export default function SaveAndMore({ data, isAuth, token }: Props) {
     document.body.removeChild(link);
   };
 
-  const handleUserSavePin = () => {
+  const handleUserSavePin = async () => {
     if (!isAuth) {
       redirect.push(`/login?from=${pathName}`);
       return;
     }
-    handleServerSuccess('Pin foi salvo');
+    try {
+      // setIsLoading(true);
+      setPinIsSave(true);
+      const res = await fetch(
+        // eslint-disable-next-line
+        `${process.env.NEXT_PUBLIC_URL_API}/saves/create/${data._id}`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const jsonRes = await res.json();
+      if (!res.ok) {
+        handleServerError(jsonRes.error as string);
+        return;
+      }
+      handleServerSuccess('Pin foi salvo');
+    } catch (err) {
+      setPinIsSave(false);
+      handleServerError('Erro interno no servidor.');
+    } finally {
+      // setIsLoading(false);
+    }
+  };
+
+  const handleUserRemovePin = async () => {
+    if (!isAuth) {
+      redirect.push(`/login?from=${pathName}`);
+      return;
+    }
+    try {
+      // setIsLoading(true);
+      setPinIsSave(false);
+      const res = await fetch(
+        // eslint-disable-next-line
+        `${process.env.NEXT_PUBLIC_URL_API}/saves/${data._id}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const jsonRes = await res.json();
+      if (!res.ok) {
+        handleServerError(jsonRes.error as string);
+        return;
+      }
+      handleServerSuccess('Pin removido dos salvos');
+    } catch (err) {
+      setPinIsSave(false);
+      handleServerError('Erro interno no servidor.');
+    } finally {
+      // setIsLoading(false);
+    }
   };
 
   return (
@@ -68,16 +127,11 @@ export default function SaveAndMore({ data, isAuth, token }: Props) {
       <GlobalSuccess
         showSuccess={showGlobalSuccess}
         successMsg={msgGlobalSuccess}
+        midiaType={data.midiaType}
       >
-        <video
-          data-show-pin-video-preview={data.midiaType == 'video' ? true : false}
-          src={data.url}
-          controls={false}
-          preload="auto"
-        ></video>
+        <video src={data.url} controls={false} preload="auto"></video>
         <Image
           src={data.url}
-          data-show-pin-img-preview={data.midiaType != 'video' ? true : false}
           alt={data.title}
           priority
           width={25}
@@ -117,13 +171,23 @@ export default function SaveAndMore({ data, isAuth, token }: Props) {
           </button>
         </div>
       </div>
-      <button
-        type="button"
-        className="btn-pin-save"
-        onClick={handleUserSavePin}
-      >
-        Salvar
-      </button>
+      {pinIsSave ? (
+        <button
+          type="button"
+          className="btn-pin-un-save"
+          onClick={handleUserRemovePin}
+        >
+          Salvo
+        </button>
+      ) : (
+        <button
+          type="button"
+          className="btn-pin-save"
+          onClick={handleUserSavePin}
+        >
+          Salvar
+        </button>
+      )}
     </Container>
   );
 }

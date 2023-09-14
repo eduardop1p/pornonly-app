@@ -52,6 +52,7 @@ export default async function Page({ params }: Props) {
     notFound();
   }
   const data = (await response.json()) as MidiaResultsType;
+  const isSave = data.userId.saves?.includes(data._id)
 
   const pinWidth = 500;
   const pinHeight = calHeight({
@@ -69,7 +70,7 @@ export default async function Page({ params }: Props) {
         >
           <Pin data={data} />
           <div className={styles['save-and-comments']}>
-            <SaveAndMore data={{ url: data.url, _id: data._id, title: data.title, midiaType: data.midiaType, username: data.userId.username }} isAuth={isAuth} token={token as string} />
+            <SaveAndMore isSave={isSave as boolean} data={{ url: data.url, _id: data._id, title: data.title, midiaType: data.midiaType, username: data.userId.username }} isAuth={isAuth} token={token as string} />
           </div>
         </div>
       </div>

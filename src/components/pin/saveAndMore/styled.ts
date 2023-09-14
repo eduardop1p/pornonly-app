@@ -79,6 +79,17 @@ export const Container = styled.div<TypeTheme>`
       }
     }
 
+    & > .btn-pin-un-save {
+      cursor: pointer;
+      color: ${theme.colors.g_colorGray0};
+      font-size: ${theme.font_size.font_size_1rem};
+      font-weight: ${theme.font_weight.font_weight_500};
+      background-color: ${theme.colors.g_colorGray300};
+      padding: 14px 1rem;
+      border-radius: 2rem;
+      transition: opacity 150ms ease-in-out;
+    }
+
     & > .btn-pin-save {
       cursor: pointer;
       color: ${theme.colors.g_colorGray0};

@@ -8,13 +8,15 @@ export function GlobalSuccess({
   successMsg,
   showSuccess,
   children,
+  midiaType,
 }: {
   successMsg?: string;
   showSuccess?: boolean;
   children?: ReactNode;
+  midiaType?: 'video' | 'img' | 'gif';
 }) {
   return (
-    <Container data-show-error={showSuccess}>
+    <Container data-show-error={showSuccess} $midiaType={midiaType}>
       {children}
       <span>{successMsg}</span>
     </Container>

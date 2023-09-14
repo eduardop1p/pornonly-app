@@ -2,8 +2,12 @@ import styled, { css } from 'styled-components';
 
 import { TypeTheme } from '@/utils/theme/myTheme';
 
-export const Container = styled.div<TypeTheme>`
-  ${({ theme }) => css`
+interface Props {
+  $midiaType?: 'video' | 'img' | 'gif';
+}
+
+export const Container = styled.div<TypeTheme & Props>`
+  ${({ theme, $midiaType }) => css`
     display: flex;
     align-items: center;
     position: fixed;
@@ -23,7 +27,15 @@ export const Container = styled.div<TypeTheme>`
       transform: translate(-50%, 0);
     }
 
-    & > img,
+    & > img {
+      margin-right: 7px;
+      flex: none;
+      position: relative;
+      border-radius: 5px;
+      width: auto;
+      height: 28px !important;
+      display: ${$midiaType === 'video' ? 'none' : 'inline-block'};
+    }
     & > video {
       margin-right: 7px;
       flex: none;
@@ -31,12 +43,7 @@ export const Container = styled.div<TypeTheme>`
       border-radius: 5px;
       width: auto;
       height: 28px !important;
-      object-fit: contain;
-
-      &[data-show-pin-img-preview='false'],
-      &[data-show-pin-video-preview='false'] {
-        display: none;
-      }
+      display: ${$midiaType !== 'video' ? 'none' : 'inline-block'};
     }
 
     & > span {

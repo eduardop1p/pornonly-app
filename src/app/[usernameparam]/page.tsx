@@ -51,6 +51,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Page({ params }: Props) {
   const token = cookies().get('token')?.value;
+  const isAuth = cookies().has('token');
   const { usernameparam } = params;
 
   const resUser = await fetch(
@@ -177,6 +178,7 @@ export default async function Page({ params }: Props) {
         publishsResults={userMidiaResults}
         savesResults={userSavesResults}
         token={token as string}
+        isAuth={isAuth}
       />
     </main>
   );
