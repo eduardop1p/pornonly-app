@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { cookies } from 'next/headers';
@@ -10,13 +9,15 @@ import Pin from '@/components/pin';
 import BackButton from '@/components/pin/backButton';
 import calHeight from '@/config/calcHeight';
 import SaveAndMore from '@/components/pin/saveAndMore';
+import UserPin from '@/components/pin/userPin';
+import Description from '@/components/pin/description';
 
 interface Props {
   params: { pinid: string };
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { pinid } = params
+  const { pinid } = params;
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_URL_API}/midia/get-midiaid/${pinid}`,
@@ -32,13 +33,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: `Pornonly - ${data.title}`,
-    description: data.description
-  }
+    description: data.description,
+    openGraph: {
+      type: 'website',
+      title: data.title,
+      siteName: 'Pornonly',
+      url: process.env.URL_SITE,
+      description: data.description,
+      images: data.midiaType != 'video' ? data.url : undefined,
+      videos: data.midiaType == 'video' ? data.url : undefined,
+    },
+  };
 }
 
 export default async function Page({ params }: Props) {
   const { pinid } = params;
-  const token = cookies().get('token')?.value
+  const token = cookies().get('token')?.value;
   const isAuth = cookies().has('token');
 
   const response = await fetch(
@@ -52,7 +62,7 @@ export default async function Page({ params }: Props) {
     notFound();
   }
   const data = (await response.json()) as MidiaResultsType;
-  const isSave = data.userId.saves?.includes(data._id)
+  const isSave = data.userId.saves?.includes(data._id);
 
   const pinWidth = 500;
   const pinHeight = calHeight({
@@ -66,11 +76,33 @@ export default async function Page({ params }: Props) {
       <BackButton />
       <div className={styles['container']}>
         <div
+          // eslint-disable-next-line
           className={`${styles['pin-default-container']} ${pinHeight < 460 ? styles['pin-alternative-container'] : ''}`}
         >
           <Pin data={data} />
           <div className={styles['save-and-comments']}>
-            <SaveAndMore isSave={isSave as boolean} data={{ url: data.url, _id: data._id, title: data.title, midiaType: data.midiaType, username: data.userId.username }} isAuth={isAuth} token={token as string} />
+            <SaveAndMore
+              isSave={isSave as boolean}
+              data={{
+                _id: data._id,
+                title: data.title,
+                description: data.description,
+                url: data.url,
+                midiaType: data.midiaType,
+                username: data.userId.username,
+              }}
+              isAuth={isAuth}
+              token={token as string}
+            />
+            {data.description && <Description description={data.description} />}
+            <UserPin
+              profilePhoto={data.userId.profilePhoto}
+              username={data.userId.username}
+              midia={data.userId.midia as string[]}
+            />
+            <div className={styles.comments}>
+              <h2 className={styles['comments-title']}>Comentários</h2>
+            </div>
           </div>
         </div>
       </div>

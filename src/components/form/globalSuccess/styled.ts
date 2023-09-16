@@ -23,7 +23,7 @@ export const Container = styled.div<TypeTheme & Props>`
     transition: transform 500ms ease-in-out;
     z-index: 5;
 
-    &[data-show-error='true'] {
+    &[data-show-success='true'] {
       transform: translate(-50%, 0);
     }
 

@@ -1,14 +1,17 @@
+'use client';
+
 import Image from 'next/image';
 
 import { Container } from './styled';
 
 export interface UserIdResultsType {
-  _id: string;
+  _id?: string;
   username: string;
   profilePhoto: {
     _id: string;
     url: string;
   }[];
+  midia?: string[];
   saves?: string[];
 }
 

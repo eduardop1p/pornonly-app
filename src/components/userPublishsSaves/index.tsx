@@ -17,12 +17,12 @@ export default function UserPublishsSaves({
   publishsResults,
   savesResults,
   token,
-  isAuth,
+  isUniqueUser,
 }: {
   publishsResults: MidiaResultsType[];
   savesResults: MidiaResultsType[];
   token: string;
-  isAuth: boolean;
+  isUniqueUser: boolean;
 }) {
   const redirect = useRouter();
 
@@ -168,7 +168,7 @@ export default function UserPublishsSaves({
       />
       <GlobalError showError={showGlobalError} errorMsg={msgGlobalError} />
       <div className={styles['btns-publishs-or-saves']}>
-        {isAuth && showPublish && (
+        {isUniqueUser && showPublish && (
           <div
             className={styles['btn-manage-more-options']}
             ref={refBtnManageMoreOptions}

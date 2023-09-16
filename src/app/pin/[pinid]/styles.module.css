@@ -26,3 +26,12 @@
   width: 100%;
   margin: 2rem;
 }
+.save-and-comments > :not(:first-child, :last-child){
+  margin-bottom: 2.8rem;
+}
+
+.comments-title{
+  font-size: var(--font-size-1_25rem);
+  font-weight: var(--font-weight-500);
+  color: var(--g-colorGray300);
+}

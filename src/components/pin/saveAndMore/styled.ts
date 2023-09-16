@@ -7,6 +7,7 @@ export const Container = styled.div<TypeTheme>`
     width: 100%;
     display: flex;
     justify-content: space-between;
+    margin-bottom: 3rem;
 
     & > .more-options {
       position: relative;
@@ -57,9 +58,9 @@ export const Container = styled.div<TypeTheme>`
           opacity: 1;
         }
 
-        & > :not(:last-child) {
+        /* & > :not(:last-child) {
           margin-bottom: 5px;
-        }
+        } */
 
         & > button {
           color: ${theme.colors.g_colorGray400};

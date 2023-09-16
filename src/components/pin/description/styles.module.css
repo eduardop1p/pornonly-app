@@ -1,0 +1,10 @@
+.container{
+
+}
+.btn-description{
+  color: var(--g-colorGray300);
+  font-size: var(--font-size-1rem);
+  font-weight: var(--font-weight-500);
+  margin-left: 5px;
+  cursor: pointer;
+}

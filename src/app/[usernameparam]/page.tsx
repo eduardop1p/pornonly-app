@@ -51,7 +51,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Page({ params }: Props) {
   const token = cookies().get('token')?.value;
-  const isAuth = cookies().has('token');
   const { usernameparam } = params;
 
   const resUser = await fetch(
@@ -92,7 +91,8 @@ export default async function Page({ params }: Props) {
   const userIsLoggedIn: any = token
     ? jwt.verify(token, process.env.TOKEN_SECRET as string)
     : false;
-  const isUniqueUser = userIsLoggedIn && userIsLoggedIn._id === userData._id;
+  const isUniqueUser: boolean =
+    userIsLoggedIn && userIsLoggedIn._id === userData._id;
   const createIn = new Date(userData.createIn as string).toLocaleDateString(
     'pt-br',
     { dateStyle: 'long' }
@@ -178,7 +178,7 @@ export default async function Page({ params }: Props) {
         publishsResults={userMidiaResults}
         savesResults={userSavesResults}
         token={token as string}
-        isAuth={isAuth}
+        isUniqueUser={isUniqueUser}
       />
     </main>
   );

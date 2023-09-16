@@ -19,6 +19,7 @@ interface Props {
     title: string;
     midiaType?: 'video' | 'img' | 'gif';
     username: string;
+    description: string;
   };
   isAuth: boolean;
   token: string;
@@ -52,6 +53,7 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
     link.href = data.url;
     link.download = fileName;
     document.body.appendChild(link);
+    link.target = '_blank';
     link.click(); // link.click() vai simular um click no meu link
     document.body.removeChild(link);
   };
@@ -74,11 +76,11 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
           },
         }
       );
-      const jsonRes = await res.json();
-      if (!res.ok) {
-        handleServerError(jsonRes.error as string);
-        return;
-      }
+      // const jsonRes = await res.json();
+      // if (!res.ok) {
+      //   handleServerError(jsonRes.error as string);
+      //   return;
+      // }
       handleServerSuccess('Pin foi salvo');
     } catch (err) {
       setPinIsSave(false);
@@ -106,17 +108,29 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
           },
         }
       );
-      const jsonRes = await res.json();
-      if (!res.ok) {
-        handleServerError(jsonRes.error as string);
-        return;
-      }
+      // const jsonRes = await res.json();
+      // if (!res.ok) {
+      //   handleServerError(jsonRes.error as string);
+      //   return;
+      // }
       handleServerSuccess('Pin removido dos salvos');
     } catch (err) {
       setPinIsSave(false);
       handleServerError('Erro interno no servidor.');
     } finally {
       // setIsLoading(false);
+    }
+  };
+
+  const handleSharePin = async () => {
+    try {
+      await navigator.share({
+        title: data.title,
+        text: data.description,
+        url: location.href,
+      });
+    } catch {
+      handleServerError('Seu navegador não suporta está função');
     }
   };
 
@@ -168,6 +182,9 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
         >
           <button type="button" onClick={handleDawnload}>
             Baixar pin
+          </button>
+          <button type="button" onClick={handleSharePin}>
+            Compatilhar
           </button>
         </div>
       </div>

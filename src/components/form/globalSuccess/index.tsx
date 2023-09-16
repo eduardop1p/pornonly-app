@@ -16,7 +16,7 @@ export function GlobalSuccess({
   midiaType?: 'video' | 'img' | 'gif';
 }) {
   return (
-    <Container data-show-error={showSuccess} $midiaType={midiaType}>
+    <Container data-show-success={showSuccess} $midiaType={midiaType}>
       {children}
       <span>{successMsg}</span>
     </Container>
