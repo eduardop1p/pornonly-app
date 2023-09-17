@@ -2,29 +2,27 @@ import styled, { css } from 'styled-components';
 
 import { TypeTheme } from '@/utils/theme/myTheme';
 
-export const Container = styled.div<TypeTheme>`
-  ${({ theme }) => css`
-    & > a {
-      display: flex;
-      align-items: center;
+interface Props {
+  $textComment?: string;
+}
 
-      &:hover {
-        & > div > h4 {
-          text-decoration: underline;
-        }
-      }
+export const Container = styled.div<TypeTheme & Props>`
+  ${({ theme, $textComment }) => css`
+    display: flex;
+    /* align-items: center; */
+
+    & > .pin-user-profile {
+      margin-right: ${$textComment ? '6px' : '7px'};
+
       & > img {
+        flex: none;
         border-radius: 100%;
         object-fit: cover;
         object-position: center;
-        margin-right: 7px;
         background-color: ${theme.colors.g_colorGray100};
       }
 
       & > span {
-        margin-right: 6px;
-        width: 32px;
-        height: 32px;
         background-color: ${theme.colors.g_colore9e9e9};
         display: flex;
         align-items: center;
@@ -34,31 +32,45 @@ export const Container = styled.div<TypeTheme>`
         font-weight: ${theme.font_weight.font_weight_500};
         color: ${theme.colors.g_colorGray400};
       }
+    }
+
+    & > .pin-info-and-comment-user {
+      display: ${$textComment ? 'block' : 'flex'};
+      flex-direction: ${$textComment ? 'row' : 'column'};
 
       & > div {
-        display: flex;
-        flex-direction: column;
+        margin-top: 5px;
 
         & > h4 {
-          font-size: ${theme.font_size.font_size_0_90rem};
+          display: inline-block;
+          font-size: ${$textComment
+            ? theme.font_size.font_size_1rem
+            : theme.font_size.font_size_0_90rem};
           font-weight: ${theme.font_weight.font_weight_500};
           color: ${theme.colors.g_colorGray300};
-          height: 1rem;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
+
+          &:hover {
+            text-decoration: underline;
+          }
+
+          & > a {
+            color: inherit;
+          }
         }
 
-        & > span {
-          font-size: ${theme.font_size.font_size_0_90rem};
+        & > .comment {
+          margin-left: 5px;
+          font-size: ${theme.font_size.font_size_1rem};
           font-weight: ${theme.font_weight.font_weight_400};
           color: ${theme.colors.g_colorGray300};
-          height: 1rem;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          margin-top: 3px;
         }
+      }
+
+      & > .publishs-count {
+        font-size: ${theme.font_size.font_size_0_90rem};
+        font-weight: ${theme.font_weight.font_weight_400};
+        color: ${theme.colors.g_colorGray300};
+        margin-top: 3px;
       }
     }
   `}

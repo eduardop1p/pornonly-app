@@ -58,6 +58,7 @@ const myTheme = {
   font_size: {
     font_size_1rem: '1rem',
     font_size_1_25rem: '1.25rem',
+    font_size_1_75rem: '1.75rem',
     font_size_2rem: '2rem',
     font_size_3_75rem: '3.75rem',
     font_size_0_90rem: '0.90rem',

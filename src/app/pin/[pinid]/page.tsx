@@ -11,9 +11,26 @@ import calHeight from '@/config/calcHeight';
 import SaveAndMore from '@/components/pin/saveAndMore';
 import UserPin from '@/components/pin/userPin';
 import Description from '@/components/pin/description';
+import Comments from '@/components/pin/comments';
+import { UserIdResultsType } from '@/components/masonry/userPin';
 
 interface Props {
   params: { pinid: string };
+}
+
+interface CommentsType {
+  commentsMidia: {
+    results: ResultsCommentsType[];
+    currentPage: number;
+    totalPages: number;
+    totalResults: number;
+  };
+}
+
+export interface ResultsCommentsType {
+  _id: string;
+  comment: string;
+  userId: UserIdResultsType;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -51,24 +68,37 @@ export default async function Page({ params }: Props) {
   const token = cookies().get('token')?.value;
   const isAuth = cookies().has('token');
 
-  const response = await fetch(
+  const resPin = await fetch(
     `${process.env.NEXT_PUBLIC_URL_API}/midia/get-midiaid/${pinid}`,
     {
       method: 'GET',
       cache: 'no-cache',
     }
   );
-  if (!response.ok) {
+  if (!resPin.ok) {
     notFound();
   }
-  const data = (await response.json()) as MidiaResultsType;
-  const isSave = data.userId.saves?.includes(data._id);
+  const dataPin = (await resPin.json()) as MidiaResultsType;
+  const isSave = dataPin.userId.saves?.includes(dataPin._id);
+
+  const resComments = await fetch(
+    `${process.env.NEXT_PUBLIC_URL_API}/comments/${dataPin._id}?page=1`,
+    {
+      method: 'GET',
+      cache: 'no-cache',
+    }
+  );
+  if (!resComments.ok) {
+    notFound();
+  }
+  const { commentsMidia } = (await resComments.json()) as CommentsType;
+  const resultsComments = commentsMidia.results;
 
   const pinWidth = 500;
   const pinHeight = calHeight({
     customWidth: pinWidth,
-    originalHeight: data.height,
-    originalWidth: data.width,
+    originalHeight: dataPin.height,
+    originalWidth: dataPin.width,
   });
 
   return (
@@ -79,29 +109,34 @@ export default async function Page({ params }: Props) {
           // eslint-disable-next-line
           className={`${styles['pin-default-container']} ${pinHeight < 460 ? styles['pin-alternative-container'] : ''}`}
         >
-          <Pin data={data} />
+          <Pin data={dataPin} />
           <div className={styles['save-and-comments']}>
             <SaveAndMore
               isSave={isSave as boolean}
               data={{
-                _id: data._id,
-                title: data.title,
-                description: data.description,
-                url: data.url,
-                midiaType: data.midiaType,
-                username: data.userId.username,
+                _id: dataPin._id,
+                title: dataPin.title,
+                description: dataPin.description,
+                url: dataPin.url,
+                midiaType: dataPin.midiaType,
+                username: dataPin.userId.username,
               }}
               isAuth={isAuth}
               token={token as string}
             />
-            {data.description && <Description description={data.description} />}
+            <h2 className={styles['pin-title']}>{dataPin.title}</h2>
+            {dataPin.description && (
+              <Description description={dataPin.description} />
+            )}
             <UserPin
-              profilePhoto={data.userId.profilePhoto}
-              username={data.userId.username}
-              midia={data.userId.midia as string[]}
+              profilePhoto={dataPin.userId.profilePhoto}
+              username={dataPin.userId.username}
+              midia={dataPin.userId.midia}
+              width={48}
+              height={48}
             />
             <div className={styles.comments}>
-              <h2 className={styles['comments-title']}>Comentários</h2>
+              <Comments midiaId={dataPin._id} results={resultsComments} />
             </div>
           </div>
         </div>

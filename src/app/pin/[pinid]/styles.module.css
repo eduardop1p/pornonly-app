@@ -27,11 +27,17 @@
   margin: 2rem;
 }
 .save-and-comments > :not(:first-child, :last-child){
-  margin-bottom: 2.8rem;
+  margin-bottom: 1.3rem;
 }
 
-.comments-title{
-  font-size: var(--font-size-1_25rem);
-  font-weight: var(--font-weight-500);
+.pin-title{
+  font-weight: var(--font-weight-600);
   color: var(--g-colorGray300);
+  font-size: var(--font-size-1_75rem);
 }
+
+.comments{
+  margin-top: 2.5rem;
+  position: relative;
+}
+
