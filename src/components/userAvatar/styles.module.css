@@ -8,21 +8,32 @@
   position: relative;
   transition: box-shadow 200ms ease-in-out;
 }
-.container:hover{
+.container:not(.container-no-link):hover{
   box-shadow: 0 0 0 8px var(--g-colore9e9e9);;
 }
-.container > a{
+.container-profile-link{
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
   height: 100%;
   width: 100%;
+  cursor: pointer;
   font-size: var(--font-size-0_75rem);
   font-weight: var(--font-weight-400);
   color: var(--g-colorGray400);
 }
-.container > a > img{
+.container-profile{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  font-size: var(--font-size-1_25rem);
+  font-weight: var(--font-weight-600);
+  color: var(--g-colorGray400);
+  cursor: default;
+}
+.container img{
   object-fit: cover;
   object-position: center;
   width: 100%;

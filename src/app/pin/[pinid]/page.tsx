@@ -9,10 +9,12 @@ import Pin from '@/components/pin';
 import BackButton from '@/components/pin/backButton';
 import calHeight from '@/config/calcHeight';
 import SaveAndMore from '@/components/pin/saveAndMore';
-import UserPin from '@/components/pin/userPin';
+import UserPinAndComments from '@/components/pin/comments/userPinAndComments';
 import Description from '@/components/pin/description';
 import Comments from '@/components/pin/comments';
 import { UserIdResultsType } from '@/components/masonry/userPin';
+import AddComments from '@/components/pin/comments/addComments';
+import UserAvatar from '@/components/userAvatar';
 
 interface Props {
   params: { pinid: string };
@@ -31,6 +33,7 @@ export interface ResultsCommentsType {
   _id: string;
   comment: string;
   userId: UserIdResultsType;
+  createIn: string;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -111,32 +114,51 @@ export default async function Page({ params }: Props) {
         >
           <Pin data={dataPin} />
           <div className={styles['save-and-comments']}>
-            <SaveAndMore
-              isSave={isSave as boolean}
-              data={{
-                _id: dataPin._id,
-                title: dataPin.title,
-                description: dataPin.description,
-                url: dataPin.url,
-                midiaType: dataPin.midiaType,
-                username: dataPin.userId.username,
-              }}
-              isAuth={isAuth}
-              token={token as string}
-            />
-            <h2 className={styles['pin-title']}>{dataPin.title}</h2>
-            {dataPin.description && (
-              <Description description={dataPin.description} />
-            )}
-            <UserPin
-              profilePhoto={dataPin.userId.profilePhoto}
-              username={dataPin.userId.username}
-              midia={dataPin.userId.midia}
-              width={48}
-              height={48}
-            />
+            <div id="pin-info-user">
+              <SaveAndMore
+                isSave={isSave as boolean}
+                data={{
+                  _id: dataPin._id,
+                  title: dataPin.title,
+                  description: dataPin.description,
+                  url: dataPin.url,
+                  midiaType: dataPin.midiaType,
+                  username: dataPin.userId.username,
+                }}
+                isAuth={isAuth}
+                token={token as string}
+              />
+              <div className={styles['pin-info']}>
+                <h2 className={styles['pin-title']}>{dataPin.title}</h2>
+                {dataPin.description && (
+                  <Description description={dataPin.description} />
+                )}
+                <UserPinAndComments
+                  profilePhoto={dataPin.userId.profilePhoto}
+                  username={dataPin.userId.username}
+                  midia={dataPin.userId.midia}
+                  width={48}
+                  height={48}
+                />
+              </div>
+            </div>
             <div className={styles.comments}>
-              <Comments midiaId={dataPin._id} results={resultsComments} />
+              <Comments
+                midiaId={dataPin._id}
+                results={resultsComments}
+                token={token as string}
+                isAuth={isAuth}
+              />
+            </div>
+            <div className={styles['add-comments']}>
+              <h3 className={styles['comments-count']}>
+                {resultsComments.length === 1
+                  ? `${resultsComments.length} comentário`
+                  : `${resultsComments.length} comentários`}
+              </h3>
+              <AddComments>
+                {<UserAvatar containerHeight={48} containerWidth={48} noLink />}
+              </AddComments>
             </div>
           </div>
         </div>

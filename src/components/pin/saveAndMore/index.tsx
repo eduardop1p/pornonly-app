@@ -135,7 +135,7 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
   };
 
   return (
-    <Container>
+    <Container id="save-and-share">
       {isLoading && <Loading />}
       <GlobalError showError={showGlobalError} errorMsg={msgGlobalError} />
       <GlobalSuccess

@@ -24,10 +24,11 @@
 
 .save-and-comments{
   width: 100%;
-  margin: 2rem;
+  margin: 2rem 2rem 1.2rem 2rem;
+  position: relative;
 }
-.save-and-comments > :not(:first-child, :last-child){
-  margin-bottom: 1.3rem;
+.pin-info > :not(:last-child){
+  margin-bottom: 1rem;
 }
 
 .pin-title{
@@ -37,7 +38,23 @@
 }
 
 .comments{
-  margin-top: 2.5rem;
-  position: relative;
+  margin-top: 2.2rem;
+}
+
+.add-comments{
+  position: absolute;
+  bottom: 0;
+  background-color: var(--g-colorGray0);
+  display: flex;
+  padding-top: 8px;
+  flex-direction: column;
+  width: 100%;
+  border-top: 1px solid var(--g-colorBgRgb-229);
+}
+.comments-count{
+  font-size: var(--font-size-1_25rem);
+  font-weight: var(--font-weight-600);
+  color: var(--g-colorGray300);
+  margin-bottom: 10px;
 }
 

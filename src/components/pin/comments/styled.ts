@@ -8,6 +8,8 @@ interface Props {
 
 export const Container = styled.div<TypeTheme & Props>`
   ${({ theme, $showComments }) => css`
+    position: relative;
+
     & > .title-and-icon {
       display: flex;
       align-items: center;
@@ -45,7 +47,10 @@ export const Container = styled.div<TypeTheme & Props>`
       flex-direction: column;
       margin-top: 1.5rem;
       position: absolute;
-      max-width: 100%;
+      width: 100%;
+      overflow-y: auto;
+      /* height: 275px; */
+      /* padding-bottom: 1rem; */
 
       &[data-show-comments='false'] {
         display: none;
@@ -53,6 +58,7 @@ export const Container = styled.div<TypeTheme & Props>`
 
       & > :not(:last-child) {
         margin-bottom: 1.2rem;
+        margin-right: 10px;
       }
     }
   `}

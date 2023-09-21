@@ -1,19 +1,49 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Container } from './styled';
 import { ResultsCommentsType } from '@/app/pin/[pinid]/page';
-import UserPin from '../userPin';
+import UserPinAndComments from './userPinAndComments';
 
 export default function Comments({
   midiaId,
   results,
+  token,
+  isAuth,
 }: {
   midiaId: string;
+  token: string;
+  isAuth: boolean;
   results: ResultsCommentsType[];
 }) {
   const [showComments, setShowComments] = useState(true);
+  const [pinInfoElement, setPinInfoElement] = useState(
+    document.body.querySelector('#pin-info-user')
+  );
+  const [pinContainer, setPinContainer] = useState(
+    document.body.querySelector('#id-pin-default-container')
+  );
+  const [initialRender, setInitialRender] = useState(true);
+
+  const [noHeight, setNoHeight] = useState(205);
+
+  useEffect(() => {
+    if (initialRender) {
+      if (!pinInfoElement || !pinContainer) {
+        setPinInfoElement(document.body.querySelector('#pin-info-user'));
+        setPinContainer(
+          document.body.querySelector('#id-pin-default-container')
+        );
+      }
+      if (pinInfoElement && pinContainer) {
+        const newNoHeight =
+          pinContainer.clientHeight - (noHeight + pinInfoElement.clientHeight);
+        setNoHeight(newNoHeight);
+        setInitialRender(false);
+      }
+    }
+  }, [pinInfoElement, pinContainer, noHeight, initialRender]);
 
   return (
     <Container $showComments={showComments}>
@@ -36,15 +66,21 @@ export default function Comments({
           </svg>
         </button>
       </div>
-      <div className="comments-and-users" data-show-comments={showComments}>
+      <div
+        className="comments-and-users"
+        data-show-comments={showComments}
+        style={{ height: `${noHeight}px` }}
+      >
         {results.map(comment => (
           <div key={comment._id}>
-            <UserPin
+            <UserPinAndComments
               username={comment.userId.username}
               profilePhoto={comment.userId.profilePhoto}
               width={32}
               height={32}
-              textComment={comment.comment}
+              comment={comment}
+              token={token}
+              isAuth={isAuth}
             />
           </div>
         ))}

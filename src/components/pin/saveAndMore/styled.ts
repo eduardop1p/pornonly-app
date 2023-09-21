@@ -7,7 +7,7 @@ export const Container = styled.div<TypeTheme>`
     width: 100%;
     display: flex;
     justify-content: space-between;
-    margin-bottom: 2rem;
+    margin-bottom: 1.8rem;
 
     & > .more-options {
       position: relative;
