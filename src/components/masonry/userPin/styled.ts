@@ -44,3 +44,55 @@ export const Container = styled.div<TypeTheme>`
       white-space: nowrap;
   `}
 `;
+
+export const ContainerLink = styled.a<TypeTheme>`
+  ${({ theme }) => css`
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      h4 {
+        text-decoration: underline;
+      }
+    }
+
+    & > img {
+      flex: none;
+      border-radius: 100%;
+      object-fit: cover;
+      object-position: center;
+      background-color: ${theme.colors.g_colorGray100};
+    }
+
+    & > span {
+      background-color: ${theme.colors.g_colore9e9e9};
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 100%;
+      font-size: ${theme.font_size.font_size_0_75rem};
+      font-weight: ${theme.font_weight.font_weight_500};
+      color: ${theme.colors.g_colorGray400};
+    }
+
+    & > div {
+      margin-left: 6px;
+      display: flex;
+      flex-direction: column;
+
+      & > h4 {
+        display: inline-block;
+        font-size: ${theme.font_size.font_size_0_90rem};
+        font-weight: ${theme.font_weight.font_weight_500};
+        color: ${theme.colors.g_colorGray300};
+      }
+
+      & > .publishs-count {
+        font-size: ${theme.font_size.font_size_0_90rem};
+        font-weight: ${theme.font_weight.font_weight_400};
+        color: ${theme.colors.g_colorGray300};
+        margin-top: 3px;
+      }
+    }
+  `}
+`;

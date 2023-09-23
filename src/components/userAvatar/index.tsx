@@ -39,7 +39,10 @@ export default async function UserAvatar({
     <div
       // eslint-disable-next-line
       className={`${styles.container} ${noLink ? styles['container-no-link'] : ''}`}
-      style={{ width: `${containerWidth}px`, height: `${containerHeight}px` }}
+      style={{
+        width: `${containerWidth}px`,
+        height: `${containerHeight}px`,
+      }}
     >
       {noLink ? (
         <div className={styles['container-profile']}>

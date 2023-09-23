@@ -143,9 +143,9 @@ export default async function Page({ params }: Props) {
 
         <h1 className={styles['user-username']}>{username}</h1>
         {isUniqueUser && <span className={styles['user-email']}>{email}</span>}
-        <div className={styles['user-createin']}>
+        {/* <div className={styles['user-createin']}>
           Conta ativa desde: {createIn}
-        </div>
+        </div> */}
         <div className={styles['user-total-publishs-and-saves']}>
           <span>
             {userMidiaResults.length == 1

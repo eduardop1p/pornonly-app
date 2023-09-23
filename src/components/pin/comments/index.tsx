@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -11,11 +12,13 @@ export default function Comments({
   results,
   token,
   isAuth,
+  userId,
 }: {
   midiaId: string;
   token: string;
   isAuth: boolean;
   results: ResultsCommentsType[];
+  userId: any;
 }) {
   const [showComments, setShowComments] = useState(true);
   const [pinInfoElement, setPinInfoElement] = useState(
@@ -26,7 +29,7 @@ export default function Comments({
   );
   const [initialRender, setInitialRender] = useState(true);
 
-  const [noHeight, setNoHeight] = useState(205);
+  const [noHeight, setNoHeight] = useState(200);
 
   useEffect(() => {
     if (initialRender) {
@@ -74,13 +77,10 @@ export default function Comments({
         {results.map(comment => (
           <div key={comment._id}>
             <UserPinAndComments
-              username={comment.userId.username}
-              profilePhoto={comment.userId.profilePhoto}
-              width={32}
-              height={32}
               comment={comment}
               token={token}
               isAuth={isAuth}
+              userId={userId}
             />
           </div>
         ))}

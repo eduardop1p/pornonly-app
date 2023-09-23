@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 
-import { Container } from './styled';
+import { Container, ContainerLink } from './styled';
 
 export interface UserIdResultsType {
   _id?: string;
@@ -15,8 +15,12 @@ export interface UserIdResultsType {
   saves?: string[];
 }
 
-export default function UserPin({ username, profilePhoto }: UserIdResultsType) {
-  return (
+export default function UserPin({
+  username,
+  profilePhoto,
+  midia,
+}: UserIdResultsType) {
+  return !midia ? (
     <Container>
       {profilePhoto.length ? (
         <Image
@@ -31,5 +35,27 @@ export default function UserPin({ username, profilePhoto }: UserIdResultsType) {
       )}
       <h4>{username}</h4>
     </Container>
+  ) : (
+    <ContainerLink href={`/${username}`}>
+      {profilePhoto.length ? (
+        <Image
+          src={profilePhoto[0].url}
+          alt={username}
+          priority
+          width={48}
+          height={48}
+        />
+      ) : (
+        <span>{username?.at(0)?.toUpperCase()}</span>
+      )}
+      <div>
+        <h4>{username}</h4>
+        <span className="publishs-count ">
+          {midia.length === 1
+            ? `${midia.length} publicação`
+            : `${midia.length} publicações`}
+        </span>
+      </div>
+    </ContainerLink>
   );
 }

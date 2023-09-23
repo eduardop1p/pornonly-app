@@ -45,7 +45,7 @@ export const Container = styled.div<TypeTheme & Props>`
     & > .comments-and-users {
       display: flex;
       flex-direction: column;
-      margin-top: 1.5rem;
+      margin-top: 1rem;
       position: absolute;
       width: 100%;
       overflow-y: auto;
@@ -57,7 +57,7 @@ export const Container = styled.div<TypeTheme & Props>`
       }
 
       & > :not(:last-child) {
-        margin-bottom: 1.2rem;
+        margin-bottom: 1rem;
         margin-right: 10px;
       }
     }

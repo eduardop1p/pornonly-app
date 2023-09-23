@@ -1,19 +1,28 @@
 import styled, { css } from 'styled-components';
 
 import { TypeTheme } from '@/utils/theme/myTheme';
-import { ResultsCommentsType } from '@/app/pin/[pinid]/page';
 
-interface Props {
-  $comment?: ResultsCommentsType;
-}
+export const Container = styled.div<TypeTheme>`
+  display: flex;
+  /* align-items: center; */
 
-export const Container = styled.div<TypeTheme & Props>`
-  ${({ theme, $comment }) => css`
+  .pin-info-and-comment-user {
+    margin-top: 3px;
+    position: relative;
+
+    .responses-comments-container {
+      margin-top: 10px;
+      margin-left: 3rem;
+    }
+  }
+`;
+
+export const ContainerComment = styled.div<TypeTheme>`
+  ${({ theme }) => css`
     display: flex;
-    /* align-items: center; */
 
-    & > .pin-user-profile {
-      margin-right: ${$comment ? '6px' : '7px'};
+    .pin-user-profile {
+      margin-right: 6px;
 
       & > img {
         flex: none;
@@ -35,18 +44,12 @@ export const Container = styled.div<TypeTheme & Props>`
       }
     }
 
-    & > .pin-info-and-comment-user {
-      margin-top: 3px;
-      display: ${$comment ? 'block' : 'flex'};
-      flex-direction: ${$comment ? 'row' : 'column'};
-
-      & > div {
+    & > div {
+      .comment-username-and-commet {
         & > h4 {
           display: inline-block;
-          font-size: ${$comment
-            ? theme.font_size.font_size_1rem
-            : theme.font_size.font_size_0_90rem};
-          font-weight: ${theme.font_weight.font_weight_500};
+          font-size: ${theme.font_size.font_size_1rem};
+          font-weight: ${theme.font_weight.font_weight_600};
           color: ${theme.colors.g_colorGray300};
 
           &:hover {
@@ -55,6 +58,7 @@ export const Container = styled.div<TypeTheme & Props>`
 
           & > a {
             color: inherit;
+            font-weight: inherit;
           }
         }
 
@@ -67,29 +71,53 @@ export const Container = styled.div<TypeTheme & Props>`
         }
       }
 
-      & > .publishs-count {
-        font-size: ${theme.font_size.font_size_0_90rem};
-        font-weight: ${theme.font_weight.font_weight_400};
-        color: ${theme.colors.g_colorGray300};
-        margin-top: 3px;
-      }
-
-      & > .createin-comment {
+      & > .container-comment-manage {
         display: flex;
         align-items: center;
 
-        & > button {
-          margin-left: 1rem;
+        & > :not(:last-child) {
+          margin-right: 14px;
+        }
+
+        & > .response-comment {
+          color: ${theme.colors.g_color5f5f5f};
+          font-size: ${theme.font_size.font_size_0_90rem};
+          font-weight: ${theme.font_weight.font_weight_600};
           cursor: pointer;
-          width: 24px;
-          height: 24px;
-          border-radius: 100%;
+        }
+
+        & > .likes-container {
           display: flex;
           align-items: center;
-          justify-content: center;
 
-          &:hover {
-            background-color: ${theme.colors.g_colore9e9e9};
+          & > button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+
+            & > svg {
+              flex: none;
+              width: 100%;
+              height: 100%;
+              display: inline-block;
+
+              &.yes-like {
+                fill: ${theme.colors.g_colorRed100};
+              }
+              &.no-like {
+                fill: ${theme.colors.g_color5f5f5f};
+              }
+            }
+          }
+
+          & > span {
+            color: ${theme.colors.g_color5f5f5f};
+            font-size: ${theme.font_size.font_size_0_90rem};
+            font-weight: ${theme.font_weight.font_weight_500};
+            margin-left: 5px;
           }
         }
 
@@ -98,6 +126,61 @@ export const Container = styled.div<TypeTheme & Props>`
           font-weight: ${theme.font_weight.font_weight_400};
           color: ${theme.colors.g_colorGray200};
           display: inline-block;
+        }
+
+        & > .user-manage-comment {
+          position: relative;
+
+          & > button {
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+            border-radius: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            &:hover {
+              background-color: ${theme.colors.g_colore9e9e9};
+            }
+          }
+
+          & > .manage-comment {
+            width: 180px;
+            background-color: ${theme.colors.g_colorGray0};
+            border-radius: 1rem;
+            position: absolute;
+            top: 1.8rem;
+            padding: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: ${theme.box_shadow.box_shadow_04};
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: default;
+
+            &[data-show-manage-comment='false'] {
+              display: none;
+            }
+
+            & > button {
+              color: ${theme.colors.g_colorRed100};
+              font-size: ${theme.font_size.font_size_1rem};
+              font-weight: ${theme.font_weight.font_weight_500};
+              padding: 8px;
+              width: 100%;
+              text-align: left;
+              border-radius: 8px;
+              transition: background 200ms ease-in-out;
+
+              &:hover {
+                background-color: ${theme.colors.g_colore9e9e9};
+                cursor: pointer;
+              }
+            }
+          }
         }
       }
     }

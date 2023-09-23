@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { cookies } from 'next/headers';
+import jwt from 'jsonwebtoken';
 
 import styles from './styles.module.css';
 
@@ -9,12 +10,12 @@ import Pin from '@/components/pin';
 import BackButton from '@/components/pin/backButton';
 import calHeight from '@/config/calcHeight';
 import SaveAndMore from '@/components/pin/saveAndMore';
-import UserPinAndComments from '@/components/pin/comments/userPinAndComments';
 import Description from '@/components/pin/description';
 import Comments from '@/components/pin/comments';
 import { UserIdResultsType } from '@/components/masonry/userPin';
 import AddComments from '@/components/pin/comments/addComments';
 import UserAvatar from '@/components/userAvatar';
+import UserPin from '@/components/masonry/userPin';
 
 interface Props {
   params: { pinid: string };
@@ -32,8 +33,23 @@ interface CommentsType {
 export interface ResultsCommentsType {
   _id: string;
   comment: string;
+  likes: LikesType;
   userId: UserIdResultsType;
+  responses?: ResponsesCommentsType[];
   createIn: string;
+}
+
+export interface ResponsesCommentsType {
+  _id: string;
+  comment: string;
+  userId: UserIdResultsType;
+  likes: LikesType;
+  createIn: string;
+}
+
+export interface LikesType {
+  likes: number;
+  users: string[];
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -70,6 +86,8 @@ export default async function Page({ params }: Props) {
   const { pinid } = params;
   const token = cookies().get('token')?.value;
   const isAuth = cookies().has('token');
+  const user: any = isAuth && jwt.decode(token as string);
+  const userId = user && user._id;
 
   const resPin = await fetch(
     `${process.env.NEXT_PUBLIC_URL_API}/midia/get-midiaid/${pinid}`,
@@ -133,12 +151,10 @@ export default async function Page({ params }: Props) {
                 {dataPin.description && (
                   <Description description={dataPin.description} />
                 )}
-                <UserPinAndComments
+                <UserPin
                   profilePhoto={dataPin.userId.profilePhoto}
                   username={dataPin.userId.username}
                   midia={dataPin.userId.midia}
-                  width={48}
-                  height={48}
                 />
               </div>
             </div>
@@ -148,6 +164,7 @@ export default async function Page({ params }: Props) {
                 results={resultsComments}
                 token={token as string}
                 isAuth={isAuth}
+                userId={userId}
               />
             </div>
             <div className={styles['add-comments']}>
@@ -156,7 +173,7 @@ export default async function Page({ params }: Props) {
                   ? `${resultsComments.length} comentário`
                   : `${resultsComments.length} comentários`}
               </h3>
-              <AddComments>
+              <AddComments token={token} isAuth={isAuth} midiaId={dataPin._id}>
                 {<UserAvatar containerHeight={48} containerWidth={48} noLink />}
               </AddComments>
             </div>

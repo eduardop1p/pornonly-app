@@ -115,7 +115,7 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
       // }
       handleServerSuccess('Pin removido dos salvos');
     } catch (err) {
-      setPinIsSave(false);
+      setPinIsSave(true);
       handleServerError('Erro interno no servidor.');
     } finally {
       // setIsLoading(false);

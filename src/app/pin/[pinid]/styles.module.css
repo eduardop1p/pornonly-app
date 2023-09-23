@@ -38,7 +38,7 @@
 }
 
 .comments{
-  margin-top: 2.2rem;
+  margin-top: 1.8rem;
 }
 
 .add-comments{
@@ -55,6 +55,6 @@
   font-size: var(--font-size-1_25rem);
   font-weight: var(--font-weight-600);
   color: var(--g-colorGray300);
-  margin-bottom: 10px;
+  margin-bottom: 1rem;
 }
 
