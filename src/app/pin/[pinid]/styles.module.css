@@ -28,7 +28,7 @@
   position: relative;
 }
 .pin-info > :not(:last-child){
-  margin-bottom: 1rem;
+  margin-bottom: 10px;
 }
 
 .pin-title{
@@ -38,7 +38,7 @@
 }
 
 .comments{
-  margin-top: 1.8rem;
+  margin-top: 1rem;
 }
 
 .add-comments{

@@ -32,15 +32,14 @@ export default function AddComments({
 
   const handleAddCommentInPin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    if (!isAuth || !token) {
-      router.push(`/login?from=${pathName}`);
-      return;
-    }
     const comment = event.currentTarget.querySelector(
       '#comment'
     ) as HTMLInputElement;
     if (!comment.value || isLoading) return;
+    if (!isAuth || !token) {
+      router.push(`/login?from=${pathName}`);
+      return;
+    }
     if (comment.value.length > 50) handleServerError('Comentário muito longo');
 
     try {

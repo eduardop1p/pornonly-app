@@ -23,7 +23,7 @@ interface Props {
   };
   isAuth: boolean;
   token: string;
-  isSave: boolean;
+  isSave: boolean | undefined;
 }
 
 export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {

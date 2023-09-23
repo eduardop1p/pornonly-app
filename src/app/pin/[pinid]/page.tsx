@@ -100,7 +100,7 @@ export default async function Page({ params }: Props) {
     notFound();
   }
   const dataPin = (await resPin.json()) as MidiaResultsType;
-  const isSave = dataPin.userId.saves?.includes(dataPin._id);
+  const isSave = dataPin.userId.saves?.includes(userId);
 
   const resComments = await fetch(
     `${process.env.NEXT_PUBLIC_URL_API}/comments/${dataPin._id}?page=1`,
@@ -134,7 +134,7 @@ export default async function Page({ params }: Props) {
           <div className={styles['save-and-comments']}>
             <div id="pin-info-user">
               <SaveAndMore
-                isSave={isSave as boolean}
+                isSave={isSave}
                 data={{
                   _id: dataPin._id,
                   title: dataPin.title,

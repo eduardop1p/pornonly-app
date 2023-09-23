@@ -11,8 +11,12 @@ export const Container = styled.div<TypeTheme>`
     position: relative;
 
     .responses-comments-container {
-      margin-top: 10px;
+      margin-top: 1rem;
       margin-left: 3rem;
+
+      & > :not(:last-child) {
+        margin-bottom: 10px;
+      }
     }
   }
 `;

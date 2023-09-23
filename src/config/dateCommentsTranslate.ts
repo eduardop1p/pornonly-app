@@ -1,4 +1,5 @@
 export default function dateCommentsTranslate(date: string) {
+  if (date.includes('now')) return 'agora mesmo';
   if (date.includes('seconds')) return `há ${extractNumbers(date)} segundos`;
   if (date.includes('second')) return `há ${extractNumbers(date)} segundo`;
   if (date.includes('minutes')) return `há ${extractNumbers(date)} minutos`;

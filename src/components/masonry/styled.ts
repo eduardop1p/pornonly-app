@@ -82,7 +82,7 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
             color: ${theme.colors.g_colorGray300};
             font-weight: ${theme.font_weight.font_weight_600};
             font-size: ${theme.font_size.font_size_0_90rem};
-            width: 100%;
+            width: fit-content;
             height: 1rem;
             overflow: hidden;
             display: -webkit-box;

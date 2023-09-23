@@ -29,7 +29,7 @@ export default function Comments({
   );
   const [initialRender, setInitialRender] = useState(true);
 
-  const [noHeight, setNoHeight] = useState(200);
+  const [noHeight, setNoHeight] = useState(185);
 
   useEffect(() => {
     if (initialRender) {

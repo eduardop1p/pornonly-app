@@ -69,6 +69,7 @@ export default function UserPinAndComments({
                 handleServerSuccess={handleServerSuccess}
                 isLoading={isLoading}
                 setIsLoading={setIsLoading}
+                parentCommentId={comment._id}
               />
             ))}
           </div>
@@ -87,6 +88,7 @@ interface UserCommentType {
   handleServerSuccess(msg: string): void;
   isLoading: boolean;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
+  parentCommentId?: string;
 }
 function UserComment({
   comment,
@@ -97,6 +99,7 @@ function UserComment({
   handleServerSuccess,
   isLoading,
   setIsLoading,
+  parentCommentId,
 }: UserCommentType) {
   const router = useRouter();
   const pathName = usePathname();
@@ -117,8 +120,9 @@ function UserComment({
     try {
       setIsLoading(true);
       const res = await fetch(
-        // eslint-disable-next-line
-        `${process.env.NEXT_PUBLIC_URL_API}/comments/delete-one/${comment._id as string}`,
+        parentCommentId
+          ? `${process.env.NEXT_PUBLIC_URL_API}/responses-comments/${parentCommentId}/${comment._id}`
+          : `${process.env.NEXT_PUBLIC_URL_API}/comments/delete-one/${comment._id}`,
         {
           method: 'DELETE',
           headers: {
@@ -149,7 +153,8 @@ function UserComment({
     try {
       setIsLikeComment(true);
       await fetch(
-        `${process.env.NEXT_PUBLIC_URL_API}/comments/like-in-comment/${comment._id}`,
+        // eslint-disable-next-line
+        `${process.env.NEXT_PUBLIC_URL_API}/${parentCommentId ? 'responses-comments' : 'comments'}/like-in-comment/${comment._id}`,
         {
           method: 'GET',
           headers: {
@@ -173,7 +178,8 @@ function UserComment({
     try {
       setIsLikeComment(false);
       await fetch(
-        `${process.env.NEXT_PUBLIC_URL_API}/comments/unclick-in-comment/${comment._id}`,
+        // eslint-disable-next-line
+        `${process.env.NEXT_PUBLIC_URL_API}/${parentCommentId ? 'responses-comments' : 'comments'}/unclick-in-comment/${comment._id}`,
         {
           method: 'DELETE',
           headers: {
@@ -206,7 +212,6 @@ function UserComment({
         )}
       </Link>
       <div>
-        {' '}
         <div className="comment-username-and-commet">
           <h4>
             <Link href={`/${comment.userId.username}`}>

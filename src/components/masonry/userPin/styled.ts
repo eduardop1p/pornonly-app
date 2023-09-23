@@ -45,10 +45,11 @@ export const Container = styled.div<TypeTheme>`
   `}
 `;
 
-export const ContainerLink = styled.a<TypeTheme>`
+export const ContainerLink = styled.div<TypeTheme>`
   ${({ theme }) => css`
     display: flex;
     align-items: center;
+    width: fit-content;
 
     &:hover {
       h4 {

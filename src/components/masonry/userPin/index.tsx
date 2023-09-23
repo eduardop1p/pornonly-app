@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 
 import { Container, ContainerLink } from './styled';
 
@@ -36,26 +37,31 @@ export default function UserPin({
       <h4>{username}</h4>
     </Container>
   ) : (
-    <ContainerLink href={`/${username}`}>
-      {profilePhoto.length ? (
-        <Image
-          src={profilePhoto[0].url}
-          alt={username}
-          priority
-          width={48}
-          height={48}
-        />
-      ) : (
-        <span>{username?.at(0)?.toUpperCase()}</span>
-      )}
-      <div>
-        <h4>{username}</h4>
-        <span className="publishs-count ">
-          {midia.length === 1
-            ? `${midia.length} publicação`
-            : `${midia.length} publicações`}
-        </span>
-      </div>
-    </ContainerLink>
+    <Link
+      href={`/${username}`}
+      style={{ width: 'fit-content', display: 'inline-block' }}
+    >
+      <ContainerLink>
+        {profilePhoto.length ? (
+          <Image
+            src={profilePhoto[0].url}
+            alt={username}
+            priority
+            width={48}
+            height={48}
+          />
+        ) : (
+          <span>{username?.at(0)?.toUpperCase()}</span>
+        )}
+        <div>
+          <h4>{username}</h4>
+          <span className="publishs-count ">
+            {midia.length === 1
+              ? `${midia.length} publicação`
+              : `${midia.length} publicações`}
+          </span>
+        </div>
+      </ContainerLink>
+    </Link>
   );
 }
