@@ -2,7 +2,7 @@
 'use client';
 
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { ChangeEvent, useState, ReactNode, useRef } from 'react';
+import { ChangeEvent, useState, ReactNode, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -74,7 +74,7 @@ export default function PublishPin({
   const [inputTitleLength, setInputTitleLength] = useState(0);
   const [inputDescriptionInFocus, setInputDescriptionInFocus] = useState(false);
   const [inputDescriptionLength, setInputDescriptionLength] = useState(0);
-  const [valueInputTags, setValueInputTags] = useState<any[]>([]);
+  const [valueInputTags, setValueInputTags] = useState<string[]>([]);
   const [valueTag, setValueTag] = useState('');
   const [inputTagFocus, setInputTagsFocus] = useState(false);
   const [typeBtn, setTypeBtn] = useState<'submit' | 'button' | 'reset'>(
@@ -82,11 +82,21 @@ export default function PublishPin({
   );
   const [descriptionValue, setDescriptionValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [widthInputNameTags, setWidthInputNameTags] = useState(0);
   const { handleServerError, msgGlobalError, showGlobalError } =
     useGlobalErrorTime();
   const { handleServerSuccess, msgGlobalSuccess, showGlobalSuccess } =
     useGlobalSuccessTime();
   const fileScrRef = useRef('');
+
+  useEffect(() => {
+    const allNameTags = Array.from(document.body.querySelectorAll('.name-tag'));
+    const totalWidthAllNameTags = allNameTags.reduce(
+      (ac: number, vl) => ac + (vl.clientWidth + 15),
+      0
+    );
+    setWidthInputNameTags(totalWidthAllNameTags);
+  }, [valueInputTags]);
 
   const handleSubmitFile: SubmitHandler<BodyFile> = async (body, event) => {
     event?.preventDefault();
@@ -265,7 +275,10 @@ export default function PublishPin({
           <button type={typeBtn}>Publicar</button>
         </div>
         <div className="title-description-tags">
-          <div style={{ height: '105px', marginBottom: '10px' }}>
+          <div
+            style={{ height: '105px', marginBottom: '10px' }}
+            className="add-title"
+          >
             <input
               id="title"
               placeholder="Adicione um título"
@@ -293,7 +306,7 @@ export default function PublishPin({
             {errors.title && <ErrorMsg errorMsg={errors.title.message} />}
           </div>
           <div className="user">{children}</div>
-          <div>
+          <div className="add-description">
             <textarea
               style={{ maxHeight: '138px' }}
               id="description"
@@ -324,7 +337,7 @@ export default function PublishPin({
               }
             >
               {valueInputTags.map((value, index: number) => (
-                <span key={index}>
+                <span key={index} className="name-tag">
                   {value}
                   <svg
                     height="18"
@@ -341,10 +354,11 @@ export default function PublishPin({
               ))}
               {valueInputTags.length !== 5 && (
                 <input
+                  style={{ width: `calc(100% - ${widthInputNameTags}px)` }}
                   type="text"
                   id="tags"
                   value={valueTag}
-                  placeholder="Adcione tags a seu pin"
+                  placeholder="Adcione tags ao seu pin"
                   maxLength={10}
                   onChange={event => setValueTag(event.target.value)}
                   onFocus={() => {

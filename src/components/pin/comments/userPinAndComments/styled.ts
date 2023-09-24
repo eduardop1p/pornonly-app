@@ -13,6 +13,7 @@ export const Container = styled.div<TypeTheme>`
     .responses-comments-container {
       margin-top: 1rem;
       margin-left: 3rem;
+      position: relative;
 
       & > :not(:last-child) {
         margin-bottom: 10px;

@@ -207,14 +207,17 @@ export const Container = styled.div<TypeTheme>`
         }
 
         & > .add-tags {
+          margin-top: 1rem;
+
           & > .container-input-tags {
             width: 100%;
             padding-bottom: 10px;
             box-shadow: ${theme.box_shadow.box_shadow_05};
-            position: relative;
             display: flex;
             align-items: center;
             justify-content: left;
+            flex-wrap: wrap;
+            position: relative;
 
             &[data-tags-focus='true'] {
               box-shadow: ${theme.box_shadow.box_shadow_06};
@@ -222,14 +225,13 @@ export const Container = styled.div<TypeTheme>`
 
             & > input {
               border: none;
-              margin-left: 5px;
               font-size: ${theme.font_size.font_size_1rem};
               font-weight: ${theme.font_weight.font_weight_400};
-              width: 100%;
+              margin-top: 8px;
             }
 
             & > span {
-              margin-right: 8px;
+              margin-right: 10px;
               background-color: ${theme.colors.g_colore9e9e9};
               color: ${theme.colors.g_colorGray400};
               font-weight: ${theme.font_weight.font_weight_500};
@@ -237,6 +239,8 @@ export const Container = styled.div<TypeTheme>`
               padding: 8px 12px;
               border-radius: 2rem;
               position: relative;
+              white-space: nowrap;
+              margin-top: 8px;
 
               & > svg {
                 position: absolute;
@@ -255,6 +259,8 @@ export const Container = styled.div<TypeTheme>`
               background: transparent;
               cursor: pointer;
               flex: none;
+              position: absolute;
+              right: 0;
 
               & > svg {
                 fill: ${theme.colors.g_color5f5f5f};
@@ -265,26 +271,25 @@ export const Container = styled.div<TypeTheme>`
         }
 
         & > .user {
-          margin-bottom: 3rem;
+          margin-bottom: 2rem;
         }
 
-        & > div {
-          margin-bottom: 2rem;
+        .info-input {
+          display: flex;
+          align-items: center;
+          width: 100%;
+          justify-content: space-between;
+          margin-top: 8px;
 
-          & > .info-input {
-            display: flex;
-            align-items: center;
-            width: 100%;
-            justify-content: space-between;
-            margin-top: 8px;
-
-            & > span {
-              color: ${theme.colors.g_colorGray111111};
-              font-weight: ${theme.font_weight.font_weight_400};
-              font-size: ${theme.font_size.font_size_0_75rem};
-            }
+          & > span {
+            color: ${theme.colors.g_colorGray111111};
+            font-weight: ${theme.font_weight.font_weight_400};
+            font-size: ${theme.font_size.font_size_0_75rem};
           }
+        }
 
+        & > .add-title,
+        & > .add-description {
           & > #title,
           & > textarea {
             width: 100%;

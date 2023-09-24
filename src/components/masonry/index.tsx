@@ -29,9 +29,7 @@ export default function Masonry({
   masonryPublishs = false,
 }: Props) {
   const [columnCount] = useState(6);
-  const [columnWidth, setColumnWidth] = useState(
-    (window.innerWidth - 16) / 6.5
-  );
+  const [columnWidth, setColumnWidth] = useState((window.innerWidth - 16) / 6);
   const [newResults, setNewResults] = useState<any[]>([]);
   const [initialRender, setInitialRender] = useState(true);
 
@@ -45,6 +43,7 @@ export default function Masonry({
     // setInitialRender(false);
     // }
   }, [columnCount, results, initialRender]);
+  console.log(newResults);
 
   useEffect(() => {
     const prevWindowWidth = window.innerWidth;

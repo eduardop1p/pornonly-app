@@ -35,7 +35,7 @@ export interface ResultsCommentsType {
   comment: string;
   likes: LikesType;
   userId: UserIdResultsType;
-  responses?: ResponsesCommentsType[];
+  responses: ResponsesCommentsType[];
   createIn: string;
 }
 
@@ -122,6 +122,13 @@ export default async function Page({ params }: Props) {
     originalWidth: dataPin.width,
   });
 
+  const allCommentsInPin =
+    resultsComments.length +
+    resultsComments.reduce(
+      (ac: number, value) => ac + value.responses.length,
+      0
+    );
+
   return (
     <main className={styles.main}>
       <BackButton />
@@ -159,19 +166,23 @@ export default async function Page({ params }: Props) {
               </div>
             </div>
             <div className={styles.comments}>
-              <Comments
-                midiaId={dataPin._id}
-                results={resultsComments}
-                token={token as string}
-                isAuth={isAuth}
-                userId={userId}
-              />
+              {allCommentsInPin ? (
+                <Comments
+                  midiaId={dataPin._id}
+                  results={resultsComments}
+                  token={token as string}
+                  isAuth={isAuth}
+                  userId={userId}
+                />
+              ) : (
+                <span>Nenhum comentário aqui</span>
+              )}
             </div>
             <div className={styles['add-comments']}>
               <h3 className={styles['comments-count']}>
-                {resultsComments.length === 1
-                  ? `${resultsComments.length} comentário`
-                  : `${resultsComments.length} comentários`}
+                {allCommentsInPin === 1
+                  ? `${allCommentsInPin} comentário`
+                  : `${allCommentsInPin} comentários`}
               </h3>
               <AddComments token={token} isAuth={isAuth} midiaId={dataPin._id}>
                 {<UserAvatar containerHeight={48} containerWidth={48} noLink />}
