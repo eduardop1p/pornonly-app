@@ -15,6 +15,7 @@ import { GlobalSuccess } from '../globalSuccess';
 import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
 import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
 import Loading from '../loading';
+import WaitingPin from '@/components/masonry/waitingPin';
 
 const ZodUserSchema = z.object({
   title: z
@@ -177,6 +178,26 @@ export default function PublishPin({
     setValueInputTags(updateItems);
   };
 
+  const handleVideoCompleteLoad = (video: HTMLVideoElement) => {
+    handleNoWaitingVideo(video);
+  };
+
+  const handleWaitingVideo = (video: HTMLVideoElement) => {
+    const parentVideo = video.parentElement;
+    const waitingPin = parentVideo?.querySelector(
+      '#waiting-pin'
+    ) as HTMLDivElement;
+    waitingPin.classList.add('waiting');
+  };
+
+  const handleNoWaitingVideo = (video: HTMLVideoElement) => {
+    const parentVideo = video.parentElement;
+    const waitingPin = parentVideo?.querySelector(
+      '#waiting-pin'
+    ) as HTMLDivElement;
+    waitingPin.classList.remove('waiting');
+  };
+
   return (
     <Container>
       {isLoading && <Loading />}
@@ -229,7 +250,28 @@ export default function PublishPin({
                     sizes="100%"
                   />
                 ) : (
-                  <video src={fileContent.src} controls={true}></video>
+                  <>
+                    <video
+                      src={fileContent.src}
+                      controls={true}
+                      onWaiting={event =>
+                        handleWaitingVideo(
+                          event.currentTarget as HTMLVideoElement
+                        )
+                      }
+                      onPlaying={event =>
+                        handleNoWaitingVideo(
+                          event.currentTarget as HTMLVideoElement
+                        )
+                      }
+                      onLoadedMetadata={event =>
+                        handleVideoCompleteLoad(
+                          event.currentTarget as HTMLVideoElement
+                        )
+                      }
+                    ></video>
+                    <WaitingPin alonePin />
+                  </>
                 )}
               </div>
             )}

@@ -236,7 +236,6 @@ export default function UserPublishsSaves({
           {publishsResults.length ? (
             <Masonry
               results={publishsResults}
-              justifyContent="left"
               visibleUserInfo={false}
               masonryPublishs
             />
@@ -248,11 +247,7 @@ export default function UserPublishsSaves({
         </div>
         <div data-active={showSaves}>
           {savesResults.length ? (
-            <Masonry
-              results={savesResults}
-              justifyContent="left"
-              visibleUserInfo={true}
-            />
+            <Masonry results={savesResults} visibleUserInfo={true} />
           ) : (
             <div className={styles['none-results']}>
               Nenhuma publicação salva

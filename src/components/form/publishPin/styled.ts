@@ -67,6 +67,13 @@ export const Container = styled.div<TypeTheme>`
               position: absolute;
               object-fit: contain;
               inset: 0;
+
+              &::-webkit-media-controls {
+                visibility: hidden;
+              }
+              &::-webkit-media-controls-enclosure {
+                visibility: visible;
+              }
             }
           }
 

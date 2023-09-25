@@ -17,33 +17,19 @@ import UserPin from './userPin';
 
 interface Props {
   results: MidiaResultsType[];
-  justifyContent: 'center' | 'left';
   visibleUserInfo?: boolean;
   masonryPublishs?: boolean;
 }
 
 export default function Masonry({
   results,
-  justifyContent,
   visibleUserInfo,
   masonryPublishs = false,
 }: Props) {
   const [columnCount] = useState(6);
-  const [columnWidth, setColumnWidth] = useState((window.innerWidth - 16) / 6);
-  const [newResults, setNewResults] = useState<any[]>([]);
-  const [initialRender, setInitialRender] = useState(true);
-
-  useEffect(() => {
-    // if (initialRender) {
-    setNewResults([]);
-    const resultsLength = Math.ceil(results.length / columnCount);
-    for (let i = 0; i < results.length; i += resultsLength) {
-      setNewResults(state => [...state, results.slice(i, i + resultsLength)]);
-    }
-    // setInitialRender(false);
-    // }
-  }, [columnCount, results, initialRender]);
-  console.log(newResults);
+  const [columnWidth, setColumnWidth] = useState(
+    (window.innerWidth - 132) / columnCount
+  );
 
   useEffect(() => {
     const prevWindowWidth = window.innerWidth;
@@ -87,7 +73,7 @@ export default function Masonry({
   }, []);
 
   const handleVideoCompleteLoad = useCallback(
-    (video: HTMLVideoElement, resultIndex: number, midiaIndex: number) => {
+    (video: HTMLVideoElement, midiaIndex: number) => {
       const videoTime = video.parentElement?.querySelector(
         '.video-time'
       ) as HTMLSpanElement;
@@ -114,138 +100,124 @@ export default function Masonry({
   return (
     <MasonryContainer
       $columnWidth={columnWidth}
-      $marginColumn="1rem"
-      $justifyContent={justifyContent}
+      $columnCount={columnCount}
       id="masonry"
     >
-      {newResults.map((midia, resultIndex: number) => (
-        <div key={resultIndex} className="masonry-column">
-          {midia.map((midiaValue: MidiaResultsType, midiaIndex: number) =>
-            midiaValue.midiaType === 'video' ? (
-              <div
-                // eslint-disable-next-line
-                className={`pin-container ${masonryPublishs ? 'pin-publishs-container' : ''}`}
-                key={midiaValue._id}
-                data-index={
-                  typeof midiaValue.index != 'undefined'
-                    ? midiaValue.index
-                    : false
+      {results.map((midiaValue: MidiaResultsType, midiaIndex: number) =>
+        midiaValue.midiaType === 'video' ? (
+          <div
+            // eslint-disable-next-line
+            className={`pin-container ${masonryPublishs ? 'pin-publishs-container' : ''}`}
+            key={midiaValue._id}
+            data-index={
+              typeof midiaValue.index != 'undefined' ? midiaValue.index : false
+            }
+          >
+            <Link
+              href={`/pin/${midiaValue._id}`}
+              className="pin"
+              style={{
+                width: `${columnWidth.toFixed(0)}px`,
+                height: `${calHeight({
+                  customWidth: columnWidth,
+                  originalHeight: midiaValue.height,
+                  originalWidth: midiaValue.width,
+                })}px`,
+              }}
+            >
+              <span className="video-time">0:00</span>
+              <video
+                src={midiaValue.url}
+                controls={true}
+                preload="metadata"
+                onWaiting={event =>
+                  handleWaitingVideo(event.currentTarget as HTMLVideoElement)
                 }
-              >
+                onPlaying={event =>
+                  handleNoWaitingVideo(event.currentTarget as HTMLVideoElement)
+                }
+                onPlay={event =>
+                  handleVideoPlay(event.currentTarget as HTMLVideoElement)
+                }
+                onLoadedData={event =>
+                  handleVideoCompleteLoad(
+                    event.currentTarget as HTMLVideoElement,
+                    midiaIndex
+                  )
+                }
+              ></video>
+              <LoadingPin />
+              <WaitingPin />
+            </Link>
+            {visibleUserInfo && (
+              <div className="pin-title-and-user">
                 <Link
                   href={`/pin/${midiaValue._id}`}
-                  className="pin"
-                  style={{
-                    width: `${columnWidth.toFixed(0)}px`,
-                    height: `${calHeight({
-                      customWidth: columnWidth,
-                      originalHeight: midiaValue.height,
-                      originalWidth: midiaValue.width,
-                    })}px`,
-                  }}
+                  title={upperFirst(midiaValue.title)}
+                  className="pin-title"
                 >
-                  <span className="video-time">0:00</span>
-                  <video
-                    src={midiaValue.url}
-                    controls={true}
-                    preload="metadata"
-                    onWaiting={event =>
-                      handleWaitingVideo(
-                        event.currentTarget as HTMLVideoElement
-                      )
-                    }
-                    onPlaying={event =>
-                      handleNoWaitingVideo(
-                        event.currentTarget as HTMLVideoElement
-                      )
-                    }
-                    onPlay={event =>
-                      handleVideoPlay(event.currentTarget as HTMLVideoElement)
-                    }
-                    onLoadedData={event =>
-                      handleVideoCompleteLoad(
-                        event.currentTarget as HTMLVideoElement,
-                        resultIndex,
-                        midiaIndex
-                      )
-                    }
-                  ></video>
-                  <LoadingPin />
-                  <WaitingPin />
+                  {upperFirst(midiaValue.title)}
                 </Link>
-                {visibleUserInfo && (
-                  <div className="pin-title-and-user">
-                    <Link
-                      href={`/pin/${midiaValue._id}`}
-                      title={upperFirst(midiaValue.title)}
-                      className="pin-title"
-                    >
-                      {upperFirst(midiaValue.title)}
-                    </Link>
-                    <Link
-                      className="pin-original-user"
-                      href={`/${midiaValue.userId.username}`}
-                    >
-                      <UserPin {...midiaValue.userId} />
-                    </Link>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div
-                key={midiaValue._id}
-                // eslint-disable-next-line
-                className={`pin-container ${masonryPublishs ? 'pin-publishs-container' : ''}`}
-                data-index={
-                  typeof midiaValue.index != 'undefined'
-                    ? midiaValue.index
-                    : false
-                }
-              >
                 <Link
-                  href={`/pin/${midiaValue._id}`}
-                  className="pin"
-                  style={{
-                    width: `${columnWidth.toFixed(0)}px`,
-                    height: `${calHeight({
-                      customWidth: columnWidth,
-                      originalHeight: midiaValue.height,
-                      originalWidth: midiaValue.width,
-                    })}px`,
-                  }}
+                  className="pin-original-user"
+                  href={`/${midiaValue.userId.username}`}
                 >
-                  <Image
-                    src={midiaValue.url}
-                    alt={midiaValue.title}
-                    priority
-                    fill
-                    sizes="100%"
-                    onLoadingComplete={element => handleRemoveLoading(element)}
-                  />
-                  <LoadingPin />
+                  <UserPin {...midiaValue.userId} />
                 </Link>
-                {visibleUserInfo && (
-                  <div className="pin-title-and-user">
-                    <Link
-                      href={`/pin/${midiaValue._id}`}
-                      title={upperFirst(midiaValue.title)}
-                      className="pin-title"
-                    >
-                      {upperFirst(midiaValue.title)}
-                    </Link>
-                    <Link
-                      className="pin-original-user"
-                      href={`/${midiaValue.userId.username}`}
-                    >
-                      <UserPin {...midiaValue.userId} />
-                    </Link>
-                  </div>
-                )}
               </div>
-            )
-          )}
-        </div>
-      ))}
+            )}
+          </div>
+        ) : (
+          <div
+            key={midiaValue._id}
+            // eslint-disable-next-line
+            className={`pin-container ${masonryPublishs ? 'pin-publishs-container' : ''}`}
+            data-index={
+              typeof midiaValue.index != 'undefined' ? midiaValue.index : false
+            }
+          >
+            <Link
+              href={`/pin/${midiaValue._id} `}
+              className="pin"
+              style={{
+                width: `${columnWidth.toFixed(0)}px`,
+                height: `${calHeight({
+                  customWidth: columnWidth,
+                  originalHeight: midiaValue.height,
+                  originalWidth: midiaValue.width,
+                })}px`,
+              }}
+            >
+              <Image
+                src={midiaValue.url}
+                alt={midiaValue.title}
+                priority
+                fill
+                sizes="100%"
+                onLoadingComplete={element => handleRemoveLoading(element)}
+              />
+              <LoadingPin />
+            </Link>
+            {visibleUserInfo && (
+              <div className="pin-title-and-user">
+                <Link
+                  href={`/pin/${midiaValue._id} `}
+                  title={upperFirst(midiaValue.title)}
+                  className="pin-title"
+                >
+                  {upperFirst(midiaValue.title)}
+                </Link>
+                <Link
+                  className="pin-original-user"
+                  href={`/${midiaValue.userId.username} `}
+                >
+                  <UserPin {...midiaValue.userId} />
+                </Link>
+              </div>
+            )}
+          </div>
+        )
+      )}
     </MasonryContainer>
   );
 }
