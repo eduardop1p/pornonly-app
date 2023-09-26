@@ -5,13 +5,13 @@ import { useRouter } from 'next/navigation';
 import styles from './styles.module.css';
 
 export default function BackButton() {
-  const redirect = useRouter();
+  const router = useRouter();
 
   return (
     <button
       type="button"
       className={styles.container}
-      onClick={() => redirect.back()}
+      onClick={() => router.back()}
     >
       <svg
         height="20"

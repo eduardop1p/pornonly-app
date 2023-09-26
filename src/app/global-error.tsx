@@ -2,6 +2,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function GlobalError({
   error,
@@ -10,6 +11,8 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const router = useRouter();
+
   // useEffect(() => {
   //   console.log(error);
   // }, [error]);
@@ -21,7 +24,7 @@ export default function GlobalError({
         <div style={{ marginTop: '10px', fontSize: '1rem' }}>
           Houve um erro inesperado na aplicação {':('}
         </div>
-        {/* <button onClick={() => reset()}>Try again</button> */}
+        <button onClick={() => router.refresh()}>Tentar novalmente</button>
       </body>
     </html>
   );

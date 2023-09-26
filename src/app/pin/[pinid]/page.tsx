@@ -13,7 +13,6 @@ import SaveAndMore from '@/components/pin/saveAndMore';
 import Description from '@/components/pin/description';
 import Comments from '@/components/pin/comments';
 import { UserIdResultsType } from '@/components/masonry/userPin';
-import AddComments from '@/components/pin/comments/addComments';
 import UserAvatar from '@/components/userAvatar';
 import UserPin from '@/components/masonry/userPin';
 
@@ -64,6 +63,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   );
   if (!response.ok) {
     notFound();
+    // throw new Error('server connection error.');
   }
   const data = (await response.json()) as MidiaResultsType;
 
@@ -136,6 +136,7 @@ export default async function Page({ params }: Props) {
         <div
           // eslint-disable-next-line
           className={`${styles['pin-default-container']} ${pinHeight < 460 ? styles['pin-alternative-container'] : ''}`}
+          id="id-pin-default-container"
         >
           <Pin data={dataPin} />
           <div className={styles['save-and-comments']}>
@@ -165,28 +166,17 @@ export default async function Page({ params }: Props) {
                 />
               </div>
             </div>
-            <div className={styles.comments}>
-              {allCommentsInPin ? (
-                <Comments
-                  midiaId={dataPin._id}
-                  results={resultsComments}
-                  token={token as string}
-                  isAuth={isAuth}
-                  userId={userId}
-                />
-              ) : (
-                <span>Nenhum comentário aqui</span>
-              )}
-            </div>
-            <div className={styles['add-comments']}>
-              <h3 className={styles['comments-count']}>
-                {allCommentsInPin === 1
-                  ? `${allCommentsInPin} comentário`
-                  : `${allCommentsInPin} comentários`}
-              </h3>
-              <AddComments token={token} isAuth={isAuth} midiaId={dataPin._id}>
-                {<UserAvatar containerHeight={48} containerWidth={48} noLink />}
-              </AddComments>
+            <div className={styles.comments} id="comment">
+              <Comments
+                midiaId={dataPin._id}
+                resultsComments={resultsComments}
+                token={token as string}
+                isAuth={isAuth}
+                userId={userId}
+                allCommentsInPin={allCommentsInPin}
+              >
+                <UserAvatar containerHeight={48} containerWidth={48} noLink />
+              </Comments>
             </div>
           </div>
         </div>

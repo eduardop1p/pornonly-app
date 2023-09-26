@@ -135,7 +135,7 @@ function UserComment({
         const jsonData = await res.json();
         handleServerError(jsonData.error as string);
       }
-      handleServerSuccess('Comentário foi apagado');
+      handleServerSuccess('Comentário foi excluido');
       router.refresh();
     } catch (err) {
       // console.log(err);
@@ -239,7 +239,7 @@ function UserComment({
           <button
             type="button"
             className="response-comment"
-            onClick={event => handleAddInputToResponse}
+            onClick={handleAddInputToResponse}
           >
             Responder
           </button>

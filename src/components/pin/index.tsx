@@ -65,7 +65,6 @@ export default function Pin({ data }: Props) {
         width: `${pinDefaultHeight < 460 ? pinAlternativeWidth : pinDefaultWidth}px`,
         height: `${pinDefaultHeight < 460 ? pinAlternativeHeigth : pinDefaultHeight}px`,
       }}
-      id="id-pin-default-container"
     >
       {data.midiaType === 'video' ? (
         <>

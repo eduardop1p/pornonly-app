@@ -9,21 +9,25 @@ import { GlobalError } from '@/components/form/globalError';
 import { GlobalSuccess } from '@/components/form/globalSuccess';
 import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
 import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
+import { ResultsCommentsType } from '@/app/pin/[pinid]/page';
 
 export default function AddComments({
   children,
   isAuth,
   token,
   midiaId,
+  resultsComments,
 }: {
   children: ReactNode;
   token?: string;
   midiaId?: string;
   isAuth: boolean;
+  resultsComments: ResultsCommentsType[];
 }) {
   const router = useRouter();
   const pathName = usePathname();
 
+  const [allComments, setAllComments] = useState(resultsComments);
   const [isLoading, setIsLoading] = useState(false);
   const { handleServerSuccess, msgGlobalSuccess, showGlobalSuccess } =
     useGlobalSuccessTime();

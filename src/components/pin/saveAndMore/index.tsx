@@ -27,7 +27,7 @@ interface Props {
 }
 
 export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
-  const redirect = useRouter();
+  const router = useRouter();
   const pathName = usePathname();
 
   const [showMoreOptions, setShowMoreOptions] = useState(false);
@@ -60,7 +60,7 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
 
   const handleUserSavePin = async () => {
     if (!isAuth) {
-      redirect.push(`/login?from=${pathName}`);
+      router.push(`/login?from=${pathName}`);
       return;
     }
     try {
@@ -92,7 +92,7 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
 
   const handleUserRemovePin = async () => {
     if (!isAuth) {
-      redirect.push(`/login?from=${pathName}`);
+      router.push(`/login?from=${pathName}`);
       return;
     }
     try {
