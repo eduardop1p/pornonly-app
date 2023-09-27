@@ -11,17 +11,18 @@ export const Container = styled.div<TypeTheme>`
       &.pin-one-border-container {
         margin: 1.2rem 0 1.2rem 1.2rem;
         align-self: center;
-
-        & > img,
-        & > video {
-          border-radius: 1rem;
-        }
+        border-radius: 1rem;
+        overflow: hidden;
       }
 
       & > img,
       & > video {
         width: 100%;
         height: 100%;
+        left: 0;
+        top: 0;
+        position: absolute;
+        z-index: 2;
 
         &::-webkit-media-controls {
           visibility: hidden;

@@ -39,7 +39,7 @@ export default function Comments({
     document.body.querySelector('#id-pin-default-container')
   );
   const [initialRender, setInitialRender] = useState(true);
-  const [containerHeight, setContainerHeight] = useState(67);
+  const [containerHeight, setContainerHeight] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const { handleServerSuccess, msgGlobalSuccess, showGlobalSuccess } =
     useGlobalSuccessTime();
@@ -55,7 +55,7 @@ export default function Comments({
         );
       }
       if (pinInfoElement && pinContainer) {
-        const dch = pinInfoElement.clientHeight + containerHeight;
+        const dch = pinInfoElement.clientHeight + 67;
         setContainerHeight(pinContainer.clientHeight - dch);
         setInitialRender(false);
       }

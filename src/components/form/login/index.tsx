@@ -33,7 +33,7 @@ const ZodLoginSchema = z.object({
 export type BodyLogin = z.infer<typeof ZodLoginSchema>;
 
 export default function Login() {
-  const redirect = useRouter();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [passwordType, setPasswordType] = useState('password');
   const [isLoading, setIsLoading] = useState(false);
@@ -81,9 +81,9 @@ export default function Login() {
         setError(jsonResponse.type, { message: jsonResponse.error });
         return;
       }
-      redirect.refresh(); // usar redirect.refresh() para atualizar os estados do react no client, esse refresh não irar carregar a pagina
+      router.refresh(); // usar router.refresh() para atualizar os estados do react no client, esse refresh não irar carregar a pagina
       const from = searchParams.get('from');
-      from ? redirect.push(from as string) : redirect.push('/');
+      from ? router.push(from as string) : router.push('/');
     } catch (err) {
       handleServerError('Erro interno no servidor.');
     } finally {

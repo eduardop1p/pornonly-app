@@ -34,6 +34,7 @@ export default function LoadingPin() {
   return (
     <LoadingPinContainer
       $backgroundRamdom={backgrounds.current[indexBgRamdom.current]}
+      id="loading-pin"
     >
       {/* <p>Carregando...</p> */}
     </LoadingPinContainer>

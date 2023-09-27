@@ -10,7 +10,7 @@ import { GlobalError } from '../globalError';
 import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
 
 export default function Logout() {
-  const redirect = useRouter();
+  const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
   const { handleServerError, showGlobalError, msgGlobalError } =
@@ -30,8 +30,8 @@ export default function Logout() {
         handleServerError(dataJson.error);
         return;
       }
-      redirect.refresh();
-      redirect.push('/login');
+      router.refresh();
+      router.push('/login');
     } catch {
       handleServerError('O logout falhou. Tente novalmente.');
     } finally {

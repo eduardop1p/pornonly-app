@@ -51,7 +51,9 @@ export default function Masonry({
   }, []);
 
   const handleRemoveLoading = useCallback((elementPin: Element) => {
-    const loading = elementPin.nextSibling as HTMLDivElement;
+    const loading = elementPin.parentElement?.querySelector(
+      '#loading-pin'
+    ) as HTMLDivElement;
     setTimeout(() => {
       loading.style.zIndex = '1';
     }, 500);
@@ -85,7 +87,9 @@ export default function Masonry({
   );
 
   const handleVideoPlay = useCallback((video: HTMLVideoElement) => {
-    const videoTime = video.previousSibling as HTMLSpanElement;
+    const videoTime = video.parentElement?.querySelector(
+      '.video-time'
+    ) as HTMLSpanElement;
     videoTime.classList.add('hidden-video-time');
   }, []);
 

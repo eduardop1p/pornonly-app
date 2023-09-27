@@ -9,7 +9,7 @@ import { Container } from './styled';
 import { MidiaResultsType } from '@/app/page';
 import calHeight from '@/config/calcHeight';
 import WaitingPin from '../masonry/waitingPin';
-// import Loading from './loading';
+import LoadingPin from '../masonry/LoadingPin';
 
 interface Props {
   data: MidiaResultsType;
@@ -34,8 +34,18 @@ export default function Pin({ data }: Props) {
     })
   );
 
+  const handleRemoveLoading = (elementPin: Element) => {
+    const loading = elementPin.parentElement?.querySelector(
+      '#loading-pin'
+    ) as HTMLDivElement;
+    setTimeout(() => {
+      loading.style.zIndex = '1';
+    }, 500);
+  };
+
   const handleVideoCompleteLoad = (video: HTMLVideoElement) => {
-    handleNoWaitingVideo(video)
+    handleNoWaitingVideo(video);
+    handleRemoveLoading(video);
   }
 
   const handleWaitingVideo = (video: HTMLVideoElement) => {
@@ -85,13 +95,16 @@ export default function Pin({ data }: Props) {
                 event.currentTarget as HTMLVideoElement
               )
             }
-            onLoadedMetadata={(event) => handleVideoCompleteLoad(event.currentTarget as HTMLVideoElement)}
+            onLoadedData={(event) => handleVideoCompleteLoad(event.currentTarget as HTMLVideoElement)}
           ></video>
           <WaitingPin alonePin />
-          {/* <Loading /> */}
+          <LoadingPin />
         </>
       ) : (
-        <Image src={data.url} alt={data.title} priority fill sizes="100%" />
+        <>
+          <Image src={data.url} alt={data.title} priority fill sizes="100%" onLoad={event => handleRemoveLoading(event.currentTarget)} />
+          <LoadingPin />
+        </>
       )}
     </Container>
   );

@@ -72,7 +72,7 @@ const ZodCreateAccountSchema = z
 export type BodyCreateAccount = z.infer<typeof ZodCreateAccountSchema>;
 
 export default function CreateAccount() {
-  const redirect = useRouter();
+  const router = useRouter();
   const { dispatch } = useGlobalContext();
 
   const [passwordType, setPasswordType] = useState('password');
@@ -132,11 +132,11 @@ export default function CreateAccount() {
       });
       if (!resLogin.ok) {
         dispatch(dataSuccess({ email, password }));
-        redirect.push('/login');
+        router.push('/login');
         return;
       }
-      redirect.refresh();
-      redirect.push('/');
+      router.refresh();
+      router.push('/');
     } catch (err) {
       handleServerError('Erro interno no servidor.');
     } finally {

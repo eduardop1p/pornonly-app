@@ -23,7 +23,7 @@ interface Props {
 }
 
 export default function UserProfile({ children, token, photo }: Props) {
-  const redirect = useRouter();
+  const router = useRouter();
   const { profilePhoto, username } = photo;
   const [isLoading, setIsLoading] = useState(false);
   const [showAddPhotoProfile, setShowAddPhotoProfile] = useState(false);
@@ -69,7 +69,7 @@ export default function UserProfile({ children, token, photo }: Props) {
         file: jsonRes.profilePhoto,
         src: jsonRes.profilePhoto.url,
       });
-      redirect.refresh();
+      router.refresh();
     } catch (err) {
       handleServerError('Erro interno no servidor.');
     } finally {
@@ -97,12 +97,12 @@ export default function UserProfile({ children, token, photo }: Props) {
         handleServerError(jsonRes.error as string);
         return;
       }
-      handleServerSuccess('Foto de perfil deletada');
+      handleServerSuccess('Foto de perfil excluida');
       setFilePhoto({
         file: null,
         src: '',
       });
-      redirect.refresh();
+      router.refresh();
     } catch (err) {
       handleServerError('Erro interno no servidor.');
     } finally {
