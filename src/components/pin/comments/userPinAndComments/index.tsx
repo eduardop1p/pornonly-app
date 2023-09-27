@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 'use client';
 
 import Image from 'next/image';
@@ -13,17 +14,18 @@ import {
   ResponsesCommentsType,
 } from '@/app/pin/[pinid]/page';
 import dateCommentsTranslate from '@/config/dateCommentsTranslate';
-import Loading from '@/components/form/loading';
-import { GlobalError } from '@/components/form/globalError';
-import { GlobalSuccess } from '@/components/form/globalSuccess';
-import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
-import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
 
 interface Props {
   token: string;
   isAuth: boolean;
   comment: ResultsCommentsType;
   userId: any;
+  setStResultsComments: Dispatch<SetStateAction<ResultsCommentsType[]>>;
+  handleServerError(msg: string): void;
+  handleServerSuccess(msg: string): void;
+  isLoading: boolean;
+  setIsLoading: Dispatch<SetStateAction<boolean>>;
+  parentCommentIndex: number;
 }
 
 export default function UserPinAndComments({
@@ -31,21 +33,15 @@ export default function UserPinAndComments({
   isAuth,
   comment,
   userId,
+  setStResultsComments,
+  handleServerError,
+  handleServerSuccess,
+  isLoading,
+  setIsLoading,
+  parentCommentIndex
 }: Props) {
-  const [isLoading, setIsLoading] = useState(false);
-  const { handleServerSuccess, msgGlobalSuccess, showGlobalSuccess } =
-    useGlobalSuccessTime();
-  const { handleServerError, msgGlobalError, showGlobalError } =
-    useGlobalErrorTime();
-
   return (
     <Container>
-      {isLoading && <Loading />}
-      <GlobalSuccess
-        successMsg={msgGlobalSuccess}
-        showSuccess={showGlobalSuccess}
-      />
-      <GlobalError errorMsg={msgGlobalError} showError={showGlobalError} />
       <div className="pin-info-and-comment-user">
         <UserComment
           comment={comment}
@@ -56,10 +52,12 @@ export default function UserPinAndComments({
           handleServerSuccess={handleServerSuccess}
           isLoading={isLoading}
           setIsLoading={setIsLoading}
+          setStResultsComments={setStResultsComments}
+          parentCommentIndex={parentCommentIndex}
         />
         {comment.responses.length ? (
           <div className="responses-comments-container">
-            {comment.responses.map((response: ResponsesCommentsType) => (
+            {comment.responses.map((response: ResponsesCommentsType, index) => (
               <UserComment
                 key={response._id}
                 comment={response}
@@ -71,6 +69,9 @@ export default function UserPinAndComments({
                 isLoading={isLoading}
                 setIsLoading={setIsLoading}
                 parentCommentId={comment._id}
+                parentCommentIndex={parentCommentIndex}
+                setStResultsComments={setStResultsComments}
+                responseIndex={index}
               />
             ))}
           </div>
@@ -90,6 +91,9 @@ interface UserCommentType {
   isLoading: boolean;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   parentCommentId?: string;
+  setStResultsComments: Dispatch<SetStateAction<ResultsCommentsType[]>>;
+  parentCommentIndex: number;
+  responseIndex?: number;
 }
 function UserComment({
   comment,
@@ -101,6 +105,9 @@ function UserComment({
   isLoading,
   setIsLoading,
   parentCommentId,
+  setStResultsComments,
+  parentCommentIndex,
+  responseIndex
 }: UserCommentType) {
   const router = useRouter();
   const pathName = usePathname();
@@ -134,9 +141,18 @@ function UserComment({
       if (!res.ok) {
         const jsonData = await res.json();
         handleServerError(jsonData.error as string);
+        return
       }
       handleServerSuccess('Comentário foi excluido');
-      router.refresh();
+      parentCommentId
+        ? setStResultsComments(state => {
+          state[parentCommentIndex].responses = state[parentCommentIndex].responses.filter(v => v._id != comment._id)
+          return state;
+        })
+        : setStResultsComments(state =>
+          state.filter(value => value._id != comment._id)
+        );
+      // router.refresh();
     } catch (err) {
       // console.log(err);
       handleServerError('Erro interno no servidor');
@@ -144,6 +160,30 @@ function UserComment({
       setIsLoading(false);
     }
   };
+
+  const handleSetLike = () => {
+    parentCommentId && typeof responseIndex !== 'undefined' ? setStResultsComments(state => {
+      state[parentCommentIndex].responses[responseIndex].likes.likes += 1
+      state[parentCommentIndex].responses[responseIndex].likes.users.push(userId)
+      return state
+    }) : setStResultsComments(state => {
+      state[parentCommentIndex].likes.likes += 1
+      state[parentCommentIndex].likes.users.push(userId)
+      return state
+    })
+  }
+
+  const handleSetUnClick = () => {
+    parentCommentId && typeof responseIndex !== 'undefined' ? setStResultsComments(state => {
+      state[parentCommentIndex].responses[responseIndex].likes.likes -= 1
+      state[parentCommentIndex].responses[responseIndex].likes.users = state[parentCommentIndex].responses[responseIndex].likes.users.filter(value => value != userId)
+      return state
+    }) : setStResultsComments(state => {
+      state[parentCommentIndex].likes.likes -= 1
+      state[parentCommentIndex].likes.users = state[parentCommentIndex].likes.users.filter(value => value != userId)
+      return state
+    })
+  }
 
   const handleLikeComment = async () => {
     if (!isAuth) {
@@ -153,7 +193,8 @@ function UserComment({
 
     try {
       setIsLikeComment(true);
-      await fetch(
+      handleSetLike()
+      const res = await fetch(
         // eslint-disable-next-line
         `${process.env.NEXT_PUBLIC_URL_API}/${parentCommentId ? 'responses-comments' : 'comments'}/like-in-comment/${comment._id}`,
         {
@@ -163,9 +204,11 @@ function UserComment({
           },
         }
       );
-      router.refresh();
+      if (!res.ok) throw new Error('servererror')
+      // router.refresh();
     } catch (err) {
       setIsLikeComment(false);
+      handleSetUnClick()
       handleServerError('Erro interno no servidor.');
     }
   };
@@ -178,7 +221,8 @@ function UserComment({
 
     try {
       setIsLikeComment(false);
-      await fetch(
+      handleSetUnClick()
+      const res = await fetch(
         // eslint-disable-next-line
         `${process.env.NEXT_PUBLIC_URL_API}/${parentCommentId ? 'responses-comments' : 'comments'}/unclick-in-comment/${comment._id}`,
         {
@@ -188,9 +232,11 @@ function UserComment({
           },
         }
       );
-      router.refresh();
+      if (!res.ok) throw new Error('server error')
+      // router.refresh();
     } catch (err) {
       setIsLikeComment(true);
+      handleSetLike()
       handleServerError('Erro interno no servidor.');
     }
   };

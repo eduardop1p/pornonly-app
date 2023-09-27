@@ -16,7 +16,7 @@ export const Container = styled.div<TypeTheme>`
       position: relative;
 
       & > :not(:last-child) {
-        margin-bottom: 10px;
+        margin-bottom: 14px;
       }
     }
   }

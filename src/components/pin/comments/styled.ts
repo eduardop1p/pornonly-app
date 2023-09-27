@@ -57,7 +57,7 @@ export const Container = styled.div<TypeTheme & Props>`
       }
 
       & > :not(:last-child) {
-        margin-bottom: 10px;
+        margin-bottom: 1rem;
         margin-right: 10px;
       }
 

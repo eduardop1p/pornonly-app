@@ -7,6 +7,11 @@ import { Container } from './styled';
 import { ResultsCommentsType } from '@/app/pin/[pinid]/page';
 import UserPinAndComments from './userPinAndComments';
 import AddComments from '@/components/pin/comments/addComments';
+import Loading from '@/components/form/loading';
+import { GlobalError } from '@/components/form/globalError';
+import { GlobalSuccess } from '@/components/form/globalSuccess';
+import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
+import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
 
 export default function Comments({
   midiaId,
@@ -25,6 +30,7 @@ export default function Comments({
   children: ReactNode;
   allCommentsInPin: number;
 }) {
+  const [stResultsComments, setStResultsComments] = useState(resultsComments);
   const [showComments, setShowComments] = useState(true);
   const [pinInfoElement, setPinInfoElement] = useState(
     document.body.querySelector('#pin-info-user')
@@ -34,6 +40,11 @@ export default function Comments({
   );
   const [initialRender, setInitialRender] = useState(true);
   const [containerHeight, setContainerHeight] = useState(67);
+  const [isLoading, setIsLoading] = useState(false);
+  const { handleServerSuccess, msgGlobalSuccess, showGlobalSuccess } =
+    useGlobalSuccessTime();
+  const { handleServerError, msgGlobalError, showGlobalError } =
+    useGlobalErrorTime();
 
   useEffect(() => {
     if (initialRender) {
@@ -56,6 +67,12 @@ export default function Comments({
       $showComments={showComments}
       style={{ height: `${containerHeight}px` }}
     >
+      {isLoading && <Loading />}
+      <GlobalSuccess
+        successMsg={msgGlobalSuccess}
+        showSuccess={showGlobalSuccess}
+      />
+      <GlobalError errorMsg={msgGlobalError} showError={showGlobalError} />
       <div className="title-and-icon">
         <h2>Comentários</h2>
         <button
@@ -77,13 +94,19 @@ export default function Comments({
       </div>
       <div className="comments-and-users" data-show-comments={showComments}>
         {allCommentsInPin ? (
-          resultsComments.map(comment => (
+          stResultsComments.map((comment, index) => (
             <div key={comment._id}>
               <UserPinAndComments
                 comment={comment}
                 token={token}
                 isAuth={isAuth}
                 userId={userId}
+                setStResultsComments={setStResultsComments}
+                handleServerError={handleServerError}
+                handleServerSuccess={handleServerSuccess}
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
+                parentCommentIndex={index}
               />
             </div>
           ))
@@ -113,7 +136,7 @@ export default function Comments({
           token={token}
           isAuth={isAuth}
           midiaId={midiaId}
-          resultsComments={resultsComments}
+          setStResultsComments={setStResultsComments}
         >
           {children}
         </AddComments>

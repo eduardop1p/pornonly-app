@@ -1,7 +1,8 @@
 'use client';
 
-import { ReactNode, FormEvent, useState } from 'react';
+import { useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
+import type { ReactNode, FormEvent, Dispatch, SetStateAction } from 'react';
 
 import { Container } from './styled';
 import Loading from '@/components/form/loading';
@@ -16,18 +17,17 @@ export default function AddComments({
   isAuth,
   token,
   midiaId,
-  resultsComments,
+  setStResultsComments,
 }: {
   children: ReactNode;
   token?: string;
   midiaId?: string;
   isAuth: boolean;
-  resultsComments: ResultsCommentsType[];
+  setStResultsComments: Dispatch<SetStateAction<ResultsCommentsType[]>>;
 }) {
   const router = useRouter();
   const pathName = usePathname();
 
-  const [allComments, setAllComments] = useState(resultsComments);
   const [isLoading, setIsLoading] = useState(false);
   const { handleServerSuccess, msgGlobalSuccess, showGlobalSuccess } =
     useGlobalSuccessTime();
@@ -59,12 +59,13 @@ export default function AddComments({
           },
         }
       );
+      const jsonData = await res.json();
       if (!res.ok) {
-        const jsonData = await res.json();
         handleServerError(jsonData.error as string);
       }
       handleServerSuccess('Comentário foi adcionado');
-      router.refresh();
+      setStResultsComments(state => [jsonData, ...state]);
+      // router.refresh();
     } catch (err) {
       // console.log(err);
       handleServerError('Erro interno no servidor');
