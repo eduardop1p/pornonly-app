@@ -54,6 +54,7 @@ export default function UserPinAndComments({
           setIsLoading={setIsLoading}
           setStResultsComments={setStResultsComments}
           parentCommentIndex={parentCommentIndex}
+          parentCommentId={comment._id}
         />
         {comment.responses.length ? (
           <div className="responses-comments-container">
@@ -90,7 +91,7 @@ interface UserCommentType {
   handleServerSuccess(msg: string): void;
   isLoading: boolean;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
-  parentCommentId?: string;
+  parentCommentId: string;
   setStResultsComments: Dispatch<SetStateAction<ResultsCommentsType[]>>;
   parentCommentIndex: number;
   responseIndex?: number;
@@ -242,9 +243,101 @@ function UserComment({
   };
 
   const handleAddInputToResponse = (event: MouseEvent<HTMLButtonElement>) => {
-    const elementTarget = event.currentTarget;
+    const offsetParent = event.currentTarget.offsetParent as HTMLDivElement;
+    const resComContainer = offsetParent.querySelector('.responses-comments-container') as HTMLDivElement;
+    const conResInput = offsetParent.querySelector('.container-response-input') as HTMLDivElement;
+    const username = event.currentTarget?.parentElement?.parentElement?.querySelector('.comment-username > a')?.textContent;
+
+    if (offsetParent.contains(conResInput)) {
+      conResInput.remove();
+    }
+    if (!offsetParent.contains(resComContainer)) {
+      const newResCommCont = document.createElement('div');
+      newResCommCont.className = 'responses-comments-container';
+      offsetParent.appendChild(newResCommCont);
+      handleCreateInputResponse(newResCommCont, username as string);
+      return
+    }
+    handleCreateInputResponse(resComContainer, username as string);
+  };
+
+  const handleCreateInputResponse = (resComContainer: HTMLDivElement, username: string) => {
+    const inputContainer = document.createElement('form');
+    inputContainer.className = 'container-response-input';
+    resComContainer.prepend(inputContainer);
+
+    const contManInpRes = document.createElement('div');
+    inputContainer.appendChild(contManInpRes);
+
+    const btnSave = document.createElement('button');
+    const btnCancel = document.createElement('button');
+    btnSave.type = 'submit';
+    btnCancel.type = 'button';
+    btnSave.innerText = 'Salvar';
+    btnCancel.innerText = 'Cancelar';
+    contManInpRes.appendChild(btnSave);
+    contManInpRes.appendChild(btnCancel);
+
+    btnCancel.onclick = event => {
+      const parentBtn = event.currentTarget as HTMLDivElement;
+      const resComContainer = parentBtn.offsetParent?.parentElement;
+      parentBtn.offsetParent?.remove();
+      if (!resComContainer?.childNodes.length) resComContainer?.remove()
+    }
+
     const input = document.createElement('input');
-    elementTarget.offsetParent?.prepend(input);
+    input.value = username;
+    inputContainer.prepend(input);
+    input.focus();
+
+    inputContainer.onsubmit = async (event) => {
+      event.preventDefault();
+      await handleAddResponseInComment(input.value);
+      const formContainer = event.target as HTMLFormElement;
+      const resComContainer = formContainer.parentElement;
+      formContainer.remove();
+      if (!resComContainer?.childNodes.length) resComContainer?.remove()
+    }
+  }
+
+  const handleAddResponseInComment = async (commentValue: string) => {
+    if (!commentValue || isLoading) return;
+    if (!isAuth || !token) {
+      router.push(`/login?from=${pathName}`);
+      return;
+    }
+    if (commentValue.length > 50) handleServerError('Comentário muito longo');
+
+    try {
+      setIsLoading(true);
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_URL_API}/responses-comments/${parentCommentId}`,
+        {
+          method: 'POST',
+          body: JSON.stringify({ comment: commentValue }),
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      const jsonData = await res.json();
+      if (!res.ok) {
+        handleServerError(jsonData.error as string);
+        return;
+      }
+      handleServerSuccess('Resposta foi adicionada');
+      setStResultsComments(state => {
+        state[parentCommentIndex].responses.push(jsonData);
+        return state;
+      });
+      // router.refresh();
+    } catch (err) {
+      // console.log(err);
+      handleServerError('Erro interno no servidor');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -266,7 +359,7 @@ function UserComment({
       </Link>
       <div>
         <div className="comment-username-and-commet">
-          <h4>
+          <h4 className='comment-username'>
             <Link href={`/${comment.userId.username}`}>
               {comment.userId.username}
             </Link>

@@ -62,6 +62,7 @@ export default function AddComments({
       const jsonData = await res.json();
       if (!res.ok) {
         handleServerError(jsonData.error as string);
+        return;
       }
       handleServerSuccess('Comentário foi adcionado');
       setStResultsComments(state => [jsonData, ...state]);

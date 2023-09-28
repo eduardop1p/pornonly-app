@@ -13,10 +13,37 @@ export const Container = styled.div<TypeTheme>`
     .responses-comments-container {
       margin-top: 1rem;
       margin-left: 3rem;
-      position: relative;
+      /* position: relative; */
+      display: flex;
+      flex-direction: column;
 
       & > :not(:last-child) {
         margin-bottom: 14px;
+      }
+
+      & > .container-response-input {
+        display: flex;
+        position: relative;
+        flex-direction: column;
+        align-items: flex-end;
+        width: 100%;
+
+        & > input {
+          margin-bottom: 10px;
+          width: 100%;
+        }
+
+        & > div {
+          display: flex;
+
+          & > :first-child {
+            margin-right: 10px;
+          }
+
+          & > button {
+            cursor: pointer;
+          }
+        }
       }
     }
   }
