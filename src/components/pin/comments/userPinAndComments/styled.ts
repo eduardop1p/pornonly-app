@@ -5,10 +5,12 @@ import { TypeTheme } from '@/utils/theme/myTheme';
 export const Container = styled.div<TypeTheme>`
   display: flex;
   /* align-items: center; */
+  width: 100%;
 
   .pin-info-and-comment-user {
     margin-top: 3px;
     position: relative;
+    width: 100%;
 
     .responses-comments-container {
       margin-top: 1rem;
@@ -19,31 +21,6 @@ export const Container = styled.div<TypeTheme>`
 
       & > :not(:last-child) {
         margin-bottom: 14px;
-      }
-
-      & > .container-response-input {
-        display: flex;
-        position: relative;
-        flex-direction: column;
-        align-items: flex-end;
-        width: 100%;
-
-        & > input {
-          margin-bottom: 10px;
-          width: 100%;
-        }
-
-        & > div {
-          display: flex;
-
-          & > :first-child {
-            margin-right: 10px;
-          }
-
-          & > button {
-            cursor: pointer;
-          }
-        }
       }
     }
   }
@@ -77,6 +54,8 @@ export const ContainerComment = styled.div<TypeTheme>`
     }
 
     & > div {
+      position: relative;
+
       .comment-username-and-commet {
         & > h4 {
           display: inline-block;
@@ -214,6 +193,96 @@ export const ContainerComment = styled.div<TypeTheme>`
             }
           }
         }
+      }
+    }
+  `}
+`;
+
+export const ContainerFormResponse = styled.form<TypeTheme>`
+  ${({ theme }) => css`
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    align-items: flex-end;
+    width: 100%;
+
+    & > .container-input {
+      margin-bottom: 10px;
+      width: 100%;
+      border-radius: 1rem;
+      border: 1px solid ${theme.colors.g_colorGray150Hovered};
+      height: 70px;
+      overflow: hidden;
+      padding: 10px 12px;
+      /* display: flex; */
+      /* position: relative; */
+
+      & > span {
+        color: ${theme.colors.g_blue};
+        font-weight: ${theme.font_weight.font_weight_400};
+        font-size: ${theme.font_size.font_size_1rem};
+        margin-right: 5px;
+        height: fit-content;
+        display: inline-block;
+        /* position: absolute; */
+      }
+
+      & > textarea {
+        /* margin-left: 5rem; */
+        width: 100%;
+        height: 100%;
+        resize: none;
+        border: none;
+        background-color: transparent;
+        font-size: ${theme.font_size.font_size_1rem};
+        font-weight: ${theme.font_weight.font_weight_400};
+
+        &::-webkit-scrollbar {
+          width: 13px; /* Largura da barra de rolagem vertical */
+        }
+
+        /* Cor do botão de rolagem */
+        &::-webkit-scrollbar-thumb {
+          background-color: ${theme.colors.g_colorGray150};
+          border-radius: 1rem;
+          border: 4px solid ${theme.colors.g_colorGray0};
+        }
+
+        &::-webkit-scrollbar-track {
+          background-color: transparent; /* Cor do fundo da barra de rolagem */
+        }
+      }
+    }
+
+    & > .container-manage-input-response {
+      display: flex;
+
+      & > :first-child {
+        margin-right: 10px;
+
+        &[data-textarea-value='true'] {
+          background-color: ${theme.colors.g_colorRed100};
+          color: ${theme.colors.g_colorGray0};
+
+          &:hover {
+            background-color: ${theme.colors.g_colorRed100Hovered};
+          }
+        }
+      }
+
+      & > :last-child:hover {
+        background-color: ${theme.colors.g_colorGray100Hovered};
+      }
+
+      & > button {
+        cursor: pointer;
+        padding: 12px 13px;
+        height: 40px;
+        background-color: ${theme.colors.g_colorGray100};
+        font-size: ${theme.font_size.font_size_1rem};
+        font-weight: ${theme.font_weight.font_weight_500};
+        border-radius: 2rem;
+        transition: background 150ms ease-in-out;
       }
     }
   `}

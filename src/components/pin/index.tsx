@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 'use client';
 
 import Image from 'next/image';
@@ -16,6 +15,8 @@ interface Props {
 }
 
 export default function Pin({ data }: Props) {
+  const [pinIsLoading, setPinIsLoading] = useState(true);
+
   const [pinDefaultWidth] = useState(500);
   const [pinDefaultHeight] = useState(
     calHeight({
@@ -34,19 +35,20 @@ export default function Pin({ data }: Props) {
     })
   );
 
-  const handleRemoveLoading = (elementPin: Element) => {
-    const loading = elementPin.parentElement?.querySelector(
-      '#loading-pin'
-    ) as HTMLDivElement;
-    setTimeout(() => {
-      loading.style.zIndex = '1';
-    }, 500);
+  const handleRemoveLoading = () => {
+    if (data.midiaType === 'video') {
+      setTimeout(() => {
+        setPinIsLoading(false);
+      }, 500);
+      return;
+    }
+    setPinIsLoading(false);
   };
 
   const handleVideoCompleteLoad = (video: HTMLVideoElement) => {
     handleNoWaitingVideo(video);
-    handleRemoveLoading(video);
-  }
+    handleRemoveLoading();
+  };
 
   const handleWaitingVideo = (video: HTMLVideoElement) => {
     const parentVideo = video.parentElement;
@@ -64,15 +66,16 @@ export default function Pin({ data }: Props) {
     waitingPin.classList.remove('waiting');
   };
 
-
   return (
     <Container
-      className={`${pinDefaultHeight >= 460 && pinDefaultHeight <= 650
-        ? 'pin-one-border-container'
-        : ''
-        }`}
+      className={
+        // eslint-disable-next-line
+        `${pinDefaultHeight >= 460 && pinDefaultHeight <= 650 ? 'pin-one-border-container' : ''}`
+      }
       style={{
+        // eslint-disable-next-line
         width: `${pinDefaultHeight < 460 ? pinAlternativeWidth : pinDefaultWidth}px`,
+        // eslint-disable-next-line
         height: `${pinDefaultHeight < 460 ? pinAlternativeHeigth : pinDefaultHeight}px`,
       }}
     >
@@ -80,30 +83,35 @@ export default function Pin({ data }: Props) {
         <>
           <video
             src={data.url}
-            preload="metadata"
+            preload="auto"
             controls
             autoPlay
             muted
             loop
             onWaiting={event =>
-              handleWaitingVideo(
-                event.currentTarget as HTMLVideoElement
-              )
+              handleWaitingVideo(event.currentTarget as HTMLVideoElement)
             }
             onPlaying={event =>
-              handleNoWaitingVideo(
-                event.currentTarget as HTMLVideoElement
-              )
+              handleNoWaitingVideo(event.currentTarget as HTMLVideoElement)
             }
-            onLoadedData={(event) => handleVideoCompleteLoad(event.currentTarget as HTMLVideoElement)}
+            onLoadedData={event =>
+              handleVideoCompleteLoad(event.currentTarget as HTMLVideoElement)
+            }
           ></video>
           <WaitingPin alonePin />
-          <LoadingPin />
+          {pinIsLoading && <LoadingPin />}
         </>
       ) : (
         <>
-          <Image src={data.url} alt={data.title} priority fill sizes="100%" onLoad={event => handleRemoveLoading(event.currentTarget)} />
-          <LoadingPin />
+          <Image
+            src={data.url}
+            alt={data.title}
+            priority
+            fill
+            sizes="100%"
+            onLoadingComplete={handleRemoveLoading}
+          />
+          {pinIsLoading && <LoadingPin />}
         </>
       )}
     </Container>

@@ -12,6 +12,7 @@ import { GlobalError } from '@/components/form/globalError';
 import { GlobalSuccess } from '@/components/form/globalSuccess';
 import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
 import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
+// import { default as LoadingHeight } from '../loading';
 
 export default function Comments({
   midiaId,
@@ -26,7 +27,7 @@ export default function Comments({
   token: string;
   isAuth: boolean;
   resultsComments: ResultsCommentsType[];
-  userId: any;
+  userId: string | null;
   children: ReactNode;
   allCommentsInPin: number;
 }) {

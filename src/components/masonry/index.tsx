@@ -132,7 +132,7 @@ export default function Masonry({
               <span className="video-time">0:00</span>
               <video
                 src={midiaValue.url}
-                controls={true}
+                controls
                 preload="metadata"
                 onWaiting={event =>
                   handleWaitingVideo(event.currentTarget as HTMLVideoElement)

@@ -1,7 +1,6 @@
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { cookies } from 'next/headers';
-import jwt from 'jsonwebtoken';
 
 import styles from './styles.module.css';
 
@@ -15,6 +14,7 @@ import Comments from '@/components/pin/comments';
 import { UserIdResultsType } from '@/components/masonry/userPin';
 import UserAvatar from '@/components/userAvatar';
 import UserPin from '@/components/masonry/userPin';
+import { UserType } from '@/app/[usernameparam]/page';
 
 interface Props {
   params: { pinid: string };
@@ -86,21 +86,37 @@ export default async function Page({ params }: Props) {
   const { pinid } = params;
   const token = cookies().get('token')?.value;
   const isAuth = cookies().has('token');
-  const user: any = isAuth && jwt.decode(token as string);
-  const userId = user && user._id;
 
   const resPin = await fetch(
     `${process.env.NEXT_PUBLIC_URL_API}/midia/get-midiaid/${pinid}`,
     {
       method: 'GET',
-      cache: 'no-cache',
+      cache: 'reload',
     }
   );
   if (!resPin.ok) {
     notFound();
   }
   const dataPin = (await resPin.json()) as MidiaResultsType;
-  const isSave = dataPin.userId.saves?.includes(userId);
+
+  let isSave = false;
+  let userId = null;
+
+  if (isAuth) {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/users`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      cache: 'no-cache',
+    });
+    if (!res.ok) {
+      return;
+    }
+    const user = (await res.json()) as UserType;
+    userId = user._id;
+    isSave = user.saves?.includes(pinid) as boolean;
+  }
 
   const resComments = await fetch(
     `${process.env.NEXT_PUBLIC_URL_API}/comments/${dataPin._id}?page=1`,
@@ -166,7 +182,7 @@ export default async function Page({ params }: Props) {
                 />
               </div>
             </div>
-            <div className={styles.comments} id="comment">
+            <div className={styles.comments}>
               <Comments
                 midiaId={dataPin._id}
                 resultsComments={resultsComments}

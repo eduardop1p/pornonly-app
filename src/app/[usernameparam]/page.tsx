@@ -22,6 +22,7 @@ export interface UserType {
   username: string;
   email: string;
   profilePhoto: ProfilePhotoType[];
+  saves?: string[];
   createIn?: string;
 }
 export interface ProfilePhotoType {

@@ -1,14 +1,13 @@
-/* eslint-disable prettier/prettier */
 'use client';
 
 import Image from 'next/image';
 import Link from 'next/link';
 import { format } from 'timeago.js';
-import { useState } from 'react';
-import type { Dispatch, SetStateAction, MouseEvent } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import type { Dispatch, SetStateAction, FormEvent, MouseEvent } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 
-import { Container, ContainerComment } from './styled';
+import { Container, ContainerComment, ContainerFormResponse } from './styled';
 import {
   ResultsCommentsType,
   ResponsesCommentsType,
@@ -38,280 +37,26 @@ export default function UserPinAndComments({
   handleServerSuccess,
   isLoading,
   setIsLoading,
-  parentCommentIndex
-}: Props) {
-  return (
-    <Container>
-      <div className="pin-info-and-comment-user">
-        <UserComment
-          comment={comment}
-          isAuth={isAuth}
-          token={token}
-          userId={userId}
-          handleServerError={handleServerError}
-          handleServerSuccess={handleServerSuccess}
-          isLoading={isLoading}
-          setIsLoading={setIsLoading}
-          setStResultsComments={setStResultsComments}
-          parentCommentIndex={parentCommentIndex}
-          parentCommentId={comment._id}
-        />
-        {comment.responses.length ? (
-          <div className="responses-comments-container">
-            {comment.responses.map((response: ResponsesCommentsType, index) => (
-              <UserComment
-                key={response._id}
-                comment={response}
-                isAuth={isAuth}
-                token={token}
-                userId={userId}
-                handleServerError={handleServerError}
-                handleServerSuccess={handleServerSuccess}
-                isLoading={isLoading}
-                setIsLoading={setIsLoading}
-                parentCommentId={comment._id}
-                parentCommentIndex={parentCommentIndex}
-                setStResultsComments={setStResultsComments}
-                responseIndex={index}
-              />
-            ))}
-          </div>
-        ) : null}
-      </div>
-    </Container>
-  );
-}
-
-interface UserCommentType {
-  comment: ResultsCommentsType | ResponsesCommentsType;
-  userId: any;
-  isAuth: boolean;
-  token: string;
-  handleServerError(msg: string): void;
-  handleServerSuccess(msg: string): void;
-  isLoading: boolean;
-  setIsLoading: Dispatch<SetStateAction<boolean>>;
-  parentCommentId: string;
-  setStResultsComments: Dispatch<SetStateAction<ResultsCommentsType[]>>;
-  parentCommentIndex: number;
-  responseIndex?: number;
-}
-function UserComment({
-  comment,
-  userId,
-  isAuth,
-  token,
-  handleServerError,
-  handleServerSuccess,
-  isLoading,
-  setIsLoading,
-  parentCommentId,
-  setStResultsComments,
   parentCommentIndex,
-  responseIndex
-}: UserCommentType) {
+}: Props) {
   const router = useRouter();
   const pathName = usePathname();
 
-  const [isLikeComment, setIsLikeComment] = useState(
-    comment.likes.users.includes(userId)
-  );
-  const [showManageComment, setShowManageComment] = useState(false);
-  // const [showResponseComment, setShowResponseComment] = useState(false);
+  const [showResponseComment, setShowResponseComment] = useState(false);
+  const [userNameResponse, setUserNameResponse] = useState('');
 
-  const isUniqueUser = () => {
-    return isAuth && userId === comment.userId._id;
-  };
-
-  const handleDeleteCommentUser = async () => {
-    if (isLoading || !isAuth || !token) return;
-
-    try {
-      setIsLoading(true);
-      const res = await fetch(
-        parentCommentId
-          ? `${process.env.NEXT_PUBLIC_URL_API}/responses-comments/${parentCommentId}/${comment._id}`
-          : `${process.env.NEXT_PUBLIC_URL_API}/comments/delete-one/${comment._id}`,
-        {
-          method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (!res.ok) {
-        const jsonData = await res.json();
-        handleServerError(jsonData.error as string);
-        return
-      }
-      handleServerSuccess('Comentário foi excluido');
-      parentCommentId
-        ? setStResultsComments(state => {
-          state[parentCommentIndex].responses = state[parentCommentIndex].responses.filter(v => v._id != comment._id)
-          return state;
-        })
-        : setStResultsComments(state =>
-          state.filter(value => value._id != comment._id)
-        );
-      // router.refresh();
-    } catch (err) {
-      // console.log(err);
-      handleServerError('Erro interno no servidor');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleSetLike = () => {
-    parentCommentId && typeof responseIndex !== 'undefined' ? setStResultsComments(state => {
-      state[parentCommentIndex].responses[responseIndex].likes.likes += 1
-      state[parentCommentIndex].responses[responseIndex].likes.users.push(userId)
-      return state
-    }) : setStResultsComments(state => {
-      state[parentCommentIndex].likes.likes += 1
-      state[parentCommentIndex].likes.users.push(userId)
-      return state
-    })
-  }
-
-  const handleSetUnClick = () => {
-    parentCommentId && typeof responseIndex !== 'undefined' ? setStResultsComments(state => {
-      state[parentCommentIndex].responses[responseIndex].likes.likes -= 1
-      state[parentCommentIndex].responses[responseIndex].likes.users = state[parentCommentIndex].responses[responseIndex].likes.users.filter(value => value != userId)
-      return state
-    }) : setStResultsComments(state => {
-      state[parentCommentIndex].likes.likes -= 1
-      state[parentCommentIndex].likes.users = state[parentCommentIndex].likes.users.filter(value => value != userId)
-      return state
-    })
-  }
-
-  const handleLikeComment = async () => {
-    if (!isAuth) {
-      router.push(`/login?from=${pathName}`);
-      return;
-    }
-
-    try {
-      setIsLikeComment(true);
-      handleSetLike()
-      const res = await fetch(
-        // eslint-disable-next-line
-        `${process.env.NEXT_PUBLIC_URL_API}/${parentCommentId ? 'responses-comments' : 'comments'}/like-in-comment/${comment._id}`,
-        {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (!res.ok) throw new Error('servererror')
-      // router.refresh();
-    } catch (err) {
-      setIsLikeComment(false);
-      handleSetUnClick()
-      handleServerError('Erro interno no servidor.');
-    }
-  };
-
-  const handleUnClickComment = async () => {
-    if (!isAuth) {
-      router.push(`/login?from=${pathName}`);
-      return;
-    }
-
-    try {
-      setIsLikeComment(false);
-      handleSetUnClick()
-      const res = await fetch(
-        // eslint-disable-next-line
-        `${process.env.NEXT_PUBLIC_URL_API}/${parentCommentId ? 'responses-comments' : 'comments'}/unclick-in-comment/${comment._id}`,
-        {
-          method: 'DELETE',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (!res.ok) throw new Error('server error')
-      // router.refresh();
-    } catch (err) {
-      setIsLikeComment(true);
-      handleSetLike()
-      handleServerError('Erro interno no servidor.');
-    }
-  };
-
-  const handleAddInputToResponse = (event: MouseEvent<HTMLButtonElement>) => {
-    const offsetParent = event.currentTarget.offsetParent as HTMLDivElement;
-    const resComContainer = offsetParent.querySelector('.responses-comments-container') as HTMLDivElement;
-    const conResInput = offsetParent.querySelector('.container-response-input') as HTMLDivElement;
-    const username = event.currentTarget?.parentElement?.parentElement?.querySelector('.comment-username > a')?.textContent;
-
-    if (offsetParent.contains(conResInput)) {
-      conResInput.remove();
-    }
-    if (!offsetParent.contains(resComContainer)) {
-      const newResCommCont = document.createElement('div');
-      newResCommCont.className = 'responses-comments-container';
-      offsetParent.appendChild(newResCommCont);
-      handleCreateInputResponse(newResCommCont, username as string);
-      return
-    }
-    handleCreateInputResponse(resComContainer, username as string);
-  };
-
-  const handleCreateInputResponse = (resComContainer: HTMLDivElement, username: string) => {
-    const inputContainer = document.createElement('form');
-    inputContainer.className = 'container-response-input';
-    resComContainer.prepend(inputContainer);
-
-    const contManInpRes = document.createElement('div');
-    inputContainer.appendChild(contManInpRes);
-
-    const btnSave = document.createElement('button');
-    const btnCancel = document.createElement('button');
-    btnSave.type = 'submit';
-    btnCancel.type = 'button';
-    btnSave.innerText = 'Salvar';
-    btnCancel.innerText = 'Cancelar';
-    contManInpRes.appendChild(btnSave);
-    contManInpRes.appendChild(btnCancel);
-
-    btnCancel.onclick = event => {
-      const parentBtn = event.currentTarget as HTMLDivElement;
-      const resComContainer = parentBtn.offsetParent?.parentElement;
-      parentBtn.offsetParent?.remove();
-      if (!resComContainer?.childNodes.length) resComContainer?.remove()
-    }
-
-    const input = document.createElement('input');
-    input.value = username;
-    inputContainer.prepend(input);
-    input.focus();
-
-    inputContainer.onsubmit = async (event) => {
-      event.preventDefault();
-      await handleAddResponseInComment(input.value);
-      const formContainer = event.target as HTMLFormElement;
-      const resComContainer = formContainer.parentElement;
-      formContainer.remove();
-      if (!resComContainer?.childNodes.length) resComContainer?.remove()
-    }
-  }
-
-  const handleAddResponseInComment = async (commentValue: string) => {
+  const handleAddResponse = async (commentValue: string) => {
     if (!commentValue || isLoading) return;
     if (!isAuth || !token) {
       router.push(`/login?from=${pathName}`);
       return;
     }
-    if (commentValue.length > 50) handleServerError('Comentário muito longo');
+    if (commentValue.length > 100) handleServerError('Comentário muito longo');
 
     try {
       setIsLoading(true);
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_URL_API}/responses-comments/${parentCommentId}`,
+        `${process.env.NEXT_PUBLIC_URL_API}/responses-comments/${comment._id}`,
         {
           method: 'POST',
           body: JSON.stringify({ comment: commentValue }),
@@ -341,6 +86,253 @@ function UserComment({
   };
 
   return (
+    <Container>
+      <div className="pin-info-and-comment-user">
+        <UserComment
+          comment={comment}
+          isAuth={isAuth}
+          token={token}
+          userId={userId}
+          handleServerError={handleServerError}
+          handleServerSuccess={handleServerSuccess}
+          isLoading={isLoading}
+          setIsLoading={setIsLoading}
+          setStResultsComments={setStResultsComments}
+          parentCommentIndex={parentCommentIndex}
+          parentCommentId={comment._id}
+          setShowResponseComment={setShowResponseComment}
+        />
+        {comment.responses.length ? (
+          <div className="responses-comments-container">
+            {showResponseComment && (
+              <AddResponse
+                handleAddResponse={handleAddResponse}
+                setShowResponseComment={setShowResponseComment}
+                username={userNameResponse}
+                isAuth={isAuth}
+              />
+            )}
+            {comment.responses.map((response: ResponsesCommentsType, index) => (
+              <UserComment
+                key={response._id}
+                comment={response}
+                isAuth={isAuth}
+                token={token}
+                userId={userId}
+                handleServerError={handleServerError}
+                handleServerSuccess={handleServerSuccess}
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
+                parentCommentId={comment._id}
+                parentCommentIndex={parentCommentIndex}
+                setStResultsComments={setStResultsComments}
+                responseIndex={index}
+                setShowResponseComment={setShowResponseComment}
+                setUserNameResponse={setUserNameResponse}
+              />
+            ))}
+          </div>
+        ) : null}
+      </div>
+    </Container>
+  );
+}
+
+interface UserCommentType {
+  comment: ResultsCommentsType | ResponsesCommentsType;
+  userId: any;
+  isAuth: boolean;
+  token: string;
+  handleServerError(msg: string): void;
+  handleServerSuccess(msg: string): void;
+  isLoading: boolean;
+  setIsLoading: Dispatch<SetStateAction<boolean>>;
+  parentCommentId: string;
+  setStResultsComments: Dispatch<SetStateAction<ResultsCommentsType[]>>;
+  parentCommentIndex: number;
+  responseIndex?: number;
+  setShowResponseComment: Dispatch<SetStateAction<boolean>>;
+  setUserNameResponse?: Dispatch<SetStateAction<string>>;
+}
+function UserComment({
+  comment,
+  userId,
+  isAuth,
+  token,
+  handleServerError,
+  handleServerSuccess,
+  isLoading,
+  setIsLoading,
+  parentCommentId,
+  setStResultsComments,
+  parentCommentIndex,
+  responseIndex,
+  setShowResponseComment,
+  setUserNameResponse,
+}: UserCommentType) {
+  const router = useRouter();
+  const pathName = usePathname();
+
+  const [isLikeComment, setIsLikeComment] = useState(
+    comment.likes.users.includes(userId)
+  );
+  const [showManageComment, setShowManageComment] = useState(false);
+
+  const isUniqueUser = () => {
+    return isAuth && userId === comment.userId._id;
+  };
+
+  const handleDeleteCommentUser = async () => {
+    if (isLoading || !isAuth || !token) return;
+
+    try {
+      setIsLoading(true);
+      const res = await fetch(
+        parentCommentId
+          ? `${process.env.NEXT_PUBLIC_URL_API}/responses-comments/${parentCommentId}/${comment._id}`
+          : `${process.env.NEXT_PUBLIC_URL_API}/comments/delete-one/${comment._id}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!res.ok) {
+        const jsonData = await res.json();
+        handleServerError(jsonData.error as string);
+        return;
+      }
+      handleServerSuccess('Comentário foi excluido');
+      if (parentCommentId) {
+        setStResultsComments(state => {
+          state[parentCommentIndex].responses = state[
+            parentCommentIndex
+          ].responses.filter(v => v._id != comment._id);
+          return state;
+        });
+        return;
+      }
+      setStResultsComments(state =>
+        state.filter(value => value._id != comment._id)
+      );
+      // router.refresh();
+    } catch (err) {
+      // console.log(err);
+      handleServerError('Erro interno no servidor');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSetLike = () => {
+    if (parentCommentId && typeof responseIndex !== 'undefined') {
+      setStResultsComments(state => {
+        state[parentCommentIndex].responses[responseIndex].likes.likes += 1;
+        state[parentCommentIndex].responses[responseIndex].likes.users.push(
+          userId
+        );
+        return state;
+      });
+      return;
+    }
+    setStResultsComments(state => {
+      state[parentCommentIndex].likes.likes += 1;
+      state[parentCommentIndex].likes.users.push(userId);
+      return state;
+    });
+  };
+
+  const handleSetUnClick = () => {
+    if (parentCommentId && typeof responseIndex !== 'undefined') {
+      setStResultsComments(state => {
+        state[parentCommentIndex].responses[responseIndex].likes.likes -= 1;
+        state[parentCommentIndex].responses[responseIndex].likes.users = state[
+          parentCommentIndex
+        ].responses[responseIndex].likes.users.filter(value => value != userId);
+        return state;
+      });
+      return;
+    }
+    setStResultsComments(state => {
+      state[parentCommentIndex].likes.likes -= 1;
+      state[parentCommentIndex].likes.users = state[
+        parentCommentIndex
+      ].likes.users.filter(value => value != userId);
+      return state;
+    });
+  };
+
+  const handleLikeComment = async () => {
+    if (!isAuth) {
+      router.push(`/login?from=${pathName}`);
+      return;
+    }
+
+    try {
+      setIsLikeComment(true);
+      handleSetLike();
+      const res = await fetch(
+        // eslint-disable-next-line
+        `${process.env.NEXT_PUBLIC_URL_API}/${parentCommentId ? 'responses-comments' : 'comments'}/like-in-comment/${comment._id}`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!res.ok) throw new Error('servererror');
+      // router.refresh();
+    } catch (err) {
+      setIsLikeComment(false);
+      handleSetUnClick();
+      handleServerError('Erro interno no servidor.');
+    }
+  };
+
+  const handleUnClickComment = async () => {
+    if (!isAuth) {
+      router.push(`/login?from=${pathName}`);
+      return;
+    }
+
+    try {
+      setIsLikeComment(false);
+      handleSetUnClick();
+      const res = await fetch(
+        // eslint-disable-next-line
+        `${process.env.NEXT_PUBLIC_URL_API}/${parentCommentId ? 'responses-comments' : 'comments'}/unclick-in-comment/${comment._id}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (!res.ok) throw new Error('server error');
+      // router.refresh();
+    } catch (err) {
+      setIsLikeComment(true);
+      handleSetLike();
+      handleServerError('Erro interno no servidor.');
+    }
+  };
+
+  const handleShowResponseComment = (event: MouseEvent<HTMLButtonElement>) => {
+    if (!isAuth) {
+      router.push(`/login?from=${pathName}`);
+      return;
+    }
+    setShowResponseComment(true);
+    if (!setUserNameResponse) return;
+    setUserNameResponse(
+      event.currentTarget.offsetParent?.querySelector('.comment-username > a')
+        ?.textContent as string
+    );
+  };
+
+  return (
     <ContainerComment>
       <Link href={`/${comment.userId.username}`} className="pin-user-profile">
         {comment.userId.profilePhoto.length ? (
@@ -359,7 +351,7 @@ function UserComment({
       </Link>
       <div>
         <div className="comment-username-and-commet">
-          <h4 className='comment-username'>
+          <h4 className="comment-username">
             <Link href={`/${comment.userId.username}`}>
               {comment.userId.username}
             </Link>
@@ -378,7 +370,7 @@ function UserComment({
           <button
             type="button"
             className="response-comment"
-            onClick={handleAddInputToResponse}
+            onClick={handleShowResponseComment}
           >
             Responder
           </button>
@@ -450,5 +442,63 @@ function UserComment({
         </div>
       </div>
     </ContainerComment>
+  );
+}
+
+function AddResponse({
+  handleAddResponse,
+  setShowResponseComment,
+  username,
+  isAuth,
+}: {
+  handleAddResponse(commentValue: string): Promise<void>;
+  setShowResponseComment: Dispatch<SetStateAction<boolean>>;
+  username?: string;
+  isAuth: boolean;
+}) {
+  const [textareaValue, setTextareaValue] = useState('');
+  const refTextarea = useRef<HTMLTextAreaElement | null>(null);
+
+  useEffect(() => {
+    refTextarea.current?.focus();
+  }, []);
+
+  const handleSubmitFormResponse = async (
+    event: FormEvent<HTMLFormElement>
+  ) => {
+    event.preventDefault();
+    if (!isAuth) {
+      return;
+    }
+    if (!textareaValue) return;
+    await handleAddResponse(textareaValue);
+    setShowResponseComment(false);
+  };
+
+  return (
+    <ContainerFormResponse onSubmit={handleSubmitFormResponse}>
+      <div className="container-input">
+        {username && <span>{username}</span>}
+        <textarea
+          onChange={event => setTextareaValue(event.target.value)}
+          ref={refTextarea}
+          name="add-response"
+          id="comment-add-response"
+          placeholder="Responder"
+          maxLength={100}
+        />
+      </div>
+      <div className="container-manage-input-response">
+        <button
+          type="submit"
+          data-textarea-value={textareaValue ? true : false}
+        >
+          Salvar
+        </button>
+        <button type="button" onClick={() => setShowResponseComment(false)}>
+          Cancelar
+        </button>
+      </div>
+    </ContainerFormResponse>
   );
 }
