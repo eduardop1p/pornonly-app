@@ -4,6 +4,7 @@ import { TypeTheme } from '@/utils/theme/myTheme';
 
 interface Props {
   $lastIndex?: boolean;
+  $breakTextarea?: boolean;
 }
 
 export const Container = styled.div<TypeTheme & Props>`
@@ -203,8 +204,8 @@ export const ContainerComment = styled.div<TypeTheme & Props>`
   `}
 `;
 
-export const ContainerFormResponse = styled.form<TypeTheme>`
-  ${({ theme }) => css`
+export const ContainerFormResponse = styled.form<TypeTheme & Props>`
+  ${({ theme, $breakTextarea }) => css`
     display: flex;
     position: relative;
     flex-direction: column;
@@ -216,28 +217,29 @@ export const ContainerFormResponse = styled.form<TypeTheme>`
       width: 100%;
       border-radius: 1rem;
       border: 1px solid ${theme.colors.g_colorGray150Hovered};
-      height: 80px;
+      height: 90px;
       overflow: hidden;
       padding: 10px;
       display: flex;
-      flex-direction: column;
-      align-items: flex-start;
+      flex-direction: ${$breakTextarea ? 'column' : 'row'};
       /* position: relative; */
 
       & > span {
         color: ${theme.colors.g_blue};
         font-weight: ${theme.font_weight.font_weight_400};
         font-size: ${theme.font_size.font_size_1rem};
-        margin-right: 5px;
         height: fit-content;
-        display: inline-block;
+        width: fit-content;
+        background-color: transparent;
+        border: none;
+        margin-right: 5px;
         /* position: absolute; */
       }
 
       & > textarea {
-        margin-top: 5px;
+        margin-top: ${$breakTextarea ? '5px' : 0};
         width: 100%;
-        height: 100%;
+        height: 18px;
         resize: none;
         border: none;
         background-color: transparent;

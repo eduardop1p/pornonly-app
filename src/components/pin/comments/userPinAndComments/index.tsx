@@ -4,7 +4,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { format } from 'timeago.js';
 import { useEffect, useRef, useState } from 'react';
-import type { Dispatch, SetStateAction, FormEvent, MouseEvent } from 'react';
+import type {
+  Dispatch,
+  SetStateAction,
+  FormEvent,
+  MouseEvent,
+  ChangeEvent,
+  KeyboardEvent,
+} from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 
 import { Container, ContainerComment, ContainerFormResponse } from './styled';
@@ -117,6 +124,7 @@ export default function UserPinAndComments({
                 setShowResponseComment={setShowResponseComment}
                 username={userNameResponse}
                 isAuth={isAuth}
+                setUserNameResponse={setUserNameResponse}
               />
             )}
             {showResponseCommentParent && (
@@ -125,6 +133,7 @@ export default function UserPinAndComments({
                 setShowResponseCommentParent={setShowResponseCommentParent}
                 username={userNameResponse}
                 isAuth={isAuth}
+                setUserNameResponse={setUserNameResponse}
               />
             )}
 
@@ -159,6 +168,7 @@ export default function UserPinAndComments({
                   setShowResponseComment={setShowResponseComment}
                   username={userNameResponse}
                   isAuth={isAuth}
+                  setUserNameResponse={setUserNameResponse}
                 />
               )}
               {showResponseCommentParent && (
@@ -167,6 +177,7 @@ export default function UserPinAndComments({
                   setShowResponseCommentParent={setShowResponseCommentParent}
                   username={userNameResponse}
                   isAuth={isAuth}
+                  setUserNameResponse={setUserNameResponse}
                 />
               )}
             </div>
@@ -501,14 +512,17 @@ function AddResponse({
   setShowResponseCommentParent,
   username,
   isAuth,
+  setUserNameResponse,
 }: {
   handleAddResponse(commentValue: string): Promise<void>;
   setShowResponseComment?: Dispatch<SetStateAction<boolean>>;
   setShowResponseCommentParent?: Dispatch<SetStateAction<boolean>>;
   username?: string;
   isAuth: boolean;
+  setUserNameResponse: Dispatch<SetStateAction<string>>;
 }) {
   const [textareaValue, setTextareaValue] = useState('');
+  const [breakTextarea, setBreakTextarea] = useState(false);
   const refTextarea = useRef<HTMLTextAreaElement | null>(null);
 
   useEffect(() => {
@@ -532,12 +546,32 @@ function AddResponse({
     if (setShowResponseCommentParent) setShowResponseCommentParent(false);
   };
 
+  const handleChangeTextarea = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    const { value } = event.target;
+    if (event.target.clientHeight > 20 && username) setBreakTextarea(true);
+    if (event.target.clientHeight < 20 && !value && username)
+      setBreakTextarea(false);
+    setTextareaValue(value);
+    event.target.style.height = '5px';
+    event.currentTarget.style.height = `${event.currentTarget.scrollHeight}px`;
+  };
+
+  const handleTextareaKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+    const { selectionStart } = event.currentTarget;
+    if (event.code === 'Backspace' && !textareaValue.charAt(selectionStart - 1))
+      setUserNameResponse('');
+  };
+
   return (
-    <ContainerFormResponse onSubmit={handleSubmitFormResponse}>
+    <ContainerFormResponse
+      onSubmit={handleSubmitFormResponse}
+      $breakTextarea={breakTextarea}
+    >
       <div className="container-input">
         {username && <span>{username}</span>}
         <textarea
-          onChange={event => setTextareaValue(event.target.value)}
+          onChange={event => handleChangeTextarea(event)}
+          onKeyDown={handleTextareaKeyDown}
           ref={refTextarea}
           name="add-response"
           id="comment-add-response"
