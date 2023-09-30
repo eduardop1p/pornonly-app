@@ -96,7 +96,7 @@ export default function Comments({
       <div className="comments-and-users" data-show-comments={showComments}>
         {allCommentsInPin ? (
           stResultsComments.map((comment, index) => (
-            <div key={comment._id}>
+            <div key={comment._id} className="container-comments">
               <UserPinAndComments
                 comment={comment}
                 token={token}
@@ -108,6 +108,7 @@ export default function Comments({
                 isLoading={isLoading}
                 setIsLoading={setIsLoading}
                 parentCommentIndex={index}
+                lastIndex={stResultsComments.length == index + 1}
               />
             </div>
           ))

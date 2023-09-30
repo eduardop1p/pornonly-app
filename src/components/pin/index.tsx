@@ -110,6 +110,7 @@ export default function Pin({ data }: Props) {
             fill
             sizes="100%"
             onLoadingComplete={handleRemoveLoading}
+            onError={handleRemoveLoading}
           />
           {pinIsLoading && <LoadingPin />}
         </>

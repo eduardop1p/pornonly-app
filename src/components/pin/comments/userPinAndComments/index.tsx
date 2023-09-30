@@ -25,6 +25,7 @@ interface Props {
   isLoading: boolean;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   parentCommentIndex: number;
+  lastIndex: boolean;
 }
 
 export default function UserPinAndComments({
@@ -38,11 +39,14 @@ export default function UserPinAndComments({
   isLoading,
   setIsLoading,
   parentCommentIndex,
+  lastIndex,
 }: Props) {
   const router = useRouter();
   const pathName = usePathname();
 
   const [showResponseComment, setShowResponseComment] = useState(false);
+  const [showResponseCommentParent, setShowResponseCommentParent] =
+    useState(false);
   const [userNameResponse, setUserNameResponse] = useState('');
 
   const handleAddResponse = async (commentValue: string) => {
@@ -100,7 +104,10 @@ export default function UserPinAndComments({
           setStResultsComments={setStResultsComments}
           parentCommentIndex={parentCommentIndex}
           parentCommentId={comment._id}
+          setShowResponseCommentParent={setShowResponseCommentParent}
+          setUserNameResponse={setUserNameResponse}
           setShowResponseComment={setShowResponseComment}
+          lastIndex={lastIndex && !comment.responses.length}
         />
         {comment.responses.length ? (
           <div className="responses-comments-container">
@@ -112,6 +119,15 @@ export default function UserPinAndComments({
                 isAuth={isAuth}
               />
             )}
+            {showResponseCommentParent && (
+              <AddResponse
+                handleAddResponse={handleAddResponse}
+                setShowResponseCommentParent={setShowResponseCommentParent}
+                username={userNameResponse}
+                isAuth={isAuth}
+              />
+            )}
+
             {comment.responses.map((response: ResponsesCommentsType, index) => (
               <UserComment
                 key={response._id}
@@ -129,10 +145,33 @@ export default function UserPinAndComments({
                 responseIndex={index}
                 setShowResponseComment={setShowResponseComment}
                 setUserNameResponse={setUserNameResponse}
+                setShowResponseCommentParent={setShowResponseCommentParent}
+                lastIndex={lastIndex && comment.responses.length == index + 1}
               />
             ))}
           </div>
-        ) : null}
+        ) : (
+          (showResponseComment || showResponseCommentParent) && (
+            <div className="responses-comments-container">
+              {showResponseComment && (
+                <AddResponse
+                  handleAddResponse={handleAddResponse}
+                  setShowResponseComment={setShowResponseComment}
+                  username={userNameResponse}
+                  isAuth={isAuth}
+                />
+              )}
+              {showResponseCommentParent && (
+                <AddResponse
+                  handleAddResponse={handleAddResponse}
+                  setShowResponseCommentParent={setShowResponseCommentParent}
+                  username={userNameResponse}
+                  isAuth={isAuth}
+                />
+              )}
+            </div>
+          )
+        )}
       </div>
     </Container>
   );
@@ -150,9 +189,11 @@ interface UserCommentType {
   parentCommentId: string;
   setStResultsComments: Dispatch<SetStateAction<ResultsCommentsType[]>>;
   parentCommentIndex: number;
-  responseIndex?: number;
   setShowResponseComment: Dispatch<SetStateAction<boolean>>;
-  setUserNameResponse?: Dispatch<SetStateAction<string>>;
+  setShowResponseCommentParent: Dispatch<SetStateAction<boolean>>;
+  setUserNameResponse: Dispatch<SetStateAction<string>>;
+  responseIndex?: number;
+  lastIndex?: boolean;
 }
 function UserComment({
   comment,
@@ -168,7 +209,9 @@ function UserComment({
   parentCommentIndex,
   responseIndex,
   setShowResponseComment,
+  setShowResponseCommentParent,
   setUserNameResponse,
+  lastIndex,
 }: UserCommentType) {
   const router = useRouter();
   const pathName = usePathname();
@@ -188,7 +231,7 @@ function UserComment({
     try {
       setIsLoading(true);
       const res = await fetch(
-        parentCommentId
+        typeof responseIndex !== 'undefined'
           ? `${process.env.NEXT_PUBLIC_URL_API}/responses-comments/${parentCommentId}/${comment._id}`
           : `${process.env.NEXT_PUBLIC_URL_API}/comments/delete-one/${comment._id}`,
         {
@@ -204,14 +247,13 @@ function UserComment({
         return;
       }
       handleServerSuccess('Comentário foi excluido');
-      if (parentCommentId) {
+      if (typeof responseIndex !== 'undefined') {
         setStResultsComments(state => {
           state[parentCommentIndex].responses = state[
             parentCommentIndex
           ].responses.filter(v => v._id != comment._id);
           return state;
         });
-        return;
       }
       setStResultsComments(state =>
         state.filter(value => value._id != comment._id)
@@ -226,7 +268,7 @@ function UserComment({
   };
 
   const handleSetLike = () => {
-    if (parentCommentId && typeof responseIndex !== 'undefined') {
+    if (typeof responseIndex !== 'undefined') {
       setStResultsComments(state => {
         state[parentCommentIndex].responses[responseIndex].likes.likes += 1;
         state[parentCommentIndex].responses[responseIndex].likes.users.push(
@@ -274,7 +316,8 @@ function UserComment({
       handleSetLike();
       const res = await fetch(
         // eslint-disable-next-line
-        `${process.env.NEXT_PUBLIC_URL_API}/${parentCommentId ? 'responses-comments' : 'comments'}/like-in-comment/${comment._id}`,
+        `${process.env.NEXT_PUBLIC_URL_API}/${typeof responseIndex !== 'undefined' ? 'responses-comments' : 'comments'
+        }/like-in-comment/${comment._id}`,
         {
           method: 'GET',
           headers: {
@@ -302,7 +345,8 @@ function UserComment({
       handleSetUnClick();
       const res = await fetch(
         // eslint-disable-next-line
-        `${process.env.NEXT_PUBLIC_URL_API}/${parentCommentId ? 'responses-comments' : 'comments'}/unclick-in-comment/${comment._id}`,
+        `${process.env.NEXT_PUBLIC_URL_API}/${typeof responseIndex !== 'undefined' ? 'responses-comments' : 'comments'
+        }/unclick-in-comment/${comment._id}`,
         {
           method: 'DELETE',
           headers: {
@@ -324,16 +368,22 @@ function UserComment({
       router.push(`/login?from=${pathName}`);
       return;
     }
-    setShowResponseComment(true);
-    if (!setUserNameResponse) return;
-    setUserNameResponse(
-      event.currentTarget.offsetParent?.querySelector('.comment-username > a')
-        ?.textContent as string
-    );
+    if (typeof responseIndex !== 'undefined') {
+      setUserNameResponse(
+        event.currentTarget.offsetParent?.querySelector('.comment-username > a')
+          ?.textContent as string
+      );
+      setShowResponseCommentParent(false);
+      setShowResponseComment(true);
+      return;
+    }
+    setUserNameResponse('');
+    setShowResponseComment(false);
+    setShowResponseCommentParent(true);
   };
 
   return (
-    <ContainerComment>
+    <ContainerComment $lastIndex={lastIndex}>
       <Link href={`/${comment.userId.username}`} className="pin-user-profile">
         {comment.userId.profilePhoto.length ? (
           <Image
@@ -448,11 +498,13 @@ function UserComment({
 function AddResponse({
   handleAddResponse,
   setShowResponseComment,
+  setShowResponseCommentParent,
   username,
   isAuth,
 }: {
   handleAddResponse(commentValue: string): Promise<void>;
-  setShowResponseComment: Dispatch<SetStateAction<boolean>>;
+  setShowResponseComment?: Dispatch<SetStateAction<boolean>>;
+  setShowResponseCommentParent?: Dispatch<SetStateAction<boolean>>;
   username?: string;
   isAuth: boolean;
 }) {
@@ -472,7 +524,12 @@ function AddResponse({
     }
     if (!textareaValue) return;
     await handleAddResponse(textareaValue);
-    setShowResponseComment(false);
+    handleRemoveTextarea();
+  };
+
+  const handleRemoveTextarea = () => {
+    if (setShowResponseComment) setShowResponseComment(false);
+    if (setShowResponseCommentParent) setShowResponseCommentParent(false);
   };
 
   return (
@@ -486,7 +543,7 @@ function AddResponse({
           id="comment-add-response"
           placeholder="Responder"
           maxLength={100}
-        />
+        ></textarea>
       </div>
       <div className="container-manage-input-response">
         <button
@@ -495,7 +552,7 @@ function AddResponse({
         >
           Salvar
         </button>
-        <button type="button" onClick={() => setShowResponseComment(false)}>
+        <button type="button" onClick={() => handleRemoveTextarea()}>
           Cancelar
         </button>
       </div>

@@ -2,7 +2,11 @@ import styled, { css } from 'styled-components';
 
 import { TypeTheme } from '@/utils/theme/myTheme';
 
-export const Container = styled.div<TypeTheme>`
+interface Props {
+  $lastIndex?: boolean;
+}
+
+export const Container = styled.div<TypeTheme & Props>`
   display: flex;
   /* align-items: center; */
   width: 100%;
@@ -26,8 +30,8 @@ export const Container = styled.div<TypeTheme>`
   }
 `;
 
-export const ContainerComment = styled.div<TypeTheme>`
-  ${({ theme }) => css`
+export const ContainerComment = styled.div<TypeTheme & Props>`
+  ${({ theme, $lastIndex }) => css`
     display: flex;
 
     .pin-user-profile {
@@ -79,6 +83,7 @@ export const ContainerComment = styled.div<TypeTheme>`
           font-weight: ${theme.font_weight.font_weight_400};
           color: ${theme.colors.g_colorGray300};
           line-height: 1.2;
+          word-break: break-word;
         }
       }
 
@@ -161,7 +166,7 @@ export const ContainerComment = styled.div<TypeTheme>`
             background-color: ${theme.colors.g_colorGray0};
             border-radius: 1rem;
             position: absolute;
-            top: 1.8rem;
+            top: ${$lastIndex ? '-3.4rem' : '1.8rem'};
             padding: 8px;
             left: 50%;
             transform: translateX(-50%);
@@ -211,10 +216,12 @@ export const ContainerFormResponse = styled.form<TypeTheme>`
       width: 100%;
       border-radius: 1rem;
       border: 1px solid ${theme.colors.g_colorGray150Hovered};
-      height: 70px;
+      height: 80px;
       overflow: hidden;
-      padding: 10px 12px;
-      /* display: flex; */
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
       /* position: relative; */
 
       & > span {
@@ -228,7 +235,7 @@ export const ContainerFormResponse = styled.form<TypeTheme>`
       }
 
       & > textarea {
-        /* margin-left: 5rem; */
+        margin-top: 5px;
         width: 100%;
         height: 100%;
         resize: none;

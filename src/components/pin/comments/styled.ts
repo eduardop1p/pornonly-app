@@ -56,9 +56,12 @@ export const Container = styled.div<TypeTheme & Props>`
         display: none;
       }
 
+      & > .container-comments {
+        margin-right: 1rem;
+      }
+
       & > :not(:last-child) {
         margin-bottom: 1rem;
-        margin-right: 10px;
       }
 
       & > .pin-no-comments {

@@ -134,20 +134,11 @@ export default function Masonry({
                 src={midiaValue.url}
                 controls
                 preload="metadata"
-                onWaiting={event =>
-                  handleWaitingVideo(event.currentTarget as HTMLVideoElement)
-                }
-                onPlaying={event =>
-                  handleNoWaitingVideo(event.currentTarget as HTMLVideoElement)
-                }
-                onPlay={event =>
-                  handleVideoPlay(event.currentTarget as HTMLVideoElement)
-                }
+                onWaiting={event => handleWaitingVideo(event.currentTarget)}
+                onPlaying={event => handleNoWaitingVideo(event.currentTarget)}
+                onPlay={event => handleVideoPlay(event.currentTarget)}
                 onLoadedData={event =>
-                  handleVideoCompleteLoad(
-                    event.currentTarget as HTMLVideoElement,
-                    midiaIndex
-                  )
+                  handleVideoCompleteLoad(event.currentTarget, midiaIndex)
                 }
               ></video>
               <LoadingPin />
@@ -199,6 +190,7 @@ export default function Masonry({
                 fill
                 sizes="100%"
                 onLoadingComplete={element => handleRemoveLoading(element)}
+                onError={event => handleRemoveLoading(event.currentTarget)}
               />
               <LoadingPin />
             </Link>

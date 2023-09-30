@@ -29,6 +29,7 @@ export default function AddComments({
   const pathName = usePathname();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [commentValue, setCommentValue] = useState('');
   const { handleServerSuccess, msgGlobalSuccess, showGlobalSuccess } =
     useGlobalSuccessTime();
   const { handleServerError, msgGlobalError, showGlobalError } =
@@ -36,15 +37,15 @@ export default function AddComments({
 
   const handleAddCommentInPin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const comment = event.currentTarget.querySelector(
-      '#comment'
-    ) as HTMLInputElement;
-    if (!comment.value || isLoading) return;
+    if (!commentValue || isLoading) return;
     if (!isAuth || !token) {
       router.push(`/login?from=${pathName}`);
       return;
     }
-    if (comment.value.length > 50) handleServerError('Comentário muito longo');
+    if (commentValue.length > 100) {
+      handleServerError('Comentário muito grande');
+      return;
+    }
 
     try {
       setIsLoading(true);
@@ -52,7 +53,7 @@ export default function AddComments({
         `${process.env.NEXT_PUBLIC_URL_API}/comments/${midiaId}`,
         {
           method: 'POST',
-          body: JSON.stringify({ comment: comment.value }),
+          body: JSON.stringify({ comment: commentValue }),
           headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -66,6 +67,7 @@ export default function AddComments({
       }
       handleServerSuccess('Comentário foi adcionado');
       setStResultsComments(state => [jsonData, ...state]);
+      setCommentValue('');
       // router.refresh();
     } catch (err) {
       // console.log(err);
@@ -89,6 +91,9 @@ export default function AddComments({
         id="comment"
         placeholder="Adicionar comentário"
         style={{ marginLeft: isAuth ? '10px' : 0 }}
+        maxLength={100}
+        value={commentValue}
+        onChange={event => setCommentValue(event.target.value)}
       />
       <button type="submit" className="send-comment">
         <svg
