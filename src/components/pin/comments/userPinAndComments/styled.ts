@@ -80,11 +80,27 @@ export const ContainerComment = styled.div<TypeTheme & Props>`
 
         & > .comment {
           margin-left: 5px;
-          font-size: ${theme.font_size.font_size_1rem};
-          font-weight: ${theme.font_weight.font_weight_400};
-          color: ${theme.colors.g_colorGray300};
-          line-height: 1.2;
-          word-break: break-word;
+          display: inline;
+
+          & > span {
+            font-size: ${theme.font_size.font_size_1rem};
+            font-weight: ${theme.font_weight.font_weight_400};
+            color: ${theme.colors.g_colorGray300};
+            line-height: 1.2;
+            word-break: break-word;
+          }
+
+          & > a {
+            margin-right: 4px;
+            color: ${theme.colors.g_blue};
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: ${theme.font_weight.font_weight_400};
+            font-size: ${theme.font_size.font_size_1rem};
+            height: fit-content;
+            width: fit-content;
+            background-color: transparent;
+          }
         }
       }
 

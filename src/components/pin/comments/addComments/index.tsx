@@ -37,6 +37,9 @@ export default function AddComments({
 
   const handleAddCommentInPin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const commentsAndUsers = document.querySelector(
+      '.comments-and-users'
+    ) as HTMLDivElement;
     if (!commentValue || isLoading) return;
     if (!isAuth || !token) {
       router.push(`/login?from=${pathName}`);
@@ -68,6 +71,7 @@ export default function AddComments({
       handleServerSuccess('Comentário foi adcionado');
       setStResultsComments(state => [jsonData, ...state]);
       setCommentValue('');
+      commentsAndUsers.scrollTop = 0;
       // router.refresh();
     } catch (err) {
       // console.log(err);

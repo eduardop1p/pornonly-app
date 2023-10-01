@@ -70,7 +70,7 @@ export default function UserPinAndComments({
         `${process.env.NEXT_PUBLIC_URL_API}/responses-comments/${comment._id}`,
         {
           method: 'POST',
-          body: JSON.stringify({ comment: commentValue }),
+          body: JSON.stringify({ comment: commentValue, userNameResponse }),
           headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -122,7 +122,7 @@ export default function UserPinAndComments({
               <AddResponse
                 handleAddResponse={handleAddResponse}
                 setShowResponseComment={setShowResponseComment}
-                username={userNameResponse}
+                userNameResponse={userNameResponse}
                 isAuth={isAuth}
                 setUserNameResponse={setUserNameResponse}
               />
@@ -131,7 +131,7 @@ export default function UserPinAndComments({
               <AddResponse
                 handleAddResponse={handleAddResponse}
                 setShowResponseCommentParent={setShowResponseCommentParent}
-                username={userNameResponse}
+                userNameResponse={userNameResponse}
                 isAuth={isAuth}
                 setUserNameResponse={setUserNameResponse}
               />
@@ -166,7 +166,7 @@ export default function UserPinAndComments({
                 <AddResponse
                   handleAddResponse={handleAddResponse}
                   setShowResponseComment={setShowResponseComment}
-                  username={userNameResponse}
+                  userNameResponse={userNameResponse}
                   isAuth={isAuth}
                   setUserNameResponse={setUserNameResponse}
                 />
@@ -175,7 +175,7 @@ export default function UserPinAndComments({
                 <AddResponse
                   handleAddResponse={handleAddResponse}
                   setShowResponseCommentParent={setShowResponseCommentParent}
-                  username={userNameResponse}
+                  userNameResponse={userNameResponse}
                   isAuth={isAuth}
                   setUserNameResponse={setUserNameResponse}
                 />
@@ -189,7 +189,7 @@ export default function UserPinAndComments({
 }
 
 interface UserCommentType {
-  comment: ResultsCommentsType | ResponsesCommentsType;
+  comment: ResponsesCommentsType;
   userId: any;
   isAuth: boolean;
   token: string;
@@ -417,7 +417,14 @@ function UserComment({
               {comment.userId.username}
             </Link>
           </h4>
-          <span className="comment">{comment.comment}</span>
+          <div className="comment">
+            {comment.userNameResponse && (
+              <Link href={`/${comment.userNameResponse}`}>
+                {comment.userNameResponse}
+              </Link>
+            )}
+            <span>{comment.comment}</span>
+          </div>
         </div>
         <div
           className="container-comment-manage"
@@ -510,14 +517,14 @@ function AddResponse({
   handleAddResponse,
   setShowResponseComment,
   setShowResponseCommentParent,
-  username,
+  userNameResponse,
   isAuth,
   setUserNameResponse,
 }: {
   handleAddResponse(commentValue: string): Promise<void>;
   setShowResponseComment?: Dispatch<SetStateAction<boolean>>;
   setShowResponseCommentParent?: Dispatch<SetStateAction<boolean>>;
-  username?: string;
+  userNameResponse?: string;
   isAuth: boolean;
   setUserNameResponse: Dispatch<SetStateAction<string>>;
 }) {
@@ -548,8 +555,9 @@ function AddResponse({
 
   const handleChangeTextarea = (event: ChangeEvent<HTMLTextAreaElement>) => {
     const { value } = event.target;
-    if (event.target.clientHeight > 20 && username) setBreakTextarea(true);
-    if (event.target.clientHeight < 20 && !value && username)
+    if (event.target.clientHeight > 20 && userNameResponse)
+      setBreakTextarea(true);
+    if (event.target.clientHeight < 20 && !value && userNameResponse)
       setBreakTextarea(false);
     setTextareaValue(value);
     event.target.style.height = '5px';
@@ -568,7 +576,7 @@ function AddResponse({
       $breakTextarea={breakTextarea}
     >
       <div className="container-input">
-        {username && <span>{username}</span>}
+        {userNameResponse && <span>{userNameResponse}</span>}
         <textarea
           onChange={event => handleChangeTextarea(event)}
           onKeyDown={handleTextareaKeyDown}

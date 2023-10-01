@@ -42,6 +42,7 @@ export interface ResponsesCommentsType {
   _id: string;
   comment: string;
   userId: UserIdResultsType;
+  userNameResponse?: string;
   likes: LikesType;
   createIn: string;
 }
