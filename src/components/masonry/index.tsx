@@ -56,7 +56,7 @@ export default function Masonry({
     ) as HTMLDivElement;
     setTimeout(() => {
       loading.style.zIndex = '1';
-    }, 500);
+    }, 100);
   }, []);
 
   const handleAddDurationVideo = useCallback(

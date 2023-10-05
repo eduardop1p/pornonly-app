@@ -7,12 +7,11 @@ export const Container = styled.div<TypeTheme>`
   ${({ theme }) => css`
       position: relative;
       flex: none;
+      overflow: hidden;
 
       &.pin-one-border-container {
         margin: 1.2rem 0 1.2rem 1.2rem;
         align-self: center;
-        border-radius: 1rem;
-        overflow: hidden;
       }
 
       & > img,

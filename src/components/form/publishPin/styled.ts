@@ -40,6 +40,31 @@ export const Container = styled.div<TypeTheme>`
             left: 0;
             top: 0;
 
+            & > .progress-pin-upload {
+              position: absolute;
+              left: 50%;
+              width: 100%;
+              background-color: ${theme.colors.g_colorTransparentGray800};
+              height: 100%;
+              top: 50%;
+              transform: translate(-50%, -50%);
+              z-index: 3;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+
+              circle {
+                stroke-width: 4.3px;
+              }
+
+              & > .upload-progress-value {
+                font-size: ${theme.font_size.font_size_1rem};
+                font-weight: ${theme.font_weight.font_weight_500};
+                position: absolute;
+                color: ${theme.colors.g_colorGray0};
+              }
+            }
+
             & > button {
               position: absolute;
               cursor: pointer;
@@ -208,6 +233,7 @@ export const Container = styled.div<TypeTheme>`
         display: flex;
         flex-direction: column;
         width: 100%;
+        position: relative;
 
         & > div:not(.user) {
           min-height: 70px;

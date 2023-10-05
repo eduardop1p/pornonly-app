@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 'use client';
 
 import Image from 'next/image';
@@ -16,6 +17,7 @@ interface Props {
 
 export default function Pin({ data }: Props) {
   const [pinIsLoading, setPinIsLoading] = useState(true);
+  const minWidthVerticalBox = 500;
 
   const [pinDefaultWidth] = useState(500);
   const [pinDefaultHeight] = useState(
@@ -36,12 +38,6 @@ export default function Pin({ data }: Props) {
   );
 
   const handleRemoveLoading = () => {
-    if (data.midiaType === 'video') {
-      setTimeout(() => {
-        setPinIsLoading(false);
-      }, 500);
-      return;
-    }
     setPinIsLoading(false);
   };
 
@@ -70,13 +66,17 @@ export default function Pin({ data }: Props) {
     <Container
       className={
         // eslint-disable-next-line
-        `${pinDefaultHeight >= 460 && pinDefaultHeight <= 650 ? 'pin-one-border-container' : ''}`
+        `${pinDefaultHeight >= minWidthVerticalBox && pinDefaultHeight <= 650 ? 'pin-one-border-container' : ''}`
       }
       style={{
-        // eslint-disable-next-line
-        width: `${pinDefaultHeight < 460 ? pinAlternativeWidth : pinDefaultWidth}px`,
-        // eslint-disable-next-line
-        height: `${pinDefaultHeight < 460 ? pinAlternativeHeigth : pinDefaultHeight}px`,
+        width: `${pinDefaultHeight < minWidthVerticalBox ? pinAlternativeWidth : pinDefaultWidth}px`,
+        height: `${pinDefaultHeight < minWidthVerticalBox ? pinAlternativeHeigth : pinDefaultHeight}px`,
+        borderRadius:
+          pinDefaultHeight < minWidthVerticalBox
+            ? '2rem 2rem 0 0'
+            : pinDefaultHeight > 650
+              ? '2rem 0 0 2rem'
+              : '1rem',
       }}
     >
       {data.midiaType === 'video' ? (

@@ -119,41 +119,6 @@ export const ContainerComment = styled.div<TypeTheme & Props>`
           cursor: pointer;
         }
 
-        & > .likes-container {
-          display: flex;
-          align-items: center;
-
-          & > button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            width: 16px;
-            height: 16px;
-
-            & > svg {
-              flex: none;
-              width: 100%;
-              height: 100%;
-              display: inline-block;
-
-              &.yes-like {
-                fill: ${theme.colors.g_colorRed100};
-              }
-              &.no-like {
-                fill: ${theme.colors.g_color5f5f5f};
-              }
-            }
-          }
-
-          & > span {
-            color: ${theme.colors.g_color5f5f5f};
-            font-size: ${theme.font_size.font_size_0_90rem};
-            font-weight: ${theme.font_weight.font_weight_500};
-            margin-left: 5px;
-          }
-        }
-
         & > span {
           font-size: ${theme.font_size.font_size_0_90rem};
           font-weight: ${theme.font_weight.font_weight_400};
@@ -310,5 +275,78 @@ export const ContainerFormResponse = styled.form<TypeTheme & Props>`
         transition: background 150ms ease-in-out;
       }
     }
+  `}
+`;
+
+export const LikeContainer = styled.div<TypeTheme>`
+  ${({ theme }) => css`
+    display: flex;
+    align-items: center;
+
+    & > button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      width: 16px;
+      height: 16px;
+
+      & > svg {
+        flex: none;
+        width: 100%;
+        height: 100%;
+        display: inline-block;
+
+        @keyframes like-animaton {
+          0%,
+          to {
+            transform: scale(1);
+          }
+          15% {
+            transform: scale(1.2);
+          }
+          30% {
+            transform: scale(0.95);
+          }
+          45%,
+          80% {
+            transform: scale(1);
+          }
+        }
+
+        &.yes-like {
+          fill: ${theme.colors.g_colorRed100};
+          animation-name: like-animaton;
+          animation-duration: 1s;
+          animation-timing-function: linear;
+        }
+        &.no-like {
+          fill: ${theme.colors.g_color5f5f5f};
+        }
+      }
+    }
+
+    & > span {
+      color: ${theme.colors.g_color5f5f5f};
+      font-size: ${theme.font_size.font_size_0_90rem};
+      font-weight: ${theme.font_weight.font_weight_500};
+      margin-left: 5px;
+    }
+    /*
+
+    [data-like-animaton='true'] {
+      animation-name: 'likeAnimaton';
+      animation-duration: 1s;
+      animation-timing-function: linear;
+    }
+
+    & > svg {
+      width: 100%;
+      height: 100%;
+
+      & > path {
+        cursor: pointer;
+      }
+    } */
   `}
 `;

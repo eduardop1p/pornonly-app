@@ -14,7 +14,12 @@ import type {
 } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 
-import { Container, ContainerComment, ContainerFormResponse } from './styled';
+import {
+  Container,
+  ContainerComment,
+  ContainerFormResponse,
+  LikeContainer,
+} from './styled';
 import {
   ResultsCommentsType,
   ResponsesCommentsType,
@@ -442,13 +447,11 @@ function UserComment({
           >
             Responder
           </button>
-
           {isLikeComment ? (
-            <div className="likes-container">
+            <LikeContainer>
               <button type="button" onClick={handleUnClickComment}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  height="1em"
                   viewBox="0 0 512 512"
                   className="yes-like"
                 >
@@ -456,13 +459,12 @@ function UserComment({
                 </svg>
               </button>
               <span>{comment.likes.likes}</span>
-            </div>
+            </LikeContainer>
           ) : (
-            <div className="likes-container">
+            <LikeContainer>
               <button type="button" onClick={handleLikeComment}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  height="1em"
                   viewBox="0 0 512 512"
                   className="no-like"
                 >
@@ -470,8 +472,9 @@ function UserComment({
                 </svg>
               </button>
               <span>{comment.likes.likes}</span>
-            </div>
+            </LikeContainer>
           )}
+
           {isUniqueUser() && (
             <div
               className="user-manage-comment"

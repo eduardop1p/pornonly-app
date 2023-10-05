@@ -6,6 +6,12 @@ import { ChangeEvent, useState, ReactNode, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import axios from 'axios';
+import { get } from 'lodash';
+import CircularProgress, {
+  CircularProgressProps,
+} from '@mui/material/CircularProgress';
+import Typography from '@mui/material/Typography';
 
 import { Container } from './styled';
 
@@ -66,6 +72,7 @@ export default function PublishPin({
     resolver: zodResolver(ZodUserSchema),
   });
 
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [fileContent, setFileContent] = useState<{ src: string; file: any }>({
     src: '',
     file: null,
@@ -115,23 +122,28 @@ export default function PublishPin({
 
     try {
       setIsLoading(true);
-      const res = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/midia`, {
-        method: 'POST',
+      await axios.post(`${process.env.NEXT_PUBLIC_URL_API}/midia`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
         },
-        body: formData,
+        onUploadProgress(progressEvent) {
+          const loaded = progressEvent.loaded;
+          const total = progressEvent.total || 0;
+          const percentage = Math.round((loaded / total) * 100);
+          setUploadProgress(percentage);
+        },
       });
-      const jsonRes = await res.json();
-      if (!res.ok) {
-        handleServerError(jsonRes.error as string);
+      handleServerSuccess('Pin adcionado ao feed');
+    } catch (err: any) {
+      if (get(err, 'response.data.error', false)) {
+        handleServerError(err.response.data.error);
         return;
       }
-      handleServerSuccess('Pin adcionado ao feed');
-    } catch {
       handleServerError('Erro interno no servidor.');
     } finally {
       setIsLoading(false);
+      setUploadProgress(0);
     }
   };
 
@@ -224,6 +236,20 @@ export default function PublishPin({
           <div className="publish">
             {fileContent.file && (
               <div className="preview">
+                {uploadProgress && (
+                  <div className="progress-pin-upload">
+                    <CircularProgress
+                      variant="determinate"
+                      value={uploadProgress}
+                      style={{
+                        width: '60px',
+                        height: '60px',
+                        color: 'var(--g-colorRed100)',
+                      }}
+                    />
+                    <span className="upload-progress-value">{`${uploadProgress}%`}</span>
+                  </div>
+                )}
                 <button
                   type="button"
                   onClick={() => {

@@ -4,7 +4,7 @@ import { cookies } from 'next/headers';
 
 import styles from './styles.module.css';
 
-import { MidiaResultsType } from '@/app/page';
+import { MidiaResultsType, MidiaType } from '@/app/page';
 import Pin from '@/components/pin';
 import BackButton from '@/components/pin/backButton';
 import calHeight from '@/config/calcHeight';
@@ -15,6 +15,7 @@ import { UserIdResultsType } from '@/components/masonry/userPin';
 import UserAvatar from '@/components/userAvatar';
 import UserPin from '@/components/masonry/userPin';
 import { UserType } from '@/app/[usernameparam]/page';
+import Masonry from '@/components/masonry';
 
 interface Props {
   params: { pinid: string };
@@ -132,6 +133,23 @@ export default async function Page({ params }: Props) {
   const { commentsMidia } = (await resComments.json()) as CommentsType;
   const resultsComments = commentsMidia.results;
 
+  let resultsMidiaSearchTag: MidiaResultsType[] = [];
+  if (dataPin.tags.join()) {
+    const resMidiaSearchTags = await fetch(
+      // eslint-disable-next-line
+      `${process.env.NEXT_PUBLIC_URL_API
+      }/midia/search-tags?search_tags=${dataPin.tags.join(',')}&page=1`,
+      {
+        method: 'GET',
+        cache: 'no-cache',
+      }
+    );
+    const dataMidiaSearchTag = (await resMidiaSearchTags.json()) as MidiaType;
+    resultsMidiaSearchTag = dataMidiaSearchTag.midia.results.filter(
+      value => value._id !== pinid
+    );
+  }
+
   const pinWidth = 500;
   const pinHeight = calHeight({
     customWidth: pinWidth,
@@ -139,20 +157,13 @@ export default async function Page({ params }: Props) {
     originalWidth: dataPin.width,
   });
 
-  const allCommentsInPin =
-    resultsComments.length +
-    resultsComments.reduce(
-      (ac: number, value) => ac + value.responses.length,
-      0
-    );
-
   return (
     <main className={styles.main}>
       <BackButton />
       <div className={styles['container']}>
         <div
           // eslint-disable-next-line
-          className={`${styles['pin-default-container']} ${pinHeight < 460 ? styles['pin-alternative-container'] : ''}`}
+          className={`${styles['pin-default-container']} ${pinHeight < 500 ? styles['pin-alternative-container'] : ''}`}
           id="id-pin-default-container"
         >
           <Pin data={dataPin} />
@@ -187,10 +198,11 @@ export default async function Page({ params }: Props) {
               <Comments
                 midiaId={dataPin._id}
                 resultsComments={resultsComments}
+                dataPin={dataPin}
                 token={token as string}
                 isAuth={isAuth}
                 userId={userId}
-                allCommentsInPin={allCommentsInPin}
+                pinHeightSmaller500={pinHeight < 500}
               >
                 <UserAvatar containerHeight={48} containerWidth={48} noLink />
               </Comments>
@@ -198,6 +210,14 @@ export default async function Page({ params }: Props) {
           </div>
         </div>
       </div>
+      {resultsMidiaSearchTag.length && (
+        <div className={styles['more-similar']}>
+          <h2>Mais como este</h2>
+          <div className={styles['results-search-tag']}>
+            <Masonry results={resultsMidiaSearchTag} visibleUserInfo />
+          </div>
+        </div>
+      )}
     </main>
   );
 }

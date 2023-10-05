@@ -1,5 +1,7 @@
 .main{
   margin: 6rem auto 2rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .container{
@@ -12,7 +14,7 @@
   width: 1050px;
   box-shadow: var(--box-shadow_07);
   border-radius: 2rem;
-  overflow: hidden;
+  /* overflow: hidden; */
   display: flex;
   min-height: 500px;
   justify-content: space-between;
@@ -24,12 +26,12 @@
 
 .save-and-comments{
   width: 100%;
-  margin: 2rem 2rem 1.2rem 2rem;
+  padding: 2rem 2rem 1.2rem 2rem;
   position: relative;
   z-index: 2;
 }
 .pin-info > :not(:last-child){
-  margin-bottom: 14px;
+  margin-bottom: 1rem;
 }
 
 .pin-title{
@@ -42,3 +44,14 @@
   margin-top: 1rem;
 }
 
+.more-similar{
+  margin-top: 2rem;
+}
+.more-similar > h2{
+  font-weight: var(--font-weight-500);
+  font-size: var(--font-size-1_25rem);
+  text-align: center;
+}
+.results-search-tag{
+  margin-top: 1.5rem;
+}

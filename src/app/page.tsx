@@ -2,6 +2,7 @@ import styles from './page.module.css';
 
 import Masonry from '@/components/masonry';
 import { UserIdResultsType } from '@/components/masonry/userPin';
+import { LikesType } from './pin/[pinid]/page';
 
 export interface MidiaType {
   midia: {
@@ -17,6 +18,8 @@ export interface MidiaResultsType {
   _id: string;
   title: string;
   midiaType: 'img' | 'gif' | 'video';
+  tags: string[];
+  likes: LikesType;
   width: number;
   height: number;
   description: string;
@@ -39,11 +42,7 @@ export default async function Home() {
 
   return (
     <main className={styles.main}>
-      <Masonry
-        results={results}
-        justifyContent="center"
-        visibleUserInfo={true}
-      />
+      <Masonry results={results} visibleUserInfo={true} />
     </main>
   );
 }

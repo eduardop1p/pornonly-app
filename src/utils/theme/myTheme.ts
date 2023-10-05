@@ -6,6 +6,7 @@ const myTheme = {
     g_colorRed0: '#ff5247',
     g_colorRed100: '#e60023',
     g_colorRedSecondary: '#cc0000',
+    g_colorRed4: '#ffe0e0',
     g_colorGray0: '#fff',
     g_colorGray50: '#fff',
     g_colorGray100: '#efefef',
