@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
@@ -26,6 +27,8 @@ export default function Masonry({
   visibleUserInfo,
   masonryPublishs = false,
 }: Props) {
+  if (typeof window == 'undefined') return null;
+
   const [columnCount] = useState(6);
   const [columnWidth, setColumnWidth] = useState(
     (window.innerWidth - 132) / columnCount
