@@ -210,14 +210,14 @@ export default async function Page({ params }: Props) {
           </div>
         </div>
       </div>
-      {resultsMidiaSearchTag.length && (
+      {resultsMidiaSearchTag.length ? (
         <div className={styles['more-similar']}>
           <h2>Mais como este</h2>
           <div className={styles['results-search-tag']}>
             <Masonry results={resultsMidiaSearchTag} visibleUserInfo />
           </div>
         </div>
-      )}
+      ) : null}
     </main>
   );
 }

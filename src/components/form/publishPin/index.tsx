@@ -8,10 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import axios from 'axios';
 import { get } from 'lodash';
-import CircularProgress, {
-  CircularProgressProps,
-} from '@mui/material/CircularProgress';
-import Typography from '@mui/material/Typography';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import { Container } from './styled';
 
@@ -108,6 +105,9 @@ export default function PublishPin({
 
   const handleSubmitFile: SubmitHandler<BodyFile> = async (body, event) => {
     event?.preventDefault();
+    const btnSubmit = event?.target.querySelector(
+      'button[type="submit"]'
+    ) as HTMLButtonElement;
     if (isLoading) return;
 
     const { title, midia } = body;
@@ -122,6 +122,7 @@ export default function PublishPin({
 
     try {
       setIsLoading(true);
+      btnSubmit.focus();
       await axios.post(`${process.env.NEXT_PUBLIC_URL_API}/midia`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,

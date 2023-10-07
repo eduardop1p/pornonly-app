@@ -16,4 +16,16 @@ export const LoadingPinContainer = styled.div<{ $backgroundRamdom: string }>`
     font-size: 14px;
     color: #fff;
   }
+
+  @keyframes rotateLoading {
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  & > svg {
+    animation-name: rotateLoading;
+    animation-duration: 1s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
 `;

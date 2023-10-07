@@ -5,7 +5,7 @@ import styles from './styles.module.css';
 export const metadata: Metadata = {
   title: 'Pornonly - Login',
   description:
-    'Pononly - Faça login aqui para poder adcionar publicações e fazer comentarios em fotos.',
+    'Pononly - Faça login para poder adcionar novos pins e fazer comentarios.',
 };
 
 import Login from '@/components/form/login';

@@ -44,6 +44,9 @@ export default function Nav({ isAuth, children }: Props) {
         >
           new
         </Link>
+        {/* <button type="button" className={styles.publish}>
+          Categoria
+        </button> */}
         {isAuth && (
           <button
             className={styles.publish}

@@ -7,6 +7,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import Link from 'next/link';
 import { upperFirst } from 'lodash';
+import ReactPlayer from 'react-player';
 
 import { MasonryContainer } from './styled';
 import { MidiaResultsType } from '@/app/page';
@@ -27,8 +28,6 @@ export default function Masonry({
   visibleUserInfo,
   masonryPublishs = false,
 }: Props) {
-  if (typeof window == 'undefined') return null;
-
   const [columnCount] = useState(6);
   const [columnWidth, setColumnWidth] = useState(
     (window.innerWidth - 132) / columnCount
@@ -51,14 +50,12 @@ export default function Masonry({
         });
       }
     };
-  }, []);
+  }, [columnCount]);
 
-  const handleRemoveLoading = useCallback((elementPin: Element) => {
-    const loading = elementPin.parentElement?.querySelector(
-      '#loading-pin'
-    ) as HTMLDivElement;
+  const handleRemoveLoading = useCallback((element: Element) => {
+    const loading = element.querySelector('#loading-pin') as HTMLDivElement;
     setTimeout(() => {
-      loading.style.zIndex = '1';
+      loading.style.display = 'none';
     }, 100);
   }, []);
 
@@ -69,38 +66,29 @@ export default function Masonry({
     []
   );
 
-  const handleNoWaitingVideo = useCallback((video: HTMLVideoElement) => {
-    const parentVideo = video.parentElement;
-    const waitingPin = parentVideo?.querySelector(
-      '#waiting-pin'
-    ) as HTMLDivElement;
+  const handleNoWaitingVideo = useCallback((element: Element) => {
+    const waitingPin = element.querySelector('#waiting-pin') as HTMLDivElement;
     waitingPin.classList.remove('waiting');
   }, []);
 
   const handleVideoCompleteLoad = useCallback(
-    (video: HTMLVideoElement, midiaIndex: number) => {
-      const videoTime = video.parentElement?.querySelector(
-        '.video-time'
-      ) as HTMLSpanElement;
-      handleAddDurationVideo(videoTime, videoDuration(video.duration));
-      handleNoWaitingVideo(video);
-      handleRemoveLoading(video);
+    (element: Element) => {
+      const videoTime = element.querySelector('.video-time') as HTMLSpanElement;
+      const videoDurationC = element.querySelector('video')?.duration as number;
+      handleAddDurationVideo(videoTime, videoDuration(videoDurationC));
+      handleNoWaitingVideo(element);
+      handleRemoveLoading(element);
     },
     [handleAddDurationVideo, handleNoWaitingVideo, handleRemoveLoading]
   );
 
-  const handleVideoPlay = useCallback((video: HTMLVideoElement) => {
-    const videoTime = video.parentElement?.querySelector(
-      '.video-time'
-    ) as HTMLSpanElement;
+  const handleVideoPlay = useCallback((element: Element) => {
+    const videoTime = element.querySelector('.video-time') as HTMLSpanElement;
     videoTime.classList.add('hidden-video-time');
   }, []);
 
-  const handleWaitingVideo = useCallback((video: HTMLVideoElement) => {
-    const parentVideo = video.parentElement;
-    const waitingPin = parentVideo?.querySelector(
-      '#waiting-pin'
-    ) as HTMLDivElement;
+  const handleWaitingVideo = useCallback((element: Element) => {
+    const waitingPin = element.querySelector('#waiting-pin') as HTMLDivElement;
     waitingPin.classList.add('waiting');
   }, []);
 
@@ -133,17 +121,30 @@ export default function Masonry({
               }}
             >
               <span className="video-time">0:00</span>
-              <video
-                src={midiaValue.url}
+              <ReactPlayer
+                url={midiaValue.url}
                 controls
-                preload="metadata"
-                onWaiting={event => handleWaitingVideo(event.currentTarget)}
-                onPlaying={event => handleNoWaitingVideo(event.currentTarget)}
-                onPlay={event => handleVideoPlay(event.currentTarget)}
-                onLoadedData={event =>
-                  handleVideoCompleteLoad(event.currentTarget, midiaIndex)
+                width="100%"
+                height="100%"
+                onPlay={() =>
+                  handleVideoPlay(document.querySelectorAll('.pin')[midiaIndex])
                 }
-              ></video>
+                onReady={() =>
+                  handleVideoCompleteLoad(
+                    document.querySelectorAll('.pin')[midiaIndex]
+                  )
+                }
+                onBuffer={() =>
+                  handleWaitingVideo(
+                    document.querySelectorAll('.pin')[midiaIndex]
+                  )
+                }
+                onBufferEnd={() =>
+                  handleNoWaitingVideo(
+                    document.querySelectorAll('.pin')[midiaIndex]
+                  )
+                }
+              />
               <LoadingPin />
               <WaitingPin />
             </Link>
@@ -192,8 +193,16 @@ export default function Masonry({
                 priority
                 fill
                 sizes="100%"
-                onLoadingComplete={element => handleRemoveLoading(element)}
-                onError={event => handleRemoveLoading(event.currentTarget)}
+                onLoadingComplete={() =>
+                  handleRemoveLoading(
+                    document.querySelectorAll('.pin')[midiaIndex]
+                  )
+                }
+                onError={() =>
+                  handleRemoveLoading(
+                    document.querySelectorAll('.pin')[midiaIndex]
+                  )
+                }
               />
               <LoadingPin />
             </Link>

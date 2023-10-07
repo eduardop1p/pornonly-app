@@ -3,6 +3,7 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
+import ReactPlayer from 'react-player'
 
 import { Container } from './styled';
 
@@ -16,6 +17,7 @@ interface Props {
 }
 
 export default function Pin({ data }: Props) {
+
   const [pinIsLoading, setPinIsLoading] = useState(true);
   const minWidthVerticalBox = 500;
 
@@ -37,26 +39,25 @@ export default function Pin({ data }: Props) {
     })
   );
 
+
   const handleRemoveLoading = () => {
     setPinIsLoading(false);
   };
 
-  const handleVideoCompleteLoad = (video: HTMLVideoElement) => {
-    handleNoWaitingVideo(video);
+  const handleVideoCompleteLoad = () => {
+    handleNoWaitingVideo();
     handleRemoveLoading();
   };
 
-  const handleWaitingVideo = (video: HTMLVideoElement) => {
-    const parentVideo = video.parentElement;
-    const waitingPin = parentVideo?.querySelector(
+  const handleWaitingVideo = () => {
+    const waitingPin = document.querySelector(
       '#waiting-pin'
     ) as HTMLDivElement;
     waitingPin.classList.add('waiting');
   };
 
-  const handleNoWaitingVideo = (video: HTMLVideoElement) => {
-    const parentVideo = video.parentElement;
-    const waitingPin = parentVideo?.querySelector(
+  const handleNoWaitingVideo = () => {
+    const waitingPin = document.querySelector(
       '#waiting-pin'
     ) as HTMLDivElement;
     waitingPin.classList.remove('waiting');
@@ -81,25 +82,27 @@ export default function Pin({ data }: Props) {
     >
       {data.midiaType === 'video' ? (
         <>
-          <video
-            src={data.url}
-            preload="auto"
+          <ReactPlayer
+            url={data.url}
             controls
-            autoPlay
+            playing
             muted
             loop
-            onWaiting={event =>
-              handleWaitingVideo(event.currentTarget as HTMLVideoElement)
-            }
-            onPlaying={event =>
-              handleNoWaitingVideo(event.currentTarget as HTMLVideoElement)
-            }
-            onLoadedData={event =>
-              handleVideoCompleteLoad(event.currentTarget as HTMLVideoElement)
-            }
-          ></video>
+            onReady={() => handleVideoCompleteLoad()}
+            onBuffer={() => handleWaitingVideo()}
+          />
           <WaitingPin alonePin />
-          {pinIsLoading && <LoadingPin />}
+          {pinIsLoading && <LoadingPin>
+            <svg
+              height="40"
+              width="40"
+              viewBox="0 0 24 24"
+              aria-label="A carregar"
+              role="img"
+            >
+              <path d="M15 10.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5m0 6c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5m-6-6c-.83 0-1.5-.67-1.5-1.5S8.17 7.5 9 7.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5m0 6c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0"></path>
+            </svg>
+          </LoadingPin>}
         </>
       ) : (
         <>
@@ -112,7 +115,17 @@ export default function Pin({ data }: Props) {
             onLoadingComplete={handleRemoveLoading}
             onError={handleRemoveLoading}
           />
-          {pinIsLoading && <LoadingPin />}
+          {pinIsLoading && <LoadingPin>
+            <svg
+              height="40"
+              width="40"
+              viewBox="0 0 24 24"
+              aria-label="A carregar"
+              role="img"
+            >
+              <path d="M15 10.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5m0 6c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5m-6-6c-.83 0-1.5-.67-1.5-1.5S8.17 7.5 9 7.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5m0 6c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0"></path>
+            </svg>
+          </LoadingPin>}
         </>
       )}
     </Container>

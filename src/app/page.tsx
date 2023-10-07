@@ -1,3 +1,5 @@
+import { notFound } from 'next/navigation';
+
 import styles from './page.module.css';
 
 import Masonry from '@/components/masonry';
@@ -36,6 +38,9 @@ export default async function Home() {
       cache: 'no-cache',
     }
   );
+  if (!res.ok) {
+    notFound();
+  }
   const {
     midia: { results },
   } = (await res.json()) as MidiaType;

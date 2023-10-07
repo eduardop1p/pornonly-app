@@ -14,8 +14,8 @@ export const Container = styled.div<TypeTheme>`
         align-self: center;
       }
 
-      & > img,
-      & > video {
+      img,
+      video {
         width: 100%;
         height: 100%;
         left: 0;

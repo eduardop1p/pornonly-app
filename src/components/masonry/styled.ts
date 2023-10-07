@@ -127,8 +127,8 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
           }
         }
 
-        & > img,
-        & > video {
+        img,
+        video {
           color: ${theme.colors.g_colorGray300};
           border-radius: 1rem;
           position: absolute;

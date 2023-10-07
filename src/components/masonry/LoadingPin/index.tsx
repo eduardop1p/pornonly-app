@@ -1,8 +1,8 @@
-import { useRef } from 'react';
+import { useRef, ReactNode } from 'react';
 
 import { LoadingPinContainer } from './styled';
 
-export default function LoadingPin() {
+export default function LoadingPin({ children }: { children?: ReactNode }) {
   const backgrounds = useRef([
     '#333',
     '#010101',
@@ -36,7 +36,7 @@ export default function LoadingPin() {
       $backgroundRamdom={backgrounds.current[indexBgRamdom.current]}
       id="loading-pin"
     >
-      {/* <p>Carregando...</p> */}
+      {children}
     </LoadingPinContainer>
   );
 }
