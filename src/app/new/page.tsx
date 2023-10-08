@@ -7,7 +7,7 @@ import Masonry from '@/components/masonry';
 import { MidiaType } from '../page';
 
 export const metadata: Metadata = {
-  title: 'Pornonly - New pins',
+  title: 'Pornonly - Recentes',
 };
 
 export default async function New() {

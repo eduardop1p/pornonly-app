@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function New() {
-  const redheadsTags = ['ruivas', 'ruiva', 'redheads', 'redhead'];
+  const redheadsTags = ['ruivas', 'ruiva', 'redheads', 'redhead', 'red'];
 
   const res = await fetch(
     // eslint-disable-next-line

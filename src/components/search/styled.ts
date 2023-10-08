@@ -38,5 +38,51 @@ export const Container = styled.form<TypeTheme>`
       color: ${theme.colors.g_colo333};
       font-weight: ${theme.font_weight.font_weight_400};
     }
+
+    & > .titles-suggestions-container {
+      position: absolute;
+      left: 0;
+      top: 3.1rem;
+      background-color: ${theme.colors.g_colorGray0};
+      width: 100%;
+      z-index: -1;
+      border-radius: 0 0 1rem 1rem;
+      display: flex;
+      flex-direction: column;
+      padding-top: 2rem;
+      padding-bottom: 1rem;
+
+      &[data-show-suggestion='false'] {
+        display: none;
+      }
+
+      & > :not(:last-child) {
+        margin-bottom: 10px;
+      }
+
+      & > .titles-suggestions {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        padding: 10px 2rem;
+
+        &:hover {
+          background-color: ${theme.colors.g_colore9e9e9};
+        }
+
+        & > svg {
+          flex: none;
+          width: 14px;
+          height: 14px;
+          margin-right: 1.5rem;
+        }
+
+        & > span {
+          color: ${theme.colors.g_colorGray300};
+          font-weight: ${theme.font_weight.font_weight_500};
+          font-size: ${theme.font_size.font_size_1rem};
+        }
+      }
+    }
   `}
 `;
