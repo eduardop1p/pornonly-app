@@ -10,24 +10,24 @@ interface Props {
 export const MasonryContainer = styled.div<TypeTheme & Props>`
   ${({ theme, $columnCount, $columnWidth }) => css`
     display: block;
-    padding: 0 1rem;
-    column-count: ${$columnCount};
+    padding: 0 8px;
+    /* column-count: ${$columnCount};
     column-width: ${$columnWidth.toFixed(0)}px;
-    column-gap: 1rem;
+    column-gap: 1rem; */
     width: 100%;
 
     &#masonry {
       transition: scale 200ms ease-in-out;
     }
 
-    & > .pin-container {
+    .pin-container {
       position: relative;
-      margin-bottom: 1rem;
+      padding: 8px;
       display: flex;
       flex-direction: column;
       /* overflow: hidden; */
       transition: all 200ms ease-in-out;
-      break-inside: avoid-column;
+      /* break-inside: avoid-column; */
 
       &.selected {
         scale: 0.95;
