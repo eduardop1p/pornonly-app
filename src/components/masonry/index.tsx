@@ -12,6 +12,7 @@ import {
   default as MasonryUi,
   ResponsiveMasonry,
 } from 'react-responsive-masonry';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 import { MasonryContainer } from './styled';
 import { MidiaResultsType } from '@/app/page';
@@ -37,7 +38,8 @@ export default function Masonry({
     (window.innerWidth - 132) / columnCount
   );
   const [stResults, setStResults] = useState(results);
-  let controller = useRef(false);
+  const [hasMore, setHasMore] = useState(true);
+  let currentPage = useRef(1);
 
   useEffect(() => {
     const prevWindowWidth = window.innerWidth;
@@ -58,30 +60,15 @@ export default function Masonry({
     };
   }, [columnCount]);
 
-  const handleScroll = useCallback(() => {
-    const margin = 100;
-
-    const windowScroll = Math.round(window.innerHeight + window.scrollY);
-    const documentScroll = Math.round(
-      document.documentElement.offsetHeight - margin
-    );
-    if (windowScroll >= documentScroll && !controller.current) {
-      controller.current = true;
-      fetchItems();
-    }
+  useEffect(() => {
+    window.document.body.id = 'scrollableDiv';
   }, []);
 
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [handleScroll]);
-
   const fetchItems = async () => {
+    currentPage.current += 1;
+
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all?page=2`,
+      `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all?page=${currentPage.current}`,
       {
         method: 'GET',
         cache: 'no-cache',
@@ -89,7 +76,12 @@ export default function Masonry({
     );
 
     const data = await res.json();
-    setStResults(state => [...state, ...data.midia.results]);
+    const results = data.midia.results as MidiaResultsType[];
+    if (!results.length) {
+      setHasMore(false);
+      return;
+    }
+    setStResults(state => [...state, ...results]);
   };
 
   const handleRemoveLoading = useCallback((element: Element) => {
@@ -139,149 +131,161 @@ export default function Masonry({
       id="masonry"
     >
       {/* <ResponsiveMasonry> */}
-      <MasonryUi columnsCount={6}>
-        {stResults.map((midiaValue: MidiaResultsType, midiaIndex: number) =>
-          midiaValue.midiaType === 'video' ? (
-            <div
-              // eslint-disable-next-line
-              className={`pin-container ${masonryPublishs ? 'pin-publishs-container' : ''}`}
-              key={midiaValue._id}
-              data-index={
-                typeof midiaValue.index != 'undefined'
-                  ? midiaValue.index
-                  : false
-              }
-            >
-              <Link
-                href={`/pin/${midiaValue._id}`}
-                className="pin"
-                id={`pin-${midiaValue._id}-${midiaValue.midiaType}`}
-                style={{
-                  width: `${columnWidth.toFixed(0)}px`,
-                  height: `${calHeight({
-                    customWidth: columnWidth,
-                    originalHeight: midiaValue.height,
-                    originalWidth: midiaValue.width,
-                  })}px`,
-                }}
+      <InfiniteScroll
+        dataLength={stResults.length}
+        scrollThreshold={0.7}
+        next={fetchItems}
+        scrollableTarget="scrollableDiv"
+        hasMore={hasMore}
+        loader={null}
+        endMessage={
+          <span className="no-more-results">Não há mais nada por aqui</span>
+        }
+      >
+        <MasonryUi columnsCount={6}>
+          {stResults.map((midiaValue: MidiaResultsType, midiaIndex: number) =>
+            midiaValue.midiaType === 'video' ? (
+              <div
+                // eslint-disable-next-line
+                className={`pin-container ${masonryPublishs ? 'pin-publishs-container' : ''}`}
+                key={`${midiaValue._id}-${midiaIndex}`}
+                data-index={
+                  typeof midiaValue.index != 'undefined'
+                    ? midiaValue.index
+                    : false
+                }
               >
-                <span className="video-time">0:00</span>
-                <ReactPlayer
-                  url={midiaValue.url}
-                  controls
-                  width="100%"
-                  height="100%"
-                  onPlay={() =>
-                    handleVideoPlay(
-                      document.querySelector(
-                        `#pin-${midiaValue._id}-${midiaValue.midiaType}`
-                      ) as HTMLElement
-                    )
-                  }
-                  onReady={() =>
-                    handleVideoCompleteLoad(
-                      document.querySelector(
-                        `#pin-${midiaValue._id}-${midiaValue.midiaType}`
-                      ) as HTMLElement
-                    )
-                  }
-                  onBuffer={() =>
-                    handleWaitingVideo(
-                      document.querySelector(
-                        `#pin-${midiaValue._id}-${midiaValue.midiaType}`
-                      ) as HTMLElement
-                    )
-                  }
-                />
-                <LoadingPin />
-                <WaitingPin />
-              </Link>
-              {visibleUserInfo && (
-                <div className="pin-title-and-user">
-                  <Link
-                    href={`/pin/${midiaValue._id}`}
-                    title={upperFirst(midiaValue.title)}
-                    className="pin-title"
-                  >
-                    {upperFirst(midiaValue.title)}
-                  </Link>
-                  <Link
-                    className="pin-original-user"
-                    href={`/${midiaValue.userId.username}`}
-                  >
-                    <UserPin {...midiaValue.userId} />
-                  </Link>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div
-              key={midiaValue._id}
-              // eslint-disable-next-line
-              className={`pin-container ${masonryPublishs ? 'pin-publishs-container' : ''}`}
-              data-index={
-                typeof midiaValue.index != 'undefined'
-                  ? midiaValue.index
-                  : false
-              }
-            >
-              <Link
-                href={`/pin/${midiaValue._id} `}
-                className="pin"
-                id={`pin-${midiaValue._id}-${midiaValue.midiaType}`}
-                style={{
-                  width: `${columnWidth.toFixed(0)}px`,
-                  height: `${calHeight({
-                    customWidth: columnWidth,
-                    originalHeight: midiaValue.height,
-                    originalWidth: midiaValue.width,
-                  })}px`,
-                }}
+                <Link
+                  href={`/pin/${midiaValue._id}`}
+                  className="pin"
+                  id={`pin-${midiaValue._id}-${midiaValue.midiaType}-${midiaIndex}`}
+                  style={{
+                    width: `${columnWidth.toFixed(0)}px`,
+                    height: `${calHeight({
+                      customWidth: columnWidth,
+                      originalHeight: midiaValue.height,
+                      originalWidth: midiaValue.width,
+                    })}px`,
+                  }}
+                >
+                  <span className="video-time">0:00</span>
+                  <ReactPlayer
+                    url={midiaValue.url}
+                    controls
+                    width="100%"
+                    height="100%"
+                    onPlay={() =>
+                      handleVideoPlay(
+                        document.querySelector(
+                          `#pin-${midiaValue._id}-${midiaValue.midiaType}-${midiaIndex}`
+                        ) as HTMLElement
+                      )
+                    }
+                    onReady={() =>
+                      handleVideoCompleteLoad(
+                        document.querySelector(
+                          `#pin-${midiaValue._id}-${midiaValue.midiaType}-${midiaIndex}`
+                        ) as HTMLElement
+                      )
+                    }
+                    onBuffer={() =>
+                      handleWaitingVideo(
+                        document.querySelector(
+                          `#pin-${midiaValue._id}-${midiaValue.midiaType}-${midiaIndex}`
+                        ) as HTMLElement
+                      )
+                    }
+                  />
+                  <LoadingPin />
+                  <WaitingPin />
+                </Link>
+                {visibleUserInfo && (
+                  <div className="pin-title-and-user">
+                    <Link
+                      href={`/pin/${midiaValue._id}`}
+                      title={upperFirst(midiaValue.title)}
+                      className="pin-title"
+                    >
+                      {upperFirst(midiaValue.title)}
+                    </Link>
+                    <Link
+                      className="pin-original-user"
+                      href={`/${midiaValue.userId.username}`}
+                    >
+                      <UserPin {...midiaValue.userId} />
+                    </Link>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div
+                key={midiaValue._id}
+                // eslint-disable-next-line
+                className={`pin-container ${masonryPublishs ? 'pin-publishs-container' : ''}`}
+                data-index={
+                  typeof midiaValue.index != 'undefined'
+                    ? midiaValue.index
+                    : false
+                }
               >
-                <Image
-                  src={midiaValue.url}
-                  alt={midiaValue.title}
-                  priority
-                  fill
-                  sizes="100%"
-                  onLoadingComplete={() =>
-                    handleRemoveLoading(
-                      document.querySelector(
-                        `#pin-${midiaValue._id}-${midiaValue.midiaType}`
-                      ) as HTMLElement
-                    )
-                  }
-                  onError={() =>
-                    handleRemoveLoading(
-                      document.querySelector(
-                        `#pin-${midiaValue._id}-${midiaValue.midiaType}`
-                      ) as HTMLElement
-                    )
-                  }
-                />
-                <LoadingPin />
-              </Link>
-              {visibleUserInfo && (
-                <div className="pin-title-and-user">
-                  <Link
-                    href={`/pin/${midiaValue._id} `}
-                    title={upperFirst(midiaValue.title)}
-                    className="pin-title"
-                  >
-                    {upperFirst(midiaValue.title)}
-                  </Link>
-                  <Link
-                    className="pin-original-user"
-                    href={`/${midiaValue.userId.username} `}
-                  >
-                    <UserPin {...midiaValue.userId} />
-                  </Link>
-                </div>
-              )}
-            </div>
-          )
-        )}
-      </MasonryUi>
+                <Link
+                  href={`/pin/${midiaValue._id} `}
+                  className="pin"
+                  id={`pin-${midiaValue._id}-${midiaValue.midiaType}-${midiaIndex}`}
+                  style={{
+                    width: `${columnWidth.toFixed(0)}px`,
+                    height: `${calHeight({
+                      customWidth: columnWidth,
+                      originalHeight: midiaValue.height,
+                      originalWidth: midiaValue.width,
+                    })}px`,
+                  }}
+                >
+                  <Image
+                    src={midiaValue.url}
+                    alt={midiaValue.title}
+                    priority
+                    fill
+                    sizes="100%"
+                    onLoadingComplete={() =>
+                      handleRemoveLoading(
+                        document.querySelector(
+                          `#pin-${midiaValue._id}-${midiaValue.midiaType}-${midiaIndex}`
+                        ) as HTMLElement
+                      )
+                    }
+                    onError={() =>
+                      handleRemoveLoading(
+                        document.querySelector(
+                          `#pin-${midiaValue._id}-${midiaValue.midiaType}-${midiaIndex}`
+                        ) as HTMLElement
+                      )
+                    }
+                  />
+                  <LoadingPin />
+                </Link>
+                {visibleUserInfo && (
+                  <div className="pin-title-and-user">
+                    <Link
+                      href={`/pin/${midiaValue._id} `}
+                      title={upperFirst(midiaValue.title)}
+                      className="pin-title"
+                    >
+                      {upperFirst(midiaValue.title)}
+                    </Link>
+                    <Link
+                      className="pin-original-user"
+                      href={`/${midiaValue.userId.username} `}
+                    >
+                      <UserPin {...midiaValue.userId} />
+                    </Link>
+                  </div>
+                )}
+              </div>
+            )
+          )}
+        </MasonryUi>
+      </InfiniteScroll>
       {/* </ResponsiveMasonry> */}
     </MasonryContainer>
   );

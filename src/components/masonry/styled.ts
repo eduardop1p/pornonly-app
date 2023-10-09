@@ -20,6 +20,14 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
       transition: scale 200ms ease-in-out;
     }
 
+    .no-more-results {
+      margin: 10px 0;
+      display: block;
+      text-align: center;
+      font-weight: ${theme.font_weight.font_weight_400};
+      font-size: ${theme.font_size.font_size_1rem};
+    }
+
     .pin-container {
       position: relative;
       padding: 8px;
