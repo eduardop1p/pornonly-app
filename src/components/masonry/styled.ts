@@ -21,8 +21,10 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
     }
 
     .no-more-results {
-      margin: 10px 0;
-      display: block;
+      position: absolute;
+      margin-top: 5px;
+      left: 50%;
+      transform: translateX(-50%);
       text-align: center;
       font-weight: ${theme.font_weight.font_weight_400};
       font-size: ${theme.font_size.font_size_1rem};

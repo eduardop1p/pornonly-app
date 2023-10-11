@@ -18,11 +18,13 @@ export default function UserPublishsSaves({
   savesResults,
   token,
   isUniqueUser,
+  userId,
 }: {
   publishsResults: MidiaResultsType[];
   savesResults: MidiaResultsType[];
   token: string;
   isUniqueUser: boolean;
+  userId: string;
 }) {
   const redirect = useRouter();
 
@@ -237,6 +239,8 @@ export default function UserPublishsSaves({
             <Masonry
               results={publishsResults}
               visibleUserInfo={false}
+              masonryPage="user-midia"
+              userId={userId}
               masonryPublishs
             />
           ) : (
@@ -247,7 +251,12 @@ export default function UserPublishsSaves({
         </div>
         <div data-active={showSaves}>
           {savesResults.length ? (
-            <Masonry results={savesResults} visibleUserInfo={true} />
+            <Masonry
+              results={savesResults}
+              visibleUserInfo={true}
+              userId={userId}
+              masonryPage="user-saves"
+            />
           ) : (
             <div className={styles['none-results']}>
               Nenhuma publicação salva

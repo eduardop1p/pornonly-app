@@ -40,12 +40,8 @@ export default function Comments({
 
   const [stResultsComments, setStResultsComments] = useState(resultsComments);
   const [showComments, setShowComments] = useState(true);
-  const [pinInfoElement, setPinInfoElement] = useState(
-    document.body.querySelector('#pin-info-user')
-  );
-  const [pinContainer, setPinContainer] = useState(
-    document.body.querySelector('#id-pin-default-container')
-  );
+  const [pinInfoElement, setPinInfoElement] = useState<Element | null>(null);
+  const [pinContainer, setPinContainer] = useState<Element | null>(null);
   const [initialRender, setInitialRender] = useState(true);
   const [containerHeight, setContainerHeight] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -71,7 +67,7 @@ export default function Comments({
       return;
     }
     if (initialRender) {
-      if (!pinInfoElement || !pinContainer) {
+      if (!pinInfoElement?.clientHeight || !pinContainer?.clientHeight) {
         setPinInfoElement(document.body.querySelector('#pin-info-user'));
         setPinContainer(
           document.body.querySelector('#id-pin-default-container')
@@ -267,14 +263,16 @@ export default function Comments({
             )}
           </div>
         </div>
-        <AddComments
-          token={token}
-          isAuth={isAuth}
-          midiaId={midiaId}
-          setStResultsComments={setStResultsComments}
-        >
-          {children}
-        </AddComments>
+        {containerHeight && (
+          <AddComments
+            token={token}
+            isAuth={isAuth}
+            midiaId={midiaId}
+            setStResultsComments={setStResultsComments}
+          >
+            {children}
+          </AddComments>
+        )}
       </div>
     </Container>
   );

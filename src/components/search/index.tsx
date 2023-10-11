@@ -2,14 +2,23 @@
 'use client';
 
 import { useState, FormEvent, ChangeEvent, useEffect, useRef } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import {
+  useRouter,
+  useSearchParams,
+  usePathname,
+  useParams,
+} from 'next/navigation';
+import { get } from 'lodash';
+import { redirect } from 'next/navigation';
 
 import { Container } from './styled';
 import Clear from './clear';
 
 export default function Search() {
   const router = useRouter();
+  const pathName = usePathname();
   const search_query = useSearchParams().get('search_query') as string;
+  const params = useParams();
 
   const [focusSearch, setFocusSearch] = useState(false);
   const [titlesSuggestion, setTitleSugestions] = useState<
@@ -21,22 +30,12 @@ export default function Search() {
 
   useEffect(() => {
     const main: HTMLElement | null = document.body.querySelector('main');
-    const masonry: HTMLDivElement | null =
-      document.body.querySelector('#masonry');
-    if (main && masonry) {
-      if (focusSearch) {
-        document.body.onscroll = () => {
-          setFocusSearch(false);
-          inputRef.current?.blur();
-        };
-        main.style.cssText =
-          'margin: 0; padding: 6rem 0 2rem; background-color: var(--g-colorTransparentGray800); height: 100vh; position: relative;';
-        masonry.style.cssText = 'position: relative; z-index: -1;';
-      }
-      if (!focusSearch) {
-        main.style.cssText = '';
-        masonry.style.cssText = '';
-      }
+    if (focusSearch) {
+      // window.test([]);
+      main?.setAttribute('search-in-focus', 'true');
+    }
+    if (!focusSearch) {
+      main?.setAttribute('search-in-focus', 'false');
     }
   }, [focusSearch]);
 
@@ -114,7 +113,7 @@ export default function Search() {
           <div
             key={value._id}
             className="titles-suggestions"
-            onClick={event => {
+            onClick={() => {
               setFocusSearch(false);
               setSearchValueInput(value.title);
               router.push(`/search?search_query=${value.title}`);

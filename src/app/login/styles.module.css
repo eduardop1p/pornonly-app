@@ -4,3 +4,13 @@
   position: absolute;
   width: 100%;
 }
+.main[search-in-focus='true']::before{
+  content: '';
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  position: fixed;
+  left: 0;
+  top: 0;
+  background-color: var(--g-colorTransparentGray800);
+}

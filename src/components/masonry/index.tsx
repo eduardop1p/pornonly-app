@@ -4,6 +4,7 @@
 
 import Image from 'next/image';
 import { useEffect, useState, useCallback, useRef } from 'react';
+import type { Dispatch, SetStateAction, MutableRefObject } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import Link from 'next/link';
 import { upperFirst } from 'lodash';
@@ -26,12 +27,21 @@ interface Props {
   results: MidiaResultsType[];
   visibleUserInfo?: boolean;
   masonryPublishs?: boolean;
+  // eslint-disable-next-line
+  masonryPage: 'home' | 'new' | 'readHeads' | 'search' | 'user-midia' | 'user-saves' | 'tags';
+  tags?: string[];
+  search_query?: string;
+  userId?: string;
 }
 
 export default function Masonry({
   results,
   visibleUserInfo,
   masonryPublishs = false,
+  masonryPage,
+  tags,
+  search_query,
+  userId,
 }: Props) {
   const [columnCount] = useState(6);
   const [columnWidth, setColumnWidth] = useState(
@@ -39,7 +49,14 @@ export default function Masonry({
   );
   const [stResults, setStResults] = useState(results);
   const [hasMore, setHasMore] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   let currentPage = useRef(1);
+  const updateInitialSearh =
+    JSON.stringify(results) !== JSON.stringify(stResults);
+
+  if (updateInitialSearh && !isLoading) {
+    setStResults(results);
+  }
 
   useEffect(() => {
     const prevWindowWidth = window.innerWidth;
@@ -59,30 +76,6 @@ export default function Masonry({
       }
     };
   }, [columnCount]);
-
-  useEffect(() => {
-    window.document.body.id = 'scrollableDiv';
-  }, []);
-
-  const fetchItems = async () => {
-    currentPage.current += 1;
-
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all?page=${currentPage.current}`,
-      {
-        method: 'GET',
-        cache: 'no-cache',
-      }
-    );
-
-    const data = await res.json();
-    const results = data.midia.results as MidiaResultsType[];
-    if (!results.length) {
-      setHasMore(false);
-      return;
-    }
-    setStResults(state => [...state, ...results]);
-  };
 
   const handleRemoveLoading = useCallback((element: Element) => {
     const loading = element.querySelector('#loading-pin') as HTMLDivElement;
@@ -124,6 +117,53 @@ export default function Masonry({
     waitingPin.classList.add('waiting');
   }, []);
 
+  const handleManageNextPage = () => {
+    setIsLoading(true);
+    switch (masonryPage) {
+      case 'home': {
+        useFetchItemsHome(setHasMore, currentPage, setStResults);
+        return;
+      }
+      case 'new': {
+        useFetchItemsNew(setHasMore, currentPage, setStResults);
+        return;
+      }
+      case 'tags': {
+        if (typeof tags === 'undefined') return;
+        useFetchItemsTags(setHasMore, currentPage, setStResults, tags);
+        return;
+      }
+      case 'readHeads': {
+        if (typeof tags === 'undefined') return;
+        useFetchItemsReadHeads(setHasMore, currentPage, setStResults, tags);
+        return;
+      }
+      case 'search': {
+        if (typeof search_query === 'undefined') return;
+        useFetchItemsSearch(
+          setHasMore,
+          currentPage,
+          setStResults,
+          search_query
+        );
+        return;
+      }
+      case 'user-midia': {
+        if (typeof userId === 'undefined') return;
+        useFetchItemsUserMidia(setHasMore, currentPage, setStResults, userId);
+        return;
+      }
+      case 'user-saves': {
+        if (typeof userId === 'undefined') return;
+        useFetchItemsUserSaves(setHasMore, currentPage, setStResults, userId);
+        return;
+      }
+      default:
+        setIsLoading(false);
+        return;
+    }
+  };
+
   return (
     <MasonryContainer
       $columnWidth={columnWidth}
@@ -134,13 +174,13 @@ export default function Masonry({
       <InfiniteScroll
         dataLength={stResults.length}
         scrollThreshold={0.7}
-        next={fetchItems}
-        scrollableTarget="scrollableDiv"
+        next={handleManageNextPage}
         hasMore={hasMore}
         loader={null}
         endMessage={
-          <span className="no-more-results">Não há mais nada por aqui</span>
+          <span className="no-more-results">{`Isso é tudo por aqui :)`}</span>
         }
+        style={{ overflow: 'hidden' }}
       >
         <MasonryUi columnsCount={6}>
           {stResults.map((midiaValue: MidiaResultsType, midiaIndex: number) =>
@@ -289,4 +329,210 @@ export default function Masonry({
       {/* </ResponsiveMasonry> */}
     </MasonryContainer>
   );
+}
+
+function useFetchItemsHome(
+  setHasMore: Dispatch<SetStateAction<boolean>>,
+  currentPage: MutableRefObject<number>,
+  setStResults: Dispatch<SetStateAction<MidiaResultsType[]>>
+) {
+  const fetchItems = async () => {
+    currentPage.current += 1;
+
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all?page=${currentPage.current}`,
+      {
+        method: 'GET',
+        cache: 'no-cache',
+      }
+    );
+
+    const data = await res.json();
+    const results = data.midia.results as MidiaResultsType[];
+    if (!results.length) {
+      setHasMore(false);
+      return;
+    }
+    setStResults(state => [...state, ...results]);
+  };
+
+  return fetchItems();
+}
+
+function useFetchItemsNew(
+  setHasMore: Dispatch<SetStateAction<boolean>>,
+  currentPage: MutableRefObject<number>,
+  setStResults: Dispatch<SetStateAction<MidiaResultsType[]>>
+) {
+  const fetchItems = async () => {
+    currentPage.current += 1;
+
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all-midia-day?page=${currentPage.current}`,
+      {
+        method: 'GET',
+        cache: 'no-cache',
+      }
+    );
+
+    const data = await res.json();
+    const results = data.midia.results as MidiaResultsType[];
+    if (!results.length) {
+      setHasMore(false);
+      return;
+    }
+    setStResults(state => [...state, ...results]);
+  };
+
+  return fetchItems();
+}
+
+function useFetchItemsTags(
+  setHasMore: Dispatch<SetStateAction<boolean>>,
+  currentPage: MutableRefObject<number>,
+  setStResults: Dispatch<SetStateAction<MidiaResultsType[]>>,
+  tags: string[]
+) {
+  const fetchItems = async () => {
+    currentPage.current += 1;
+
+    const res = await fetch(
+      // eslint-disable-next-line
+      `${process.env.NEXT_PUBLIC_URL_API}/midia/search-tags?search_tags=${tags.join(',')}&page=${currentPage.current}`,
+      {
+        method: 'GET',
+        cache: 'no-cache',
+      }
+    );
+
+    const data = await res.json();
+    const results = data.midia.results as MidiaResultsType[];
+    if (!results.length) {
+      setHasMore(false);
+      return;
+    }
+    setStResults(state => [...state, ...results]);
+  };
+
+  return fetchItems();
+}
+
+function useFetchItemsReadHeads(
+  setHasMore: Dispatch<SetStateAction<boolean>>,
+  currentPage: MutableRefObject<number>,
+  setStResults: Dispatch<SetStateAction<MidiaResultsType[]>>,
+  tags: string[]
+) {
+  const fetchItems = async () => {
+    currentPage.current += 1;
+
+    const res = await fetch(
+      // eslint-disable-next-line
+      `${process.env.NEXT_PUBLIC_URL_API}/midia/search-tags?search_tags=${tags.join(',')}&page=${currentPage.current}`,
+      {
+        method: 'GET',
+        cache: 'no-cache',
+      }
+    );
+
+    const data = await res.json();
+    const results = data.midia.results as MidiaResultsType[];
+    if (!results.length) {
+      setHasMore(false);
+      return;
+    }
+    setStResults(state => [...state, ...results]);
+  };
+
+  return fetchItems();
+}
+
+function useFetchItemsSearch(
+  setHasMore: Dispatch<SetStateAction<boolean>>,
+  currentPage: MutableRefObject<number>,
+  setStResults: Dispatch<SetStateAction<MidiaResultsType[]>>,
+  search_query: string
+) {
+  const fetchItems = async () => {
+    currentPage.current += 1;
+
+    const res = await fetch(
+      // eslint-disable-next-line
+      `${process.env.NEXT_PUBLIC_URL_API}/midia/search?search_query=${search_query}&page=${currentPage.current}`,
+      {
+        method: 'GET',
+        cache: 'no-cache',
+      }
+    );
+
+    const data = await res.json();
+    const results = data.midia.results as MidiaResultsType[];
+    if (!results.length) {
+      setHasMore(false);
+      return;
+    }
+    setStResults(state => [...state, ...results]);
+  };
+
+  return fetchItems();
+}
+
+function useFetchItemsUserMidia(
+  setHasMore: Dispatch<SetStateAction<boolean>>,
+  currentPage: MutableRefObject<number>,
+  setStResults: Dispatch<SetStateAction<MidiaResultsType[]>>,
+  userId: string
+) {
+  const fetchItems = async () => {
+    currentPage.current += 1;
+
+    const res = await fetch(
+      // eslint-disable-next-line
+      `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all-midia-userid/${userId}?page=${currentPage.current}`,
+      {
+        method: 'GET',
+        cache: 'no-cache',
+      }
+    );
+
+    const data = await res.json();
+    const results = data.midia.results as MidiaResultsType[];
+    if (!results.length) {
+      setHasMore(false);
+      return;
+    }
+    setStResults(state => [...state, ...results]);
+  };
+
+  return fetchItems();
+}
+
+function useFetchItemsUserSaves(
+  setHasMore: Dispatch<SetStateAction<boolean>>,
+  currentPage: MutableRefObject<number>,
+  setStResults: Dispatch<SetStateAction<MidiaResultsType[]>>,
+  userId: string
+) {
+  const fetchItems = async () => {
+    currentPage.current += 1;
+
+    const res = await fetch(
+      // eslint-disable-next-line
+      `${process.env.NEXT_PUBLIC_URL_API}/saves/get-all-saves-userid/${userId}?page=${currentPage.current}`,
+      {
+        method: 'GET',
+        cache: 'no-cache',
+      }
+    );
+
+    const data = await res.json();
+    const results = data.midia.results as MidiaResultsType[];
+    if (!results.length) {
+      setHasMore(false);
+      return;
+    }
+    setStResults(state => [...state, ...results]);
+  };
+
+  return fetchItems();
 }

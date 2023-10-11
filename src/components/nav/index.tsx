@@ -36,18 +36,21 @@ export default function Nav({ isAuth, children }: Props) {
           <Link
             className={pathName === '/' ? styles['link-active'] : ''}
             href="/"
+            scroll={false}
           >
             Página inicial
           </Link>
           <Link
             className={pathName === '/new' ? styles['link-active'] : ''}
             href="/new"
+            scroll={false}
           >
             new
           </Link>
           <Link
             className={pathName === '/redheads' ? styles['link-active'] : ''}
             href="/redheads"
+            scroll={false}
           >
             Ruivas
           </Link>

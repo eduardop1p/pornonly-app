@@ -214,7 +214,12 @@ export default async function Page({ params }: Props) {
         <div className={styles['more-similar']}>
           <h2>Mais como este</h2>
           <div className={styles['results-search-tag']}>
-            <Masonry results={resultsMidiaSearchTag} visibleUserInfo />
+            <Masonry
+              masonryPage="tags"
+              results={resultsMidiaSearchTag}
+              visibleUserInfo
+              tags={dataPin.tags}
+            />
           </div>
         </div>
       ) : null}

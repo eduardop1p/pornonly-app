@@ -24,7 +24,7 @@
   padding: 0 1rem;
   font-weight: var(--font-weight-500);
   font-size: var(--font-size-1rem);
-  transition: background 200ms ease-in-out;
+  transition: background 150ms ease-in-out;
 }
 .main-navs > :not(:last-child){
   margin-right: 5px;
@@ -51,7 +51,7 @@
   justify-content: center;
   height: 40px;
   cursor: pointer;
-  transition: background 100ms ease-in-out;
+  transition: background 150ms ease-in-out;
 }
 
 .login{

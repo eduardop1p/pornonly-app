@@ -31,7 +31,12 @@ export default async function New() {
 
   return (
     <main className={styles.main}>
-      <Masonry results={results} visibleUserInfo={true} />
+      <Masonry
+        masonryPage="readHeads"
+        tags={redheadsTags}
+        results={results}
+        visibleUserInfo={true}
+      />
     </main>
   );
 }

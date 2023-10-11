@@ -68,7 +68,7 @@ export default async function Page({ params }: Props) {
   const { profilePhoto, username, email } = userData;
 
   const resUserMidia = await fetch(
-    `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all-midia-userid/${userData._id}/?page=1`,
+    `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all-midia-userid/${userData._id}?page=1`,
     {
       method: 'GET',
       cache: 'no-cache',
@@ -80,7 +80,7 @@ export default async function Page({ params }: Props) {
   );
 
   const resUserSaves = await fetch(
-    `${process.env.NEXT_PUBLIC_URL_API}/saves/get-all-saves-userid/${userData._id}/?page=1`,
+    `${process.env.NEXT_PUBLIC_URL_API}/saves/get-all-saves-userid/${userData._id}?page=1`,
     {
       method: 'GET',
       cache: 'no-cache',
@@ -180,6 +180,7 @@ export default async function Page({ params }: Props) {
         savesResults={userSavesResults}
         token={token as string}
         isUniqueUser={isUniqueUser}
+        userId={userData._id}
       />
     </main>
   );

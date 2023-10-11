@@ -35,7 +35,8 @@ export default async function Home() {
     `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all?page=1`,
     {
       method: 'GET',
-      cache: 'no-cache',
+      cache: 'force-cache',
+      next: { revalidate: 60 },
     }
   );
   if (!res.ok) {
@@ -47,7 +48,7 @@ export default async function Home() {
 
   return (
     <main className={styles.main}>
-      <Masonry results={results} visibleUserInfo={true} />
+      <Masonry masonryPage="home" results={results} visibleUserInfo={true} />
     </main>
   );
 }

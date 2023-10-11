@@ -9,6 +9,7 @@ interface Props {
 export const Container = styled.div<TypeTheme & Props>`
   ${({ theme, $showComments }) => css`
     position: relative;
+    overflow: hidden;
 
     & > .title-and-icon {
       display: flex;

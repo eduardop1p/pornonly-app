@@ -30,17 +30,21 @@ export default async function New({ searchParams: { search_query } }: Props) {
     }
   );
   if (!res.ok) {
-    console.log(await res.json());
     notFound();
   }
-  const {
+  let {
     midia: { results },
   } = (await res.json()) as MidiaType;
 
   return (
-    <main className={styles.main} data-search-infocus={false}>
+    <main className={styles.main}>
       {results.length ? (
-        <Masonry results={results} visibleUserInfo={true} />
+        <Masonry
+          masonryPage="search"
+          search_query={search_query}
+          results={results}
+          visibleUserInfo={true}
+        />
       ) : (
         <div className={styles['no-search']}>
           <div className={styles['search']}>
