@@ -14,6 +14,7 @@ import {
   ResponsiveMasonry,
 } from 'react-responsive-masonry';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 import { MasonryContainer } from './styled';
 import { MidiaResultsType } from '@/app/page';
@@ -49,19 +50,19 @@ export default function Masonry({
   );
   const [stResults, setStResults] = useState(results);
   const [hasMore, setHasMore] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
   let currentPage = useRef(1);
-  const updateInitialSearh =
-    JSON.stringify(results) !== JSON.stringify(stResults);
 
-  if (updateInitialSearh && !isLoading) {
+  useEffect(() => {
+    // esse effect só vai execultar quando o results do back-end mudar
     setStResults(results);
-  }
+    console.log('update results');
+  }, [results]);
+
+  // if (JSON.stringify(results) != JSON.stringify(stResults)) console.log('sim');
 
   useEffect(() => {
     const prevWindowWidth = window.innerWidth;
-
-    window.onresize = () => {
+    const onresize = () => {
       const newWindowWidth = window.innerWidth;
       if (newWindowWidth != prevWindowWidth) {
         document.querySelectorAll('.pin').forEach((el: Element) => {
@@ -75,6 +76,10 @@ export default function Masonry({
         });
       }
     };
+
+    window.addEventListener('resize', onresize);
+
+    return () => removeEventListener('resize', onresize);
   }, [columnCount]);
 
   const handleRemoveLoading = useCallback((element: Element) => {
@@ -118,7 +123,6 @@ export default function Masonry({
   }, []);
 
   const handleManageNextPage = () => {
-    setIsLoading(true);
     switch (masonryPage) {
       case 'home': {
         useFetchItemsHome(setHasMore, currentPage, setStResults);
@@ -159,7 +163,6 @@ export default function Masonry({
         return;
       }
       default:
-        setIsLoading(false);
         return;
     }
   };
@@ -425,23 +428,26 @@ function useFetchItemsReadHeads(
 ) {
   const fetchItems = async () => {
     currentPage.current += 1;
+    try {
+      const res = await fetch(
+        // eslint-disable-next-line
+        `${process.env.NEXT_PUBLIC_URL_API}/midia/search-tags?search_tags=${tags.join(',')}&page=${currentPage.current}`,
+        {
+          method: 'GET',
+          cache: 'no-cache',
+        }
+      );
 
-    const res = await fetch(
-      // eslint-disable-next-line
-      `${process.env.NEXT_PUBLIC_URL_API}/midia/search-tags?search_tags=${tags.join(',')}&page=${currentPage.current}`,
-      {
-        method: 'GET',
-        cache: 'no-cache',
+      const data = await res.json();
+      const results = data.midia.results as MidiaResultsType[];
+      if (!results.length) {
+        setHasMore(false);
+        return;
       }
-    );
-
-    const data = await res.json();
-    const results = data.midia.results as MidiaResultsType[];
-    if (!results.length) {
-      setHasMore(false);
-      return;
+      setStResults(state => [...state, ...results]);
+    } catch (err) {
+      console.error(err);
     }
-    setStResults(state => [...state, ...results]);
   };
 
   return fetchItems();
@@ -454,24 +460,28 @@ function useFetchItemsSearch(
   search_query: string
 ) {
   const fetchItems = async () => {
-    currentPage.current += 1;
+    try {
+      currentPage.current += 1;
 
-    const res = await fetch(
-      // eslint-disable-next-line
-      `${process.env.NEXT_PUBLIC_URL_API}/midia/search?search_query=${search_query}&page=${currentPage.current}`,
-      {
-        method: 'GET',
-        cache: 'no-cache',
+      const res = await fetch(
+        // eslint-disable-next-line
+        `${process.env.NEXT_PUBLIC_URL_API}/midia/search?search_query=${search_query}&page=${currentPage.current}`,
+        {
+          method: 'GET',
+          cache: 'no-cache',
+        }
+      );
+
+      const data = await res.json();
+      const results = data.midia.results as MidiaResultsType[];
+      if (!results.length) {
+        setHasMore(false);
+        return;
       }
-    );
-
-    const data = await res.json();
-    const results = data.midia.results as MidiaResultsType[];
-    if (!results.length) {
-      setHasMore(false);
-      return;
+      setStResults(state => [...state, ...results]);
+    } catch (err) {
+      console.error(err);
     }
-    setStResults(state => [...state, ...results]);
   };
 
   return fetchItems();

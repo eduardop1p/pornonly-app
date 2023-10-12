@@ -82,6 +82,7 @@ export default function Search() {
       onBlur={() => setFocusSearch(false)}
       tabIndex={1}
       onSubmit={handleSubmitSearch}
+      id="form-search"
     >
       <svg
         height="16"
