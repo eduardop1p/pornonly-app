@@ -14,7 +14,6 @@ import {
   ResponsiveMasonry,
 } from 'react-responsive-masonry';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { usePathname, useSearchParams } from 'next/navigation';
 
 import { MasonryContainer } from './styled';
 import { MidiaResultsType } from '@/app/page';
@@ -54,11 +53,13 @@ export default function Masonry({
 
   useEffect(() => {
     // esse effect só vai execultar quando o results do back-end mudar
-    setStResults(results);
-    console.log('update results');
+    if (location.pathname == '/search') {
+      setStResults(results);
+      setHasMore(true);
+      currentPage.current = 1;
+    }
+    // console.log('update results');
   }, [results]);
-
-  // if (JSON.stringify(results) != JSON.stringify(stResults)) console.log('sim');
 
   useEffect(() => {
     const prevWindowWidth = window.innerWidth;
@@ -474,6 +475,7 @@ function useFetchItemsSearch(
 
       const data = await res.json();
       const results = data.midia.results as MidiaResultsType[];
+      console.log(results);
       if (!results.length) {
         setHasMore(false);
         return;
