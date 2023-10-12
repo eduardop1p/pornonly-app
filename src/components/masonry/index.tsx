@@ -475,7 +475,6 @@ function useFetchItemsSearch(
 
       const data = await res.json();
       const results = data.midia.results as MidiaResultsType[];
-      console.log(results);
       if (!results.length) {
         setHasMore(false);
         return;

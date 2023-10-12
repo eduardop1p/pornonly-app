@@ -42,7 +42,7 @@ export const Container = styled.form<TypeTheme>`
     & > .titles-suggestions-container {
       position: absolute;
       left: 0;
-      top: 3.1rem;
+      top: 2.8rem;
       background-color: ${theme.colors.g_colorGray0};
       width: 100%;
       z-index: -1;
@@ -66,7 +66,8 @@ export const Container = styled.form<TypeTheme>`
         cursor: pointer;
         padding: 10px 2rem;
 
-        &:hover {
+        &:hover,
+        &.selected {
           background-color: ${theme.colors.g_colore9e9e9};
         }
 

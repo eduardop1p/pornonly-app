@@ -20,13 +20,16 @@ export default function Nav({ isAuth, children }: Props) {
 
   useEffect(() => {
     const header = document.querySelector('header');
-    window.onscroll = () => {
+    const onscroll = () => {
       if (window.scrollY > 1) {
         header?.classList.add('on-scrollY-header');
       } else {
         header?.classList.remove('on-scrollY-header');
       }
     };
+    window.addEventListener('scroll', onscroll);
+
+    return () => window.removeEventListener('scroll', onscroll);
   }, []);
 
   return (
