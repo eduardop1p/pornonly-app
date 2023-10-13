@@ -18,12 +18,14 @@ export default function AddComments({
   token,
   midiaId,
   setStResultsComments,
+  setAllCommentsInPin,
 }: {
   children: ReactNode;
   token?: string;
   midiaId?: string;
   isAuth: boolean;
   setStResultsComments: Dispatch<SetStateAction<ResultsCommentsType[]>>;
+  setAllCommentsInPin: Dispatch<SetStateAction<number>>;
 }) {
   const router = useRouter();
   const pathName = usePathname();
@@ -69,6 +71,7 @@ export default function AddComments({
         return;
       }
       handleServerSuccess('Comentário foi adcionado');
+      setAllCommentsInPin(state => (state += 1));
       setStResultsComments(state => [jsonData, ...state]);
       setCommentValue('');
       commentsAndUsers.scrollTop = 0;

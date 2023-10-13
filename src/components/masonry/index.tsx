@@ -181,9 +181,7 @@ export default function Masonry({
         next={handleManageNextPage}
         hasMore={hasMore}
         loader={null}
-        endMessage={
-          <span className="no-more-results">{`Isso é tudo por aqui :)`}</span>
-        }
+        endMessage={<span className="no-more-results">{`Isso é tudo`}</span>}
         style={{ overflow: 'hidden' }}
       >
         <MasonryUi columnsCount={6}>
@@ -341,23 +339,27 @@ function useFetchItemsHome(
   setStResults: Dispatch<SetStateAction<MidiaResultsType[]>>
 ) {
   const fetchItems = async () => {
-    currentPage.current += 1;
+    try {
+      currentPage.current += 1;
 
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all?page=${currentPage.current}`,
-      {
-        method: 'GET',
-        cache: 'no-cache',
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all?page=${currentPage.current}`,
+        {
+          method: 'GET',
+          cache: 'no-cache',
+        }
+      );
+
+      const data = await res.json();
+      const results = data.midia.results as MidiaResultsType[];
+      if (!results.length) {
+        setHasMore(false);
+        return;
       }
-    );
-
-    const data = await res.json();
-    const results = data.midia.results as MidiaResultsType[];
-    if (!results.length) {
-      setHasMore(false);
-      return;
+      setStResults(state => [...state, ...results]);
+    } catch (err) {
+      console.log(err);
     }
-    setStResults(state => [...state, ...results]);
   };
 
   return fetchItems();
@@ -369,23 +371,27 @@ function useFetchItemsNew(
   setStResults: Dispatch<SetStateAction<MidiaResultsType[]>>
 ) {
   const fetchItems = async () => {
-    currentPage.current += 1;
+    try {
+      currentPage.current += 1;
 
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all-midia-day?page=${currentPage.current}`,
-      {
-        method: 'GET',
-        cache: 'no-cache',
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all-midia-day?page=${currentPage.current}`,
+        {
+          method: 'GET',
+          cache: 'no-cache',
+        }
+      );
+
+      const data = await res.json();
+      const results = data.midia.results as MidiaResultsType[];
+      if (!results.length) {
+        setHasMore(false);
+        return;
       }
-    );
-
-    const data = await res.json();
-    const results = data.midia.results as MidiaResultsType[];
-    if (!results.length) {
-      setHasMore(false);
-      return;
+      setStResults(state => [...state, ...results]);
+    } catch (err) {
+      console.error(err);
     }
-    setStResults(state => [...state, ...results]);
   };
 
   return fetchItems();
@@ -398,24 +404,28 @@ function useFetchItemsTags(
   tags: string[]
 ) {
   const fetchItems = async () => {
-    currentPage.current += 1;
+    try {
+      currentPage.current += 1;
 
-    const res = await fetch(
-      // eslint-disable-next-line
-      `${process.env.NEXT_PUBLIC_URL_API}/midia/search-tags?search_tags=${tags.join(',')}&page=${currentPage.current}`,
-      {
-        method: 'GET',
-        cache: 'no-cache',
+      const res = await fetch(
+        // eslint-disable-next-line
+        `${process.env.NEXT_PUBLIC_URL_API}/midia/search-tags?search_tags=${tags.join(',')}&page=${currentPage.current}`,
+        {
+          method: 'GET',
+          cache: 'no-cache',
+        }
+      );
+
+      const data = await res.json();
+      const results = data.midia.results as MidiaResultsType[];
+      if (!results.length) {
+        setHasMore(false);
+        return;
       }
-    );
-
-    const data = await res.json();
-    const results = data.midia.results as MidiaResultsType[];
-    if (!results.length) {
-      setHasMore(false);
-      return;
+      setStResults(state => [...state, ...results]);
+    } catch (err) {
+      console.error(err);
     }
-    setStResults(state => [...state, ...results]);
   };
 
   return fetchItems();
@@ -428,8 +438,9 @@ function useFetchItemsReadHeads(
   tags: string[]
 ) {
   const fetchItems = async () => {
-    currentPage.current += 1;
     try {
+      currentPage.current += 1;
+
       const res = await fetch(
         // eslint-disable-next-line
         `${process.env.NEXT_PUBLIC_URL_API}/midia/search-tags?search_tags=${tags.join(',')}&page=${currentPage.current}`,
@@ -495,24 +506,28 @@ function useFetchItemsUserMidia(
   userId: string
 ) {
   const fetchItems = async () => {
-    currentPage.current += 1;
+    try {
+      currentPage.current += 1;
 
-    const res = await fetch(
-      // eslint-disable-next-line
-      `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all-midia-userid/${userId}?page=${currentPage.current}`,
-      {
-        method: 'GET',
-        cache: 'no-cache',
+      const res = await fetch(
+        // eslint-disable-next-line
+        `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all-midia-userid/${userId}?page=${currentPage.current}`,
+        {
+          method: 'GET',
+          cache: 'no-cache',
+        }
+      );
+
+      const data = await res.json();
+      const results = data.midia.results as MidiaResultsType[];
+      if (!results.length) {
+        setHasMore(false);
+        return;
       }
-    );
-
-    const data = await res.json();
-    const results = data.midia.results as MidiaResultsType[];
-    if (!results.length) {
-      setHasMore(false);
-      return;
+      setStResults(state => [...state, ...results]);
+    } catch (err) {
+      console.error(err);
     }
-    setStResults(state => [...state, ...results]);
   };
 
   return fetchItems();
@@ -525,24 +540,28 @@ function useFetchItemsUserSaves(
   userId: string
 ) {
   const fetchItems = async () => {
-    currentPage.current += 1;
+    try {
+      currentPage.current += 1;
 
-    const res = await fetch(
-      // eslint-disable-next-line
-      `${process.env.NEXT_PUBLIC_URL_API}/saves/get-all-saves-userid/${userId}?page=${currentPage.current}`,
-      {
-        method: 'GET',
-        cache: 'no-cache',
+      const res = await fetch(
+        // eslint-disable-next-line
+        `${process.env.NEXT_PUBLIC_URL_API}/saves/get-all-saves-userid/${userId}?page=${currentPage.current}`,
+        {
+          method: 'GET',
+          cache: 'no-cache',
+        }
+      );
+
+      const data = await res.json();
+      const results = data.midia.results as MidiaResultsType[];
+      if (!results.length) {
+        setHasMore(false);
+        return;
       }
-    );
-
-    const data = await res.json();
-    const results = data.midia.results as MidiaResultsType[];
-    if (!results.length) {
-      setHasMore(false);
-      return;
+      setStResults(state => [...state, ...results]);
+    } catch (err) {
+      console.error(err);
     }
-    setStResults(state => [...state, ...results]);
   };
 
   return fetchItems();

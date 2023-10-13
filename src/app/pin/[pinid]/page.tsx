@@ -21,7 +21,7 @@ interface Props {
   params: { pinid: string };
 }
 
-interface CommentsType {
+export interface CommentsType {
   commentsMidia: {
     results: ResultsCommentsType[];
     currentPage: number;
@@ -36,6 +36,7 @@ export interface ResultsCommentsType {
   likes: LikesType;
   userId: UserIdResultsType;
   responses: ResponsesCommentsType[];
+  indexComm?: number;
   createIn: string;
 }
 
@@ -44,6 +45,7 @@ export interface ResponsesCommentsType {
   comment: string;
   userId: UserIdResultsType;
   userNameResponse?: string;
+  indexRes?: number;
   likes: LikesType;
   createIn: string;
 }
@@ -131,7 +133,14 @@ export default async function Page({ params }: Props) {
     notFound();
   }
   const { commentsMidia } = (await resComments.json()) as CommentsType;
-  const resultsComments = commentsMidia.results;
+  const resultsComments = commentsMidia.results.map((value, indexComm) => ({
+    ...value,
+    responses: value.responses.map((value, indexRes) => ({
+      ...value,
+      indexRes,
+    })),
+    indexComm,
+  }));
 
   let resultsMidiaSearchTag: MidiaResultsType[] = [];
   if (dataPin.tags.join()) {
@@ -198,6 +207,7 @@ export default async function Page({ params }: Props) {
               <Comments
                 midiaId={dataPin._id}
                 resultsComments={resultsComments}
+                totalComments={commentsMidia.totalResults}
                 dataPin={dataPin}
                 token={token as string}
                 isAuth={isAuth}

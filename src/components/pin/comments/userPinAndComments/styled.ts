@@ -25,7 +25,7 @@ export const Container = styled.div<TypeTheme & Props>`
       flex-direction: column;
 
       & > :not(:last-child) {
-        margin-bottom: 14px;
+        margin-bottom: 15px;
       }
     }
   }

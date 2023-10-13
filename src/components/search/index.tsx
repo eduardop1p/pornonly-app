@@ -65,6 +65,7 @@ export default function Search() {
     // };
     const handleKeyDownSearch = (event: KeyboardEvent) => {
       if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        event.preventDefault();
         const suggestionList = document.querySelector(
           '.titles-suggestions-container'
         ) as HTMLDivElement;
@@ -83,7 +84,7 @@ export default function Search() {
         for (let i = 0; i < suggestionsCount; i++) {
           suggestionList.children[i].classList.remove('selected');
         }
-        if (selectedIndex.current >= 0 && inputRef.current) {
+        if (selectedIndex.current >= 0) {
           suggestionList.children[selectedIndex.current].classList.add(
             'selected'
           );
@@ -111,6 +112,7 @@ export default function Search() {
     setFocusSearch(false);
     inputRef.current?.blur();
 
+    handleRemoveSelected();
     router.push(`/search?search_query=${searchValueInput}`);
   };
 
@@ -139,8 +141,17 @@ export default function Search() {
 
   const handleClickTiSu = (value: { _id: string; title: string }) => {
     setSearchValueInput(value.title);
-    router.push(`/search?search_query=${value.title}`);
+    handleRemoveSelected();
     setFocusSearch(false);
+    router.push(`/search?search_query=${value.title}`);
+  };
+
+  const handleRemoveSelected = () => {
+    const suggestionList = document.querySelectorAll(
+      '.titles-suggestions'
+    ) as NodeListOf<HTMLDivElement>;
+    suggestionList.forEach(el => el.classList.remove('selected'));
+    selectedIndex.current = -1;
   };
 
   return (

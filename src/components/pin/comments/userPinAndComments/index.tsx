@@ -38,6 +38,7 @@ interface Props {
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   parentCommentIndex: number;
   lastIndex: boolean;
+  setAllCommentsInPin: Dispatch<SetStateAction<number>>;
 }
 
 export default function UserPinAndComments({
@@ -52,6 +53,7 @@ export default function UserPinAndComments({
   setIsLoading,
   parentCommentIndex,
   lastIndex,
+  setAllCommentsInPin,
 }: Props) {
   const router = useRouter();
   const pathName = usePathname();
@@ -88,6 +90,7 @@ export default function UserPinAndComments({
         return;
       }
       handleServerSuccess('Resposta foi adicionada');
+      setAllCommentsInPin(state => (state += 1));
       setStResultsComments(state => {
         state[parentCommentIndex].responses.push(jsonData);
         return state;
@@ -120,6 +123,7 @@ export default function UserPinAndComments({
           setUserNameResponse={setUserNameResponse}
           setShowResponseComment={setShowResponseComment}
           lastIndex={lastIndex && !comment.responses.length}
+          setAllCommentsInPin={setAllCommentsInPin}
         />
         {comment.responses.length ? (
           <div className="responses-comments-container">
@@ -161,6 +165,7 @@ export default function UserPinAndComments({
                 setUserNameResponse={setUserNameResponse}
                 setShowResponseCommentParent={setShowResponseCommentParent}
                 lastIndex={lastIndex && comment.responses.length == index + 1}
+                setAllCommentsInPin={setAllCommentsInPin}
               />
             ))}
           </div>
@@ -210,6 +215,7 @@ interface UserCommentType {
   setUserNameResponse: Dispatch<SetStateAction<string>>;
   responseIndex?: number;
   lastIndex?: boolean;
+  setAllCommentsInPin: Dispatch<SetStateAction<number>>;
 }
 function UserComment({
   comment,
@@ -228,6 +234,7 @@ function UserComment({
   setShowResponseCommentParent,
   setUserNameResponse,
   lastIndex,
+  setAllCommentsInPin,
 }: UserCommentType) {
   const router = useRouter();
   const pathName = usePathname();
@@ -263,6 +270,7 @@ function UserComment({
         return;
       }
       handleServerSuccess('Comentário foi excluido');
+      setAllCommentsInPin(state => (state -= 1));
       if (typeof responseIndex !== 'undefined') {
         setStResultsComments(state => {
           state[parentCommentIndex].responses = state[

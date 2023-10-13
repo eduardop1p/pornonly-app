@@ -49,7 +49,7 @@ export const Container = styled.div<TypeTheme & Props>`
       margin-top: 10px;
       position: absolute;
       width: 100%;
-      height: calc(100% - 183px);
+      height: calc(100% - 177px);
       overflow-y: auto;
       /* padding-bottom: 1rem; */
 
@@ -57,15 +57,15 @@ export const Container = styled.div<TypeTheme & Props>`
         display: none;
       }
 
-      & > .container-comments {
+      .container-comments {
         margin-right: 1rem;
+
+        &:not(:last-child) {
+          margin-bottom: 1rem;
+        }
       }
 
-      & > :not(:last-child) {
-        margin-bottom: 1rem;
-      }
-
-      & > .pin-no-comments {
+      .pin-no-comments {
         position: absolute;
         left: 50%;
         top: 40%;
@@ -104,7 +104,7 @@ export const Container = styled.div<TypeTheme & Props>`
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 1rem;
+        margin-bottom: 10px;
 
         & > .comments-count {
           font-size: ${theme.font_size.font_size_1_25rem};
