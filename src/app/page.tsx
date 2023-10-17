@@ -31,8 +31,11 @@ export interface MidiaResultsType {
 }
 
 export default async function Home() {
+  const midiaType = '';
+  const order = 'popular';
+
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all?page=1`,
+    `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all?midiaType=${midiaType}&order=${order}&page=1`,
     {
       method: 'GET',
       cache: 'force-cache',

@@ -22,6 +22,8 @@ import videoDuration from '@/config/calcDuration';
 import LoadingPin from './LoadingPin';
 import WaitingPin from './waitingPin';
 import UserPin from './userPin';
+import ScrollTop from './scrollTop';
+import Category from './category';
 
 interface Props {
   results: MidiaResultsType[];
@@ -50,6 +52,8 @@ export default function Masonry({
   const [stResults, setStResults] = useState(results);
   const [hasMore, setHasMore] = useState(true);
   let currentPage = useRef(1);
+  const midiaType = useRef<'img' | 'gif' | 'video' | ''>('');
+  const order = useRef<'popular' | 'desc' | 'asc'>('popular');
 
   useEffect(() => {
     // esse effect só vai execultar quando o results do back-end mudar
@@ -57,6 +61,8 @@ export default function Masonry({
       setStResults(results);
       setHasMore(true);
       currentPage.current = 1;
+      midiaType.current = '';
+      order.current = 'popular';
     }
     // console.log('update results');
   }, [results]);
@@ -126,7 +132,13 @@ export default function Masonry({
   const handleManageNextPage = () => {
     switch (masonryPage) {
       case 'home': {
-        useFetchItemsHome(setHasMore, currentPage, setStResults);
+        useFetchItemsHome(
+          setHasMore,
+          currentPage,
+          midiaType,
+          order,
+          setStResults
+        );
         return;
       }
       case 'new': {
@@ -174,6 +186,10 @@ export default function Masonry({
       $columnCount={columnCount}
       id="masonry"
     >
+      {currentPage.current > 2 && <ScrollTop />}
+      <div className="category-and-order">
+        <Category />
+      </div>
       {/* <ResponsiveMasonry> */}
       <InfiniteScroll
         dataLength={stResults.length}
@@ -336,6 +352,8 @@ export default function Masonry({
 function useFetchItemsHome(
   setHasMore: Dispatch<SetStateAction<boolean>>,
   currentPage: MutableRefObject<number>,
+  midiaType: MutableRefObject<string>,
+  order: MutableRefObject<string>,
   setStResults: Dispatch<SetStateAction<MidiaResultsType[]>>
 ) {
   const fetchItems = async () => {
@@ -343,7 +361,7 @@ function useFetchItemsHome(
       currentPage.current += 1;
 
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all?page=${currentPage.current}`,
+        `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all?midiaType=${midiaType.current}&order=${order.current}&page=${currentPage.current}`,
         {
           method: 'GET',
           cache: 'no-cache',

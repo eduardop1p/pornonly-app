@@ -16,6 +16,13 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
     column-gap: 1rem; */
     width: 100%;
 
+    & > .category-and-order {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0 8px 0;
+    }
+
     &#masonry {
       transition: scale 200ms ease-in-out;
     }
