@@ -6,7 +6,7 @@
   justify-content: space-between;
   background-color: var(--g-colorGray0);
   top: 0;
-  z-index: 7;
+  z-index: 6;
   position: fixed;
   width: 100%;
   transition: box-shadow 300ms ease-in-out;

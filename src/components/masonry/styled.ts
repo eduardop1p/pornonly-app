@@ -7,10 +7,15 @@ interface Props {
   $columnCount: number;
 }
 
+export const Container = styled.div`
+  padding: 0 3px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+`;
+
 export const MasonryContainer = styled.div<TypeTheme & Props>`
   ${({ theme, $columnCount, $columnWidth }) => css`
-    display: block;
-    padding: 0 8px;
     /* column-count: ${$columnCount};
     column-width: ${$columnWidth.toFixed(0)}px;
     column-gap: 1rem; */

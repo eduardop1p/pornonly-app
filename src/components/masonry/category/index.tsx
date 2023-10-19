@@ -1,8 +1,22 @@
-import { useState, useRef } from 'react';
+import {
+  useState,
+  useRef,
+  MutableRefObject,
+  Dispatch,
+  SetStateAction,
+} from 'react';
 
 import { Container } from './styled';
 
-export default function Category() {
+import { MidiaResultsType } from '@/app/page';
+
+export default function Category({
+  setStResults,
+  midiaType,
+}: {
+  setStResults: Dispatch<SetStateAction<MidiaResultsType[]>>;
+  midiaType: MutableRefObject<'img' | 'gif' | 'video' | ''>;
+}) {
   const [showCategory, setShowCategory] = useState(false);
 
   const refBtnCategory = useRef<HTMLButtonElement | null>(null);
@@ -14,15 +28,33 @@ export default function Category() {
     }, 300);
   };
 
+  const handleFetchItemsHomeCategory = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all?midiaType=${midiaType.current}&order=popular&page=1`,
+        {
+          method: 'GET',
+          cache: 'no-cache',
+        }
+      );
+
+      const data = await res.json();
+      const results = data.midia.results as MidiaResultsType[];
+      setStResults(results);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <Container
       data-category-active={showCategory}
-      onBlur={() => {
-        if (!showCategory) return;
-        setShowCategory(false);
+      // onBlur={() => {
+      //   if (!showCategory) return;
+      //   setShowCategory(false);
 
-        handleAddAnimationClick();
-      }}
+      //   handleAddAnimationClick();
+      // }}
       tabIndex={1}
       onClick={() => {
         setShowCategory(!showCategory);
@@ -46,7 +78,15 @@ export default function Category() {
         </svg>
       </button>
       <div className="categories" onClick={event => event.stopPropagation()}>
-        <button type="button">Imagens</button>
+        <button
+          type="button"
+          onClick={() => {
+            midiaType.current = 'img';
+            handleFetchItemsHomeCategory();
+          }}
+        >
+          Imagens
+        </button>
         <button type="button">Gifs</button>
         <button type="button">Videos</button>
       </div>
