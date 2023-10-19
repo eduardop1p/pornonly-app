@@ -38,8 +38,7 @@ export default async function Home() {
     `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all?midiaType=${midiaType}&order=${order}&page=1`,
     {
       method: 'GET',
-      cache: 'force-cache',
-      next: { revalidate: 60 },
+      next: { tags: ['pin'] },
     }
   );
   if (!res.ok) {

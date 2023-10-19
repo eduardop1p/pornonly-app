@@ -55,21 +55,30 @@ export interface LikesType {
   users: string[];
 }
 
+const getPinToId = async (pinId: string) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_URL_API}/midia/get-midiaid/${pinId}`,
+      {
+        method: 'GET',
+        next: { tags: ['pin'] },
+      }
+    );
+    if (!response.ok) {
+      notFound();
+      // throw new Error('server connection error.');
+    }
+    const data = (await response.json()) as MidiaResultsType;
+    return data;
+  } catch {
+    throw new Error('Internal server error.');
+  }
+};
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { pinid } = params;
 
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_URL_API}/midia/get-midiaid/${pinid}`,
-    {
-      method: 'GET',
-      cache: 'no-cache',
-    }
-  );
-  if (!response.ok) {
-    notFound();
-    // throw new Error('server connection error.');
-  }
-  const data = (await response.json()) as MidiaResultsType;
+  const data = await getPinToId(pinid);
 
   return {
     title: `Pornonly - ${data.title}`,
@@ -91,17 +100,7 @@ export default async function Page({ params }: Props) {
   const token = cookies().get('token')?.value;
   const isAuth = cookies().has('token');
 
-  const resPin = await fetch(
-    `${process.env.NEXT_PUBLIC_URL_API}/midia/get-midiaid/${pinid}`,
-    {
-      method: 'GET',
-      cache: 'reload',
-    }
-  );
-  if (!resPin.ok) {
-    notFound();
-  }
-  const dataPin = (await resPin.json()) as MidiaResultsType;
+  const dataPin = await getPinToId(pinid);
 
   let isSave = false;
   let userId = null;
@@ -150,7 +149,7 @@ export default async function Page({ params }: Props) {
       }/midia/search-tags?search_tags=${dataPin.tags.join(',')}&page=1`,
       {
         method: 'GET',
-        cache: 'no-cache',
+        next: { tags: ['pin'] },
       }
     );
     const dataMidiaSearchTag = (await resMidiaSearchTags.json()) as MidiaType;

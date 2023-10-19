@@ -26,7 +26,7 @@ export default async function New({ searchParams: { search_query } }: Props) {
     }/midia/search?search_query=${search_query}&page=1`,
     {
       method: 'GET',
-      cache: 'no-cache',
+      next: { tags: ['pin'] },
     }
   );
   if (!res.ok) {

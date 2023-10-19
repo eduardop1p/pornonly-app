@@ -19,7 +19,7 @@ export default async function New() {
     }/midia/search-tags?search_tags=${redheadsTags.join(',')}&page=1`,
     {
       method: 'GET',
-      cache: 'no-cache',
+      next: { tags: ['pin'] },
     }
   );
   if (!res.ok) {

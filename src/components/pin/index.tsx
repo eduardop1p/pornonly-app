@@ -95,6 +95,8 @@ export default function Pin({ data }: Props) {
         <>
           <ReactPlayer
             url={data.url}
+            width='100%'
+            height='100%'
             controls
             playing
             muted

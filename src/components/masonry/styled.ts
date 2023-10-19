@@ -149,6 +149,15 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
           }
         }
 
+        & > .playing-icon {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          z-index: 3;
+          transform: translate(-50%, -50%);
+          fill: ${theme.colors.g_colorGray0};
+        }
+
         img,
         video {
           color: ${theme.colors.g_colorGray300};

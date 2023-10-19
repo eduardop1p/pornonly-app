@@ -15,7 +15,7 @@ export default async function New() {
     `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all-midia-day?page=1`,
     {
       method: 'GET',
-      cache: 'no-cache',
+      next: { tags: ['pin'] },
     }
   );
   if (!res.ok) {

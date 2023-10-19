@@ -31,19 +31,29 @@ export interface ProfilePhotoType {
   url: string;
 }
 
+const getUser = async (usernameparam: string) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_URL_API}/users/${usernameparam}`,
+      {
+        method: 'GET',
+        cache: 'no-cache',
+      }
+    );
+    const data = (await response.json()) as UserType;
+    if (!response.ok) notFound();
+    return data;
+  } catch {
+    throw new Error('Internal server error.');
+  }
+};
+
 // pato borrachudo admin
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const token = cookies().get('token')?.value;
   const { usernameparam } = params;
 
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_URL_API}/users/${usernameparam}`,
-    {
-      method: 'GET',
-      cache: 'no-cache',
-    }
-  );
-  const data = (await response.json()) as UserType;
+  const data = await getUser(usernameparam);
 
   return {
     title: `Pornonly - ${data.username}`,
@@ -54,24 +64,14 @@ export default async function Page({ params }: Props) {
   const token = cookies().get('token')?.value;
   const { usernameparam } = params;
 
-  const resUser = await fetch(
-    `${process.env.NEXT_PUBLIC_URL_API}/users/${usernameparam}`,
-    {
-      method: 'GET',
-      cache: 'no-cache',
-    }
-  );
-  if (!resUser.ok) {
-    notFound();
-  }
-  const userData = (await resUser.json()) as UserType;
+  const userData = await getUser(usernameparam);
   const { profilePhoto, username, email } = userData;
 
   const resUserMidia = await fetch(
     `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all-midia-userid/${userData._id}?page=1`,
     {
       method: 'GET',
-      cache: 'no-cache',
+      next: { tags: ['pin'] },
     }
   );
   const dataUserMidia = (await resUserMidia.json()) as MidiaType;

@@ -17,7 +17,7 @@ export const Container = styled.div<TypeTheme & Props>`
     transform: translate(-50%, 125px);
     min-height: 45px;
     bottom: 1.5rem;
-    padding: 8px 1rem;
+    padding: 10px;
     border-radius: 10px;
     margin-bottom: 0 !important;
     transition: transform 500ms ease-in-out;
@@ -34,7 +34,7 @@ export const Container = styled.div<TypeTheme & Props>`
       border-radius: 5px;
       width: auto;
       height: 28px !important;
-      display: ${$midiaType === 'video' ? 'none' : 'inline-block'};
+      /* display: ${$midiaType === 'video' ? 'none' : 'inline-block'}; */
     }
     & > video {
       margin-right: 7px;
@@ -43,7 +43,7 @@ export const Container = styled.div<TypeTheme & Props>`
       border-radius: 5px;
       width: auto;
       height: 28px !important;
-      display: ${$midiaType !== 'video' ? 'none' : 'inline-block'};
+      /* display: ${$midiaType !== 'video' ? 'none' : 'inline-block'}; */
     }
 
     & > span {

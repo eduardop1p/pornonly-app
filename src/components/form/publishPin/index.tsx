@@ -135,6 +135,9 @@ export default function PublishPin({
           setUploadProgress(percentage);
         },
       });
+      await axios.get(
+        `${process.env.NEXT_PUBLIC_URL_SITE}/api/revalidation?tag=pin&secret=${process.env.NEXT_PUBLIC_REVALIDATION_SECRET}`
+      );
       handleServerSuccess('Pin adcionado ao feed');
     } catch (err: any) {
       if (get(err, 'response.data.error', false)) {
