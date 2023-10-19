@@ -27,7 +27,8 @@ export const Container = styled.div<TypeTheme & Props>`
       transform: translate(-50%, 0);
     }
 
-    & > img {
+    & > img,
+    & > video {
       margin-right: 7px;
       flex: none;
       position: relative;
@@ -36,15 +37,15 @@ export const Container = styled.div<TypeTheme & Props>`
       height: 28px !important;
       /* display: ${$midiaType === 'video' ? 'none' : 'inline-block'}; */
     }
-    & > video {
+    /* & > video {
       margin-right: 7px;
       flex: none;
       position: relative;
       border-radius: 5px;
       width: auto;
       height: 28px !important;
-      /* display: ${$midiaType !== 'video' ? 'none' : 'inline-block'}; */
-    }
+      display: ${$midiaType !== 'video' ? 'none' : 'inline-block'};
+    } */
 
     & > span {
       color: ${theme.colors.g_colorGray0};

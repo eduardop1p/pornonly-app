@@ -13,6 +13,18 @@ export const Container = styled.div<TypeTheme>`
       position: relative;
 
       & > .btn-more-options {
+        @keyframes animationCategory {
+          0% {
+            scale: 0.95;
+          }
+          50% {
+            scale: 0.9;
+          }
+          100% {
+            scale: 1;
+          }
+        }
+
         cursor: pointer;
         display: flex;
         justify-content: center;
@@ -21,6 +33,12 @@ export const Container = styled.div<TypeTheme>`
         height: 48px;
         border-radius: 100%;
         transition: background 150ms ease-in-out;
+
+        &.click {
+          animation-name: animationCategory;
+          animation-duration: 300ms;
+          animation-timing-function: ease-in-out;
+        }
 
         &:hover {
           background-color: ${theme.colors.g_colorBgRgb_229};

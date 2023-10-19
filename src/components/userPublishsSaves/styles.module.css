@@ -1,3 +1,15 @@
+@keyframes animationCategory {
+  0% {
+    scale: 0.95;
+  }
+  50% {
+    scale: 0.9;
+  }
+  100% {
+    scale: 1;
+  }
+}
+
 .container{
   margin-top: 2rem;
 }
@@ -25,29 +37,42 @@
   position: relative;
 }
 
-.btn-manage-more-options{
+.container-manage-more-options{
   position: absolute;
   left: 1rem;
   width: 45px;
   height: 45px;
+  border-radius: 100%;
   z-index: 4;
+}
+.btn-manage-more-options{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 100%;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  border-radius: 100%;
   transition: background 150ms ease-in-out;
 }
-.btn-manage-more-options:hover{
-  background-color: var(--g-colore9e9e9);
+.btn-manage-more-options[data-click='true']{
+  animation-name: animationCategory;
+  animation-duration: 300ms;
+  animation-timing-function: ease-in-out;
 }
-.btn-manage-more-options > svg{
-  flex: none;
+.btn-manage-more-options[data-user-options-active='false']:hover{
+  background-color: var(--g-colore9e9e9);
 }
 .btn-manage-more-options[data-user-options-active='true']{
   background-color: var(--g-colorGray400);
 }
-.btn-manage-more-options > svg[data-user-options-active='true']{
+
+.container-manage-more-options svg{
+  flex: none;
+  transition: fill 150ms ease-in-out;
+}
+.container-manage-more-options svg[data-user-options-active='true']{
   fill: var(--g-colorGray0);
 }
 

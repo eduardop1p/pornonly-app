@@ -39,11 +39,15 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
     useGlobalSuccessTime();
 
   const refMoreOptions = useRef<HTMLDivElement | null>(null);
+  const refBtnMoreOptions = useRef<HTMLButtonElement | null>(null);
   const fileName = data.url.split('/').pop() as string;
 
   const handleOnBlur = (event: FocusEvent<HTMLDivElement>) => {
     if (!refMoreOptions.current?.contains(event.relatedTarget)) {
       setShowMoreOptions(false);
+      if (showMoreOptions) {
+        handleAddAnimationClick();
+      }
     }
   };
 
@@ -134,6 +138,13 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
     }
   };
 
+  const handleAddAnimationClick = () => {
+    refBtnMoreOptions.current?.classList.add('click');
+    setTimeout(() => {
+      refBtnMoreOptions.current?.classList.remove('click');
+    }, 300);
+  };
+
   return (
     <Container id="save-and-share">
       {isLoading && <Loading />}
@@ -154,15 +165,19 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
       </GlobalSuccess>
       <div
         className="more-options"
-        onClick={() => setShowMoreOptions(!showMoreOptions)}
         onBlur={event => handleOnBlur(event)}
         tabIndex={0}
         ref={refMoreOptions}
       >
         <button
+          ref={refBtnMoreOptions}
           type="button"
           className="btn-more-options"
           data-btn-more-options-active={showMoreOptions}
+          onClick={() => {
+            setShowMoreOptions(!showMoreOptions);
+            handleAddAnimationClick();
+          }}
         >
           <svg
             height="20"

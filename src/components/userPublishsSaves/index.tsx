@@ -38,7 +38,8 @@ export default function UserPublishsSaves({
   const { handleServerError, msgGlobalError, showGlobalError } =
     useGlobalErrorTime();
 
-  const refBtnManageMoreOptions = useRef<HTMLDivElement | null>(null);
+  const refContainerManageMoreOptions = useRef<HTMLDivElement | null>(null);
+  const refBtnManageMoreOptions = useRef<HTMLButtonElement | null>(null);
   const pinsIdsRemoveArray = useRef<{ id: string; key: string }[]>([]);
   const refPinSelectMode = useRef<boolean | null>(null);
   refPinSelectMode.current = pinSelectMode;
@@ -121,10 +122,13 @@ export default function UserPublishsSaves({
 
   const handleOnBlur = (event: FocusEvent<HTMLDivElement>) => {
     if (
-      !refBtnManageMoreOptions.current?.contains(event.relatedTarget) &&
+      !refContainerManageMoreOptions.current?.contains(event.relatedTarget) &&
       !refPinSelectMode.current
     ) {
       setShowContainerSelectMode(false);
+      if (showContainerSelectMode) {
+        handleAddAnimationClick();
+      }
     }
   };
 
@@ -161,6 +165,13 @@ export default function UserPublishsSaves({
     }
   };
 
+  const handleAddAnimationClick = () => {
+    refBtnManageMoreOptions.current?.setAttribute('data-click', 'true');
+    setTimeout(() => {
+      refBtnManageMoreOptions.current?.removeAttribute('data-click');
+    }, 300);
+  };
+
   return (
     <div className={styles['container']}>
       {isLoading && <Loading />}
@@ -172,24 +183,34 @@ export default function UserPublishsSaves({
       <div className={styles['btns-publishs-or-saves']}>
         {isUniqueUser && showPublish && (
           <div
-            className={styles['btn-manage-more-options']}
-            ref={refBtnManageMoreOptions}
+            className={styles['container-manage-more-options']}
+            ref={refContainerManageMoreOptions}
             data-user-options-active={showContainerSelectMode}
             tabIndex={0}
             onBlur={handleOnBlur}
-            onClick={() => setShowContainerSelectMode(!showContainerSelectMode)}
           >
-            <svg
-              height="20"
-              width="20"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-              aria-label=""
-              role="img"
+            <button
+              type="button"
               data-user-options-active={showContainerSelectMode}
+              ref={refBtnManageMoreOptions}
+              className={styles['btn-manage-more-options']}
+              onClick={() => {
+                setShowContainerSelectMode(!showContainerSelectMode);
+                handleAddAnimationClick();
+              }}
             >
-              <path d="M12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3M3 9c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm18 0c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3z"></path>
-            </svg>
+              <svg
+                height="20"
+                width="20"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                aria-label=""
+                role="img"
+                data-user-options-active={showContainerSelectMode}
+              >
+                <path d="M12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3M3 9c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm18 0c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3z"></path>
+              </svg>
+            </button>
             <div
               onClick={event => event.stopPropagation()}
               data-user-options-active={showContainerSelectMode}
