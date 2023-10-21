@@ -82,7 +82,7 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
       }
 
       & > .select-pin {
-        z-index: 2;
+        z-index: 3;
         position: absolute;
         width: 100%;
         height: 100%;

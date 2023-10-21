@@ -14,6 +14,7 @@ import {
   ResponsiveMasonry,
 } from 'react-responsive-masonry';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { usePathname } from 'next/navigation';
 
 import { Container, MasonryContainer } from './styled';
 import { MidiaResultsType } from '@/app/page';
@@ -34,6 +35,7 @@ interface Props {
   tags?: string[];
   search_query?: string;
   userId?: string;
+  username?: string;
 }
 
 export default function Masonry({
@@ -44,7 +46,10 @@ export default function Masonry({
   tags,
   search_query,
   userId,
+  username,
 }: Props) {
+  const pathName = usePathname();
+
   const [columnCount] = useState(6);
   const [columnWidth, setColumnWidth] = useState(
     (window.innerWidth - 118) / columnCount
@@ -57,7 +62,7 @@ export default function Masonry({
 
   useEffect(() => {
     // esse effect só vai execultar quando o results do back-end mudar
-    if (location.pathname == '/search') {
+    if (pathName == '/search' || pathName == `/${username}`) {
       setStResults(results);
       setHasMore(true);
       currentPage.current = 1;
@@ -65,7 +70,7 @@ export default function Masonry({
       order.current = 'popular';
     }
     // console.log('update results');
-  }, [results]);
+  }, [results, username, pathName]);
 
   useEffect(() => {
     const prevWindowWidth = window.innerWidth;

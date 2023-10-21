@@ -11,6 +11,7 @@ import { GlobalError } from '@/components/form/globalError';
 import { GlobalSuccess } from '@/components/form/globalSuccess';
 import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
 import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
+import revalidatePin from '@/services/revalidatePin';
 
 interface Props {
   data: {
@@ -80,6 +81,7 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
           },
         }
       );
+      await revalidatePin();
       // const jsonRes = await res.json();
       // if (!res.ok) {
       //   handleServerError(jsonRes.error as string);
@@ -112,6 +114,7 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
           },
         }
       );
+      await revalidatePin();
       // const jsonRes = await res.json();
       // if (!res.ok) {
       //   handleServerError(jsonRes.error as string);
@@ -154,14 +157,17 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
         successMsg={msgGlobalSuccess}
         midiaType={data.midiaType}
       >
-        <video src={data.url} controls={false} preload="auto"></video>
-        <Image
-          src={data.url}
-          alt={data.title}
-          priority
-          width={25}
-          height={25}
-        />
+        {data.midiaType === 'video' ? (
+          <video src={data.url} controls={false} preload="auto"></video>
+        ) : (
+          <Image
+            src={data.url}
+            alt={data.title}
+            priority
+            width={25}
+            height={25}
+          />
+        )}
       </GlobalSuccess>
       <div
         className="more-options"

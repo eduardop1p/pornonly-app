@@ -1,5 +1,5 @@
 .main{
-  padding: 5.5rem 0 2rem;
+  /* padding: 5.5rem 0 2rem; */
   display: flex;
   flex-direction: column;
 }
@@ -17,29 +17,31 @@
 .container{
   display: flex;
   width: 100%;
-  justify-content: center;
-}
-
-.pin-default-container{
-  width: 1050px;
-  box-shadow: var(--box-shadow_07);
-  border-radius: 2rem;
-  /* overflow: hidden; */
-  display: flex;
-  min-height: 500px;
+  height: 100vh;
+  align-items: center;
   justify-content: space-between;
+  background-color: var(--g-colore9e9e9);
+  padding-top: 5rem;
+  position: relative;
 }
-.pin-default-container.pin-alternative-container{
-  width: 800px;
-  flex-direction: column;
+.container-pin{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-left: 6rem;
+  margin-right: 2.5rem;
+}
+.container-comments{
+  flex: none;
+  height: 100%;
+  width: 508px;
+  position: relative;
+  background-color: var(--g-colorGray0);
+}
+.pin-info-user{
+  padding: 2rem 2rem 0 2rem;
 }
 
-.save-and-comments{
-  width: 100%;
-  padding: 2rem 2rem 1.2rem 2rem;
-  position: relative;
-  z-index: 2;
-}
 .pin-info > :not(:last-child){
   margin-bottom: 1rem;
 }

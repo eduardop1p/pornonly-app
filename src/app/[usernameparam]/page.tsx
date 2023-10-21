@@ -71,7 +71,7 @@ export default async function Page({ params }: Props) {
     `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all-midia-userid/${userData._id}?page=1`,
     {
       method: 'GET',
-      next: { tags: ['pin'] },
+      cache: 'no-cache',
     }
   );
   const dataUserMidia = (await resUserMidia.json()) as MidiaType;
@@ -181,6 +181,7 @@ export default async function Page({ params }: Props) {
         token={token as string}
         isUniqueUser={isUniqueUser}
         userId={userData._id}
+        username={userData.username}
       />
     </main>
   );

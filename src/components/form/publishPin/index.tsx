@@ -19,6 +19,7 @@ import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
 import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
 import Loading from '../loading';
 import WaitingPin from '@/components/masonry/waitingPin';
+import revalidatePin from '@/services/revalidatePin';
 
 const ZodUserSchema = z.object({
   title: z
@@ -135,9 +136,7 @@ export default function PublishPin({
           setUploadProgress(percentage);
         },
       });
-      await axios.get(
-        `${process.env.NEXT_PUBLIC_URL_SITE}/api/revalidation?tag=pin&secret=${process.env.NEXT_PUBLIC_REVALIDATION_SECRET}`
-      );
+      await revalidatePin();
       handleServerSuccess('Pin adcionado ao feed');
     } catch (err: any) {
       if (get(err, 'response.data.error', false)) {

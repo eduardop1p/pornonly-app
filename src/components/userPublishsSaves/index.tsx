@@ -12,6 +12,7 @@ import { GlobalSuccess } from '../form/globalSuccess';
 import { GlobalError } from '../form/globalError';
 import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
 import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
+import revalidatePin from '@/services/revalidatePin';
 
 export default function UserPublishsSaves({
   publishsResults,
@@ -19,14 +20,16 @@ export default function UserPublishsSaves({
   token,
   isUniqueUser,
   userId,
+  username,
 }: {
   publishsResults: MidiaResultsType[];
   savesResults: MidiaResultsType[];
   token: string;
   isUniqueUser: boolean;
   userId: string;
+  username: string;
 }) {
-  const redirect = useRouter();
+  const router = useRouter();
 
   const [showPublish, setShowPublish] = useState(true);
   const [showSaves, setShowSaves] = useState(false);
@@ -156,8 +159,11 @@ export default function UserPublishsSaves({
         handleServerError(jsonRes.error as string);
         return;
       }
+      await revalidatePin();
       handleServerSuccess('Selecionados excluidos');
-      redirect.refresh();
+      setShowContainerSelectMode(false);
+      setPinSelectMode(false);
+      router.refresh();
     } catch (err) {
       handleServerError('Erro interno no servidor.');
     } finally {
@@ -263,6 +269,7 @@ export default function UserPublishsSaves({
               masonryPage="user-midia"
               userId={userId}
               masonryPublishs
+              username={username}
             />
           ) : (
             <div className={styles['none-results']}>
@@ -277,6 +284,7 @@ export default function UserPublishsSaves({
               visibleUserInfo={true}
               userId={userId}
               masonryPage="user-saves"
+              username={username}
             />
           ) : (
             <div className={styles['none-results']}>

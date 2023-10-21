@@ -7,7 +7,6 @@ import styles from './styles.module.css';
 import { MidiaResultsType, MidiaType } from '@/app/page';
 import Pin from '@/components/pin';
 import BackButton from '@/components/pin/backButton';
-import calHeight from '@/config/calcHeight';
 import SaveAndMore from '@/components/pin/saveAndMore';
 import Description from '@/components/pin/description';
 import Comments from '@/components/pin/comments';
@@ -158,64 +157,52 @@ export default async function Page({ params }: Props) {
     );
   }
 
-  const pinWidth = 500;
-  const pinHeight = calHeight({
-    customWidth: pinWidth,
-    originalHeight: dataPin.height,
-    originalWidth: dataPin.width,
-  });
-
   return (
     <main className={styles.main}>
       <BackButton />
-      <div className={styles['container']}>
-        <div
-          // eslint-disable-next-line
-          className={`${styles['pin-default-container']} ${pinHeight < 500 ? styles['pin-alternative-container'] : ''}`}
-          id="id-pin-default-container"
-        >
+      <div className={styles['container']} id="pin-container">
+        <div className={styles['container-pin']}>
           <Pin data={dataPin} />
-          <div className={styles['save-and-comments']}>
-            <div id="pin-info-user">
-              <SaveAndMore
-                isSave={isSave}
-                data={{
-                  _id: dataPin._id,
-                  title: dataPin.title,
-                  description: dataPin.description,
-                  url: dataPin.url,
-                  midiaType: dataPin.midiaType,
-                  username: dataPin.userId.username,
-                }}
-                isAuth={isAuth}
-                token={token as string}
+        </div>
+        <div className={styles['container-comments']}>
+          <div className={styles['pin-info-user']}>
+            <SaveAndMore
+              isSave={isSave}
+              data={{
+                _id: dataPin._id,
+                title: dataPin.title,
+                description: dataPin.description,
+                url: dataPin.url,
+                midiaType: dataPin.midiaType,
+                username: dataPin.userId.username,
+              }}
+              isAuth={isAuth}
+              token={token as string}
+            />
+            <div className={styles['pin-info']}>
+              <h2 className={styles['pin-title']}>{dataPin.title}</h2>
+              {dataPin.description && (
+                <Description description={dataPin.description} />
+              )}
+              <UserPin
+                profilePhoto={dataPin.userId.profilePhoto}
+                username={dataPin.userId.username}
+                midia={dataPin.userId.midia}
               />
-              <div className={styles['pin-info']}>
-                <h2 className={styles['pin-title']}>{dataPin.title}</h2>
-                {dataPin.description && (
-                  <Description description={dataPin.description} />
-                )}
-                <UserPin
-                  profilePhoto={dataPin.userId.profilePhoto}
-                  username={dataPin.userId.username}
-                  midia={dataPin.userId.midia}
-                />
-              </div>
             </div>
-            <div className={styles.comments}>
-              <Comments
-                midiaId={dataPin._id}
-                resultsComments={resultsComments}
-                totalComments={commentsMidia.totalResults}
-                dataPin={dataPin}
-                token={token as string}
-                isAuth={isAuth}
-                userId={userId}
-                pinHeightSmaller500={pinHeight < 500}
-              >
-                <UserAvatar containerHeight={48} containerWidth={48} noLink />
-              </Comments>
-            </div>
+          </div>
+          <div className={styles.comments}>
+            <Comments
+              midiaId={dataPin._id}
+              resultsComments={resultsComments}
+              totalComments={commentsMidia.totalResults}
+              dataPin={dataPin}
+              token={token as string}
+              isAuth={isAuth}
+              userId={userId}
+            >
+              <UserAvatar containerHeight={48} containerWidth={48} noLink />
+            </Comments>
           </div>
         </div>
       </div>

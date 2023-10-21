@@ -8,84 +8,87 @@ interface Props {
 
 export const Container = styled.div<TypeTheme & Props>`
   ${({ theme, $showComments }) => css`
-    position: relative;
-    overflow: hidden;
+    /* position: relative; */
+    /* overflow: hidden; */
 
-    & > .title-and-icon {
-      display: flex;
-      align-items: center;
+    & > .container-comments-scrollab {
+      padding: 0 2rem;
 
-      & > h2 {
-        font-size: ${theme.font_size.font_size_1_25rem};
-        font-weight: ${theme.font_weight.font_weight_500};
-        color: ${theme.colors.g_colorGray300};
-      }
-
-      & > .icon-container {
+      & > .title-and-icon {
         display: flex;
         align-items: center;
-        justify-content: center;
-        margin-left: 8px;
-        width: 40px;
-        height: 40px;
-        border-radius: 100%;
-        cursor: pointer;
 
-        &:hover {
-          background-color: ${theme.colors.g_colore9e9e9};
+        & > h2 {
+          font-size: ${theme.font_size.font_size_1_25rem};
+          font-weight: ${theme.font_weight.font_weight_500};
+          color: ${theme.colors.g_colorGray300};
         }
 
-        & > svg {
-          flex: none;
-          transition: rotate 200ms ease-in-out;
-          rotate: ${!$showComments ? '-90deg' : '0'};
-        }
-      }
-    }
+        & > .icon-container {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-left: 8px;
+          width: 40px;
+          height: 40px;
+          border-radius: 100%;
+          cursor: pointer;
 
-    & > .comments-and-users {
-      display: flex;
-      flex-direction: column;
-      margin-top: 10px;
-      position: absolute;
-      width: 100%;
-      height: calc(100% - 177px);
-      overflow-y: auto;
-      /* padding-bottom: 1rem; */
+          &:hover {
+            background-color: ${theme.colors.g_colore9e9e9};
+          }
 
-      &[data-show-comments='false'] {
-        display: none;
-      }
-
-      .container-comments {
-        margin-right: 1rem;
-
-        &:not(:last-child) {
-          margin-bottom: 1rem;
+          & > svg {
+            flex: none;
+            transition: rotate 200ms ease-in-out;
+            rotate: ${!$showComments ? '-90deg' : '0'};
+          }
         }
       }
 
-      .pin-no-comments {
-        position: absolute;
-        left: 50%;
-        top: 40%;
-        transform: translate(-50%, -40%);
-        width: calc(100% - 2rem);
+      & > .comments-and-users {
         display: flex;
         flex-direction: column;
-        align-items: center;
+        margin-top: 10px;
+        position: relative;
+        /* position: absolute; */
+        width: 100%;
+        height: 220px;
+        /* height: calc(100% - 177px); */
+        overflow-y: auto;
+        /* padding-bottom: 1rem; */
 
-        & > svg {
-          flex: none;
-          margin-bottom: 5px;
-          fill: ${theme.colors.g_color5f5f5f};
+        &[data-show-comments='false'] {
+          display: none;
         }
 
-        & > span {
-          text-align: center;
-          font-weight: ${theme.font_weight.font_weight_400};
-          font-size: ${theme.font_size.font_size_1rem};
-          color: ${theme.colors.g_color5f5f5f};
+        .container-comments {
+          margin-right: 1rem;
+          margin-bottom: 1rem;
+        }
+
+        .pin-no-comments {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+          width: calc(100% - 2rem);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          & > svg {
+            flex: none;
+            margin-bottom: 5px;
+            fill: ${theme.colors.g_color5f5f5f};
+          }
+
+          & > span {
+            text-align: center;
+            font-weight: ${theme.font_weight.font_weight_400};
+            font-size: ${theme.font_size.font_size_1rem};
+            color: ${theme.colors.g_color5f5f5f};
+          }
         }
       }
     }
@@ -100,26 +103,30 @@ export const Container = styled.div<TypeTheme & Props>`
       width: 100%;
       border-top: 1px solid ${theme.colors.g_colorBgRgb_229};
 
-      & > .commet-title-and-likes {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 10px;
+      & > div {
+        padding: 0 2rem 2rem;
 
-        & > .comments-count {
-          font-size: ${theme.font_size.font_size_1_25rem};
-          font-weight: ${theme.font_weight.font_weight_600};
-          color: ${theme.colors.g_colorGray300};
-        }
-
-        & > div {
+        & > .commet-title-and-likes {
           display: flex;
           align-items: center;
+          justify-content: space-between;
+          margin-bottom: 10px;
 
-          & > span {
+          & > .comments-count {
+            font-size: ${theme.font_size.font_size_1_25rem};
+            font-weight: ${theme.font_weight.font_weight_600};
             color: ${theme.colors.g_colorGray300};
-            font-size: ${theme.font_size.font_size_1rem};
-            font-weight: ${theme.font_weight.font_weight_500};
+          }
+
+          & > div {
+            display: flex;
+            align-items: center;
+
+            & > span {
+              color: ${theme.colors.g_colorGray300};
+              font-size: ${theme.font_size.font_size_1rem};
+              font-weight: ${theme.font_weight.font_weight_500};
+            }
           }
         }
       }

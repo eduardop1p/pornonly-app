@@ -14,7 +14,7 @@
   border-radius: 100%;
 }
 .container:hover{
-  background-color: var(--g-colore9e9e9);
+  background-color: var(--color-border-container01);
 }
 
 .container > svg{
