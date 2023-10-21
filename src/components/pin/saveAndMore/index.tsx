@@ -50,6 +50,17 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
   const newHeight = document.documentElement.clientHeight;
   const newWidth = Math.round(newHeight * pinProportion);
 
+  useEffect(() => {
+    const onresize = () => {
+      const pinProportion = data.width / data.height;
+      const newHeight = document.documentElement.clientHeight;
+      const newWidth = Math.round(newHeight * pinProportion);
+    };
+    window.addEventListener('resize', onresize);
+
+    return () => window.removeEventListener('resize', onresize);
+  }, [data]);
+
   const handleOnBlur = (event: FocusEvent<HTMLDivElement>) => {
     if (!refMoreOptions.current?.contains(event.relatedTarget)) {
       setShowMoreOptions(false);
