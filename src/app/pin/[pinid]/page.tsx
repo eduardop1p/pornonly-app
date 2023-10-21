@@ -70,7 +70,7 @@ const getPinToId = async (pinId: string) => {
     const data = (await response.json()) as MidiaResultsType;
     return data;
   } catch {
-    throw new Error('Internal server error.');
+    notFound();
   }
 };
 
@@ -164,8 +164,8 @@ export default async function Page({ params }: Props) {
         <div className={styles['container-pin']}>
           <Pin data={dataPin} />
         </div>
-        <div className={styles['container-comments']}>
-          <div className={styles['pin-info-user']}>
+        <div className={styles['container-comments']} id="container-comments">
+          <div className={styles['pin-info-user']} id="pin-info-user">
             <SaveAndMore
               isSave={isSave}
               data={{

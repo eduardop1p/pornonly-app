@@ -64,7 +64,10 @@ export const Container = styled.div<TypeTheme & Props>`
 
         .container-comments {
           margin-right: 1rem;
-          margin-bottom: 1rem;
+
+          &:not(p) {
+            margin-bottom: 1rem;
+          }
         }
 
         .pin-no-comments {

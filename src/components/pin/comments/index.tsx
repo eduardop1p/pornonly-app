@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 'use client';
 
-import { useState, ReactNode, useRef } from 'react';
+import { useState, ReactNode, useRef, useEffect } from 'react';
 import type { Dispatch, SetStateAction, MutableRefObject } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
@@ -54,6 +54,21 @@ export default function Comments({
   const { handleServerError, msgGlobalError, showGlobalError } =
     useGlobalErrorTime();
   let currentPage = useRef(1);
+  const refCommentsAndUsers = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const containerCommentsHeight = document.querySelector(
+      '#container-comments'
+    )?.clientHeight as number;
+    const pinUserInfoHeight = document.querySelector('#pin-info-user')
+      ?.clientHeight as number;
+
+    const dinamicHeight = pinUserInfoHeight + 216;
+    if (refCommentsAndUsers.current) {
+      // eslint-disable-next-line
+      refCommentsAndUsers.current.style.height = `${containerCommentsHeight - dinamicHeight}px`;
+    }
+  }, []);
 
   const handleLikeComment = async () => {
     if (!isAuth) {
@@ -159,6 +174,7 @@ export default function Comments({
           className="comments-and-users"
           id="scroll-comments-and-users"
           data-show-comments={showComments}
+          ref={refCommentsAndUsers}
         >
           {allCommentsInPin ? (
             <InfiniteScroll
@@ -181,8 +197,9 @@ export default function Comments({
                   style={{
                     textAlign: 'center',
                     fontSize: '15px',
-                    fontWeight: 500,
-                    marginTop: '-5px',
+                    color: 'var(--g-color5f5f5f)',
+                    fontWeight: 400,
+                    marginTop: '-8px',
                     marginBottom: '5px',
                   }}
                 >{`Isso é tudo`}</p>
