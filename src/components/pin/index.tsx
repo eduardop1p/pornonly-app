@@ -86,6 +86,7 @@ export default function Pin({ data }: Props) {
         width: `${newWidth}px`,
         height: `${newHeight}px`,
       }}
+      id="pin"
     >
       {pinIsLoading && newHeight && newWidth && (
         <LoadingPin>

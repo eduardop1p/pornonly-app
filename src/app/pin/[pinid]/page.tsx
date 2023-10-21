@@ -175,6 +175,8 @@ export default async function Page({ params }: Props) {
                 url: dataPin.url,
                 midiaType: dataPin.midiaType,
                 username: dataPin.userId.username,
+                height: dataPin.height,
+                width: dataPin.width,
               }}
               isAuth={isAuth}
               token={token as string}

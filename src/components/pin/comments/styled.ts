@@ -53,7 +53,7 @@ export const Container = styled.div<TypeTheme & Props>`
         position: relative;
         /* position: absolute; */
         width: 100%;
-        height: 220px;
+        height: 0;
         /* height: calc(100% - 177px); */
         overflow-y: auto;
         /* padding-bottom: 1rem; */

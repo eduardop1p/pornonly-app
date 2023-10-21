@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
-import { useState, useRef, FocusEvent } from 'react';
+import { useState, useRef, FocusEvent, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 
-import { Container } from './styled';
+import { Container, ContainerFullScreen } from './styled';
 import Loading from '../../form/loading';
 import { GlobalError } from '@/components/form/globalError';
 import { GlobalSuccess } from '@/components/form/globalSuccess';
@@ -21,6 +21,8 @@ interface Props {
     midiaType?: 'video' | 'img' | 'gif';
     username: string;
     description: string;
+    height: number;
+    width: number;
   };
   isAuth: boolean;
   token: string;
@@ -31,6 +33,7 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
   const router = useRouter();
   const pathName = usePathname();
 
+  const [showFullScreen, setShowFullScreen] = useState(false);
   const [showMoreOptions, setShowMoreOptions] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [pinIsSave, setPinIsSave] = useState(isSave);
@@ -42,6 +45,10 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
   const refMoreOptions = useRef<HTMLDivElement | null>(null);
   const refBtnMoreOptions = useRef<HTMLButtonElement | null>(null);
   const fileName = data.url.split('/').pop() as string;
+
+  const pinProportion = data.width / data.height;
+  const newHeight = document.documentElement.clientHeight;
+  const newWidth = Math.round(newHeight * pinProportion);
 
   const handleOnBlur = (event: FocusEvent<HTMLDivElement>) => {
     if (!refMoreOptions.current?.contains(event.relatedTarget)) {
@@ -150,6 +157,37 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
 
   return (
     <Container id="save-and-share">
+      {showFullScreen && data.midiaType !== 'video' && (
+        <ContainerFullScreen onClick={() => setShowFullScreen(false)}>
+          <button
+            type="button"
+            className="close-full-screen"
+            onClick={() => setShowFullScreen(false)}
+          >
+            <svg
+              height={22}
+              width={22}
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              aria-label=""
+              role="img"
+            >
+              <path d="m15.18 12 7.16-7.16c.88-.88.88-2.3 0-3.18-.88-.88-2.3-.88-3.18 0L12 8.82 4.84 1.66c-.88-.88-2.3-.88-3.18 0-.88.88-.88 2.3 0 3.18L8.82 12l-7.16 7.16c-.88.88-.88 2.3 0 3.18.44.44 1.01.66 1.59.66.58 0 1.15-.22 1.59-.66L12 15.18l7.16 7.16c.44.44 1.01.66 1.59.66.58 0 1.15-.22 1.59-.66.88-.88.88-2.3 0-3.18L15.18 12z"></path>
+            </svg>
+          </button>
+          <div
+            className="pin-full-screen"
+            onClick={event => event.stopPropagation()}
+          >
+            <Image
+              src={data.url}
+              height={newHeight}
+              width={newWidth}
+              alt={data.title}
+            />
+          </div>
+        </ContainerFullScreen>
+      )}
       {isLoading && <Loading />}
       <GlobalError showError={showGlobalError} errorMsg={msgGlobalError} />
       <GlobalSuccess
@@ -169,45 +207,59 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
           />
         )}
       </GlobalSuccess>
-      <div
-        className="more-options"
-        onBlur={event => handleOnBlur(event)}
-        tabIndex={0}
-        ref={refMoreOptions}
-      >
-        <button
-          ref={refBtnMoreOptions}
-          type="button"
-          className="btn-more-options"
-          data-btn-more-options-active={showMoreOptions}
-          onClick={() => {
-            setShowMoreOptions(!showMoreOptions);
-            handleAddAnimationClick();
-          }}
-        >
-          <svg
-            height="20"
-            width="20"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-            aria-label=""
-            role="img"
-          >
-            <path d="M12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3M3 9c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm18 0c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3z"></path>
-          </svg>
-        </button>
+      <div className="container-more-aptions-and-compress">
         <div
-          className="container-more-options"
-          data-more-options-active={showMoreOptions}
-          onClick={event => event.stopPropagation()}
+          className="more-options"
+          onBlur={event => handleOnBlur(event)}
+          tabIndex={0}
+          ref={refMoreOptions}
         >
-          <button type="button" onClick={handleDawnload}>
-            Baixar pin
+          <button
+            ref={refBtnMoreOptions}
+            type="button"
+            className="btn-more-options"
+            data-btn-more-options-active={showMoreOptions}
+            onClick={() => {
+              setShowMoreOptions(!showMoreOptions);
+              handleAddAnimationClick();
+            }}
+          >
+            <svg
+              height="20"
+              width="20"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              aria-label=""
+              role="img"
+            >
+              <path d="M12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3M3 9c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm18 0c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3z"></path>
+            </svg>
           </button>
-          <button type="button" onClick={handleSharePin}>
-            Compatilhar
-          </button>
+          <div
+            className="container-more-options"
+            data-more-options-active={showMoreOptions}
+            onClick={event => event.stopPropagation()}
+          >
+            <button type="button" onClick={handleDawnload}>
+              Baixar pin
+            </button>
+            <button type="button" onClick={handleSharePin}>
+              Compatilhar
+            </button>
+          </div>
         </div>
+        {data.midiaType !== 'video' && (
+          <button type="button" onClick={() => setShowFullScreen(true)}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height={20}
+              width={20}
+              viewBox="0 0 448 512"
+            >
+              <path d="M160 64c0-17.7-14.3-32-32-32s-32 14.3-32 32v64H32c-17.7 0-32 14.3-32 32s14.3 32 32 32h96c17.7 0 32-14.3 32-32V64zM32 320c-17.7 0-32 14.3-32 32s14.3 32 32 32H96v64c0 17.7 14.3 32 32 32s32-14.3 32-32V352c0-17.7-14.3-32-32-32H32zM352 64c0-17.7-14.3-32-32-32s-32 14.3-32 32v96c0 17.7 14.3 32 32 32h96c17.7 0 32-14.3 32-32s-14.3-32-32-32H352V64zM320 320c-17.7 0-32 14.3-32 32v96c0 17.7 14.3 32 32 32s32-14.3 32-32V384h64c17.7 0 32-14.3 32-32s-14.3-32-32-32H320z" />
+            </svg>
+          </button>
+        )}
       </div>
       {pinIsSave ? (
         <button
