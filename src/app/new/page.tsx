@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: 'Pornonly - Recentes',
 };
 
-export default async function New() {
+export default async function Page() {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all-midia-day?page=1`,
     {

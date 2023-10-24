@@ -142,11 +142,12 @@ export default function PublishPin({
       await revalidatePin();
       handleServerSuccess('Pin adcionado ao feed');
     } catch (err: any) {
+      // console.log(err);
       if (get(err, 'response.data.error', false)) {
         handleServerError(err.response.data.error);
         return;
       }
-      handleServerError('Erro interno no servidor.');
+      handleServerError('Parece que você está offline');
     } finally {
       setIsLoading(false);
       setUploadProgress(0);

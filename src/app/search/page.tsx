@@ -19,7 +19,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function New({ searchParams: { search_query } }: Props) {
+export default async function Page({ searchParams: { search_query } }: Props) {
   const res = await fetch(
     // eslint-disable-next-line
     `${process.env.NEXT_PUBLIC_URL_API

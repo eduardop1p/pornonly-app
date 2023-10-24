@@ -31,7 +31,7 @@ export interface MidiaResultsType {
   createIn: string;
 }
 
-export default async function Home() {
+export default async function Page() {
   const midiaType = '';
   const order = 'popular';
 

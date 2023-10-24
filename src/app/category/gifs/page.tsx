@@ -3,20 +3,18 @@ import { Metadata } from 'next';
 import styles from './page.module.css';
 
 import Masonry from '@/components/masonry';
-import { MidiaType } from '../page';
-import NotFoundPage from '../not-found';
+import { MidiaType } from '../../page';
+import NotFoundPage from '../../not-found';
 
 export const metadata: Metadata = {
-  title: 'Pornonly - Ruivas',
+  title: 'Pornonly - Gifs',
 };
 
 export default async function Page() {
-  const redheadsTags = ['ruivas', 'ruiva', 'redheads', 'redhead', 'red'];
+  const order = 'popular';
 
   const res = await fetch(
-    // eslint-disable-next-line
-    `${process.env.NEXT_PUBLIC_URL_API
-    }/midia/search-tags?search_tags=${redheadsTags.join(',')}&page=1`,
+    `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all-midia-type/gif?order=${order}&page=1`,
     {
       method: 'GET',
       next: { tags: ['pin'] },
@@ -31,12 +29,7 @@ export default async function Page() {
 
   return (
     <main className={styles.main}>
-      <Masonry
-        masonryPage="readHeads"
-        tags={redheadsTags}
-        results={results}
-        visibleUserInfo={true}
-      />
+      <Masonry masonryPage="gif" results={results} visibleUserInfo={true} />
     </main>
   );
 }

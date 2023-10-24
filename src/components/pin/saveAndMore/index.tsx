@@ -179,6 +179,7 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
           </button>
           <div
             className="pin-full-screen"
+            style={{ width: isLoadingFullScreen ? '100%' : 'auto' }}
             onClick={event => event.stopPropagation()}
           >
             {isLoadingFullScreen && <LoadingFullScreen fullScreen />}

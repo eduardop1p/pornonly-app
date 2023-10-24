@@ -31,7 +31,7 @@ interface Props {
   visibleUserInfo?: boolean;
   masonryPublishs?: boolean;
   // eslint-disable-next-line
-  masonryPage: 'home' | 'new' | 'readHeads' | 'search' | 'user-midia' | 'user-saves' | 'tags';
+  masonryPage: 'home' | 'new' | 'readHeads' | 'img' | 'video' | 'gif' | 'search' | 'user-midia' | 'user-saves' | 'tags';
   tags?: string[];
   search_query?: string;
   userId?: string;
@@ -140,6 +140,39 @@ export default function Masonry({
       }
       case 'new': {
         useFetchItemsNew(setHasMore, currentPage, setStResults);
+        return;
+      }
+      case 'img': {
+        midiaType.current = 'img';
+        useFetchItemsMidiaType(
+          setHasMore,
+          currentPage,
+          order,
+          midiaType,
+          setStResults
+        );
+        return;
+      }
+      case 'video': {
+        midiaType.current = 'video';
+        useFetchItemsMidiaType(
+          setHasMore,
+          currentPage,
+          order,
+          midiaType,
+          setStResults
+        );
+        return;
+      }
+      case 'gif': {
+        midiaType.current = 'gif';
+        useFetchItemsMidiaType(
+          setHasMore,
+          currentPage,
+          order,
+          midiaType,
+          setStResults
+        );
         return;
       }
       case 'tags': {
@@ -440,6 +473,42 @@ function useFetchItemsNew(
 
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all-midia-day?page=${currentPage.current}`,
+        {
+          method: 'GET',
+          cache: 'no-cache',
+        }
+      );
+
+      const data = await res.json();
+      const results = data.midia.results as MidiaResultsType[];
+      if (!results.length) {
+        setHasMore(false);
+        return;
+      }
+      setStResults(state => [...state, ...results]);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  return fetchItems();
+}
+
+function useFetchItemsMidiaType(
+  setHasMore: Dispatch<SetStateAction<boolean>>,
+  currentPage: MutableRefObject<number>,
+  order: MutableRefObject<string>,
+  midiaType: MutableRefObject<string>,
+  setStResults: Dispatch<SetStateAction<MidiaResultsType[]>>
+) {
+  // console.log(currentPage.current);
+  // console.log(midiaType.current);
+  const fetchItems = async () => {
+    try {
+      currentPage.current += 1;
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all-midia-type/${midiaType.current}?order=${order.current}&page=${currentPage.current}`,
         {
           method: 'GET',
           cache: 'no-cache',

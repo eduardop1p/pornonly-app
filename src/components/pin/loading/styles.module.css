@@ -14,7 +14,7 @@
 }
 .container[data-full-screen='true']{
   border-radius: 0 !important;
-  /* background-color: transparent; */
+  background-color: transparent;
 }
 
 .icon-container{
@@ -25,6 +25,7 @@
   border-radius: 100%;
   overflow: hidden;
 }
+
 
 @keyframes rotateLoading {
   100%{

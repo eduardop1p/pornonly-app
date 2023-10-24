@@ -16,6 +16,7 @@ import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
 import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
 import { MidiaResultsType } from '@/app/page';
 import { useRouter, usePathname } from 'next/navigation';
+import revalidatePin from '@/services/revalidatePin';
 // import { default as LoadingHeight } from '../loading';
 
 export default function Comments({
@@ -70,7 +71,7 @@ export default function Comments({
     }
   }, []);
 
-  const handleLikeComment = async () => {
+  const handleLikePin = async () => {
     if (!isAuth) {
       router.push(`/login?from=${pathName}`);
       return;
@@ -94,6 +95,7 @@ export default function Comments({
         }
       );
       if (!res.ok) throw new Error('servererror');
+      await revalidatePin();
       // router.refresh();
     } catch (err) {
       setIsLikePin(false);
@@ -106,7 +108,7 @@ export default function Comments({
     }
   };
 
-  const handleUnClickComment = async () => {
+  const handleUnClickPin = async () => {
     if (!isAuth) {
       router.push(`/login?from=${pathName}`);
       return;
@@ -130,6 +132,7 @@ export default function Comments({
         }
       );
       if (!res.ok) throw new Error('server error');
+      await revalidatePin();
       // router.refresh();
     } catch (err) {
       setIsLikePin(true);
@@ -221,7 +224,7 @@ export default function Comments({
                     parentCommentIndex={index}
                     lastIndex={
                       stResultsComments.length == index + 1 &&
-                      stResultsComments.length > 2
+                      stResultsComments.length > 1
                     }
                     setAllCommentsInPin={setAllCommentsInPin}
                   />
@@ -257,7 +260,7 @@ export default function Comments({
               <span>{dataPin.likes.likes}</span>
               {isLikePin ? (
                 <LikeContainer data-is-like={isLikePin}>
-                  <button type="button" onClick={handleUnClickComment}>
+                  <button type="button" onClick={handleUnClickPin}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 512 512"
@@ -269,7 +272,7 @@ export default function Comments({
                 </LikeContainer>
               ) : (
                 <LikeContainer>
-                  <button type="button" onClick={handleLikeComment}>
+                  <button type="button" onClick={handleLikePin}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 512 512"
