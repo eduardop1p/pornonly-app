@@ -47,6 +47,13 @@ const ZodUserSchema = z.object({
       //   });
       // }
     }),
+  tags: z
+    .string()
+    .array()
+    .refine(val => {
+      console.log(val);
+      return val.length >= 2 && val.length <= 2;
+    }, 'Você tem que adcionar no minimo 2 tags.'),
   midia: z
     .instanceof(FileList)
     .refine(val => val.item(0) instanceof File, 'Nenhum arquivo adcionado.'),
@@ -66,6 +73,7 @@ export default function PublishPin({
     handleSubmit,
     formState: { errors },
     resetField,
+    setValue,
   } = useForm<BodyFile>({
     resolver: zodResolver(ZodUserSchema),
   });
@@ -104,6 +112,10 @@ export default function PublishPin({
     );
     setWidthInputNameTags(totalWidthAllNameTags);
   }, [valueInputTags]);
+
+  useEffect(() => {
+    setValue('tags', valueInputTags);
+  }, [valueInputTags, setValue]);
 
   const handleSubmitFile: SubmitHandler<BodyFile> = async (body, event) => {
     event?.preventDefault();
@@ -283,6 +295,7 @@ export default function PublishPin({
                     setFileContent({ src: '', file: null });
                     resetField('midia');
                     resetField('title');
+                    resetField('tags');
                     setDescriptionValue('');
                     setValueInputTags([]);
                   }}
@@ -453,15 +466,22 @@ export default function PublishPin({
                   value={valueTag}
                   placeholder="Adcione tags ao seu pin"
                   maxLength={10}
-                  onChange={event => setValueTag(event.target.value)}
+                  {...register('tags', {
+                    onChange(event) {
+                      setValueTag(event.target.value);
+                    },
+                    onBlur() {
+                      setTypeBtn('submit');
+                      setInputTagsFocus(false);
+                      handleAddTag();
+                    },
+                    setValueAs(value) {
+                      return valueInputTags;
+                    },
+                  })}
                   onFocus={() => {
                     setTypeBtn('button');
                     setInputTagsFocus(true);
-                  }}
-                  onBlur={() => {
-                    setTypeBtn('submit');
-                    setInputTagsFocus(false);
-                    handleAddTag();
                   }}
                 />
               )}
@@ -485,6 +505,7 @@ export default function PublishPin({
                 <span>{5 - valueInputTags.length}</span>
               </div>
             )}
+            {errors.tags && <ErrorMsg errorMsg={errors.tags.message} />}
           </div>
         </div>
       </form>
