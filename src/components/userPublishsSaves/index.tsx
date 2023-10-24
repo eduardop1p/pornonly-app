@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef, FocusEvent } from 'react';
-import { useRouter } from 'next/navigation';
 
 import styles from './styles.module.css';
 
@@ -29,8 +28,7 @@ export default function UserPublishsSaves({
   userId: string;
   username: string;
 }) {
-  const router = useRouter();
-
+  const [stPublishsResults, setStPublishsResults] = useState(publishsResults);
   const [showPublish, setShowPublish] = useState(true);
   const [showSaves, setShowSaves] = useState(false);
   const [showContainerSelectMode, setShowContainerSelectMode] = useState(false);
@@ -43,7 +41,7 @@ export default function UserPublishsSaves({
 
   const refContainerManageMoreOptions = useRef<HTMLDivElement | null>(null);
   const refBtnManageMoreOptions = useRef<HTMLButtonElement | null>(null);
-  const pinsIdsRemoveArray = useRef<{ id: string; key: string }[]>([]);
+  const pinsIdsRemoveArray = useRef<{ id?: string; key: string }[]>([]);
   const refPinSelectMode = useRef<boolean | null>(null);
   refPinSelectMode.current = pinSelectMode;
 
@@ -56,11 +54,19 @@ export default function UserPublishsSaves({
       if (!pinElement) return;
       pinElement.onclick = event => {
         const currentTarget = event.currentTarget as HTMLDivElement;
-        const index = currentTarget.getAttribute('data-index') as unknown;
-        const { _id, url } = publishsResults[index as number];
-        const key = url.split('/').slice(-2).join('/');
+        const index = parseInt(
+          currentTarget.getAttribute('data-index') as string
+        );
+        const { _id, url, thumb } = stPublishsResults[index];
         if (!currentTarget.classList.contains('selected')) {
-          pinsIdsRemoveArray.current.push({ id: _id, key });
+          if (thumb)
+            pinsIdsRemoveArray.current.push({
+              key: new URL(thumb).pathname.slice(1),
+            });
+          pinsIdsRemoveArray.current.push({
+            id: _id,
+            key: new URL(url).pathname.slice(1),
+          });
           currentTarget.classList.add('selected');
         } else {
           pinsIdsRemoveArray.current = pinsIdsRemoveArray.current.filter(
@@ -70,7 +76,7 @@ export default function UserPublishsSaves({
         }
       };
     },
-    [pinsIdsRemoveArray, publishsResults]
+    [pinsIdsRemoveArray, stPublishsResults]
   );
 
   const handleAddSelectDiv = useCallback(() => {
@@ -163,7 +169,11 @@ export default function UserPublishsSaves({
       handleServerSuccess('Selecionados excluidos');
       setShowContainerSelectMode(false);
       setPinSelectMode(false);
-      router.refresh();
+      setStPublishsResults(state =>
+        state.filter(itemP =>
+          pinsIdsRemoveArray.current.every(itemC => itemP._id !== itemC.id)
+        )
+      );
     } catch (err) {
       handleServerError('Erro interno no servidor.');
     } finally {
@@ -262,9 +272,9 @@ export default function UserPublishsSaves({
 
       <div className={styles['publishs-or-saves']}>
         <div data-active={showPublish}>
-          {publishsResults.length ? (
+          {stPublishsResults.length ? (
             <Masonry
-              results={publishsResults}
+              results={stPublishsResults}
               visibleUserInfo={false}
               masonryPage="user-midia"
               userId={userId}

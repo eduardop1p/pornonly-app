@@ -9,6 +9,7 @@ import { z } from 'zod';
 import axios from 'axios';
 import { get } from 'lodash';
 import CircularProgress from '@mui/material/CircularProgress';
+import VideoSnapshot from 'video-snapshot';
 
 import { Container } from './styled';
 
@@ -48,8 +49,7 @@ const ZodUserSchema = z.object({
     }),
   midia: z
     .instanceof(FileList)
-    .transform(val => val.item(0))
-    .refine(val => val instanceof File, 'Nenhum arquivo adcionado.'),
+    .refine(val => val.item(0) instanceof File, 'Nenhum arquivo adcionado.'),
 });
 
 export type BodyFile = z.infer<typeof ZodUserSchema>;
@@ -93,7 +93,8 @@ export default function PublishPin({
     useGlobalErrorTime();
   const { handleServerSuccess, msgGlobalSuccess, showGlobalSuccess } =
     useGlobalSuccessTime();
-  const fileScrRef = useRef('');
+  const fileScrRef = useRef(fileContent.src);
+  const thumbBlobVideoRef = useRef<Blob | string>('');
 
   useEffect(() => {
     const allNameTags = Array.from(document.body.querySelectorAll('.name-tag'));
@@ -111,12 +112,14 @@ export default function PublishPin({
     ) as HTMLButtonElement;
     if (isLoading) return;
 
-    const { title, midia } = body;
+    const { title } = body;
+    const midia = body.midia[0] as Blob;
     const description = descriptionValue.trim();
     const tags = valueInputTags.join(' ');
 
     const formData = new FormData();
-    formData.append('midia', midia as Blob);
+    formData.append('midia', midia);
+    formData.append('thumb', thumbBlobVideoRef.current);
     formData.append('title', title);
     formData.append('description', description);
     formData.append('tags', tags);
@@ -150,14 +153,14 @@ export default function PublishPin({
     }
   };
 
-  const handleChangeFile = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files === null) return;
+  const handleChangeFile = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.item(0);
+    if (!file) return;
 
-    const file = event.target.files[0];
     const maxFileSize = 500 * 1024 * 1024;
     // console.log(`${size}MB`);
     if (file.size > maxFileSize) {
-      handleServerError('Arquivo muito grande.');
+      handleServerError('Arquivo muito grande');
       return;
     }
 
@@ -165,6 +168,25 @@ export default function PublishPin({
     setFileContent({ src, file });
     setFileType(file.type);
     fileScrRef.current = src;
+
+    if (file.type.includes('video')) {
+      await handleGetThumbVideo(file);
+    } else {
+      thumbBlobVideoRef.current = '';
+    }
+  };
+
+  const handleGetThumbVideo = async (videoFile: Blob) => {
+    const snapshoter = new VideoSnapshot(videoFile);
+    const base64Image = await snapshoter.takeSnapshot();
+    const byteCharacters = atob(base64Image.split(',')[1]);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: 'image/jpeg' });
+    thumbBlobVideoRef.current = blob;
   };
 
   const handleChangeTextatera = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -221,7 +243,10 @@ export default function PublishPin({
         successMsg={msgGlobalSuccess}
         showSuccess={showGlobalSuccess}
       >
-        {fileType.includes('image') ? (
+        {fileType.includes('video') && (
+          <video src={fileScrRef.current} controls={false}></video>
+        )}
+        {fileType.includes('image') && (
           <Image
             src={fileScrRef.current}
             alt="preview"
@@ -229,8 +254,6 @@ export default function PublishPin({
             priority
             height={25}
           />
-        ) : (
-          <video src={fileScrRef.current} controls={false}></video>
         )}
       </GlobalSuccess>
 
@@ -258,6 +281,9 @@ export default function PublishPin({
                   onClick={() => {
                     setFileContent({ src: '', file: null });
                     resetField('midia');
+                    resetField('title');
+                    setDescriptionValue('');
+                    setValueInputTags([]);
                   }}
                 >
                   <svg
@@ -284,19 +310,13 @@ export default function PublishPin({
                       src={fileContent.src}
                       controls={true}
                       onWaiting={event =>
-                        handleWaitingVideo(
-                          event.currentTarget as HTMLVideoElement
-                        )
+                        handleWaitingVideo(event.currentTarget)
                       }
                       onPlaying={event =>
-                        handleNoWaitingVideo(
-                          event.currentTarget as HTMLVideoElement
-                        )
+                        handleNoWaitingVideo(event.currentTarget)
                       }
                       onLoadedMetadata={event =>
-                        handleVideoCompleteLoad(
-                          event.currentTarget as HTMLVideoElement
-                        )
+                        handleVideoCompleteLoad(event.currentTarget)
                       }
                     ></video>
                     <WaitingPin alonePin />
@@ -384,6 +404,7 @@ export default function PublishPin({
               name="description"
               placeholder="Adcione uma descrição"
               maxLength={500}
+              value={descriptionValue}
               onChange={handleChangeTextatera}
               onFocus={() => setInputDescriptionInFocus(true)}
               onBlur={() => setInputDescriptionInFocus(false)}

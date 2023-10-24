@@ -4,6 +4,7 @@
 
 import Image from 'next/image';
 import { useEffect, useState, useCallback, useRef } from 'react';
+import type { MouseEvent } from 'react';
 import type { Dispatch, SetStateAction, MutableRefObject } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import Link from 'next/link';
@@ -19,7 +20,6 @@ import { usePathname } from 'next/navigation';
 import { Container, MasonryContainer } from './styled';
 import { MidiaResultsType } from '@/app/page';
 import calHeight from '@/config/calcHeight';
-import videoDuration from '@/config/calcDuration';
 import LoadingPin from './LoadingPin';
 import WaitingPin from './waitingPin';
 import UserPin from './userPin';
@@ -94,45 +94,37 @@ export default function Masonry({
     return () => removeEventListener('resize', onresize);
   }, [columnCount]);
 
-  const handleRemoveLoading = useCallback((element: Element) => {
-    const loading = element.querySelector('#loading-pin') as HTMLDivElement;
-    setTimeout(() => {
-      loading.style.display = 'none';
-    }, 100);
+  const handleRemoveLoading = useCallback((element: Element | null) => {
+    const loading = element?.querySelector('#loading-pin') as HTMLDivElement;
+    loading.style.display = 'none';
   }, []);
 
-  const handleAddDurationVideo = useCallback(
-    (videoTime: HTMLSpanElement, duration: string) => {
-      videoTime.innerText = duration;
-    },
-    []
-  );
-
-  const handleNoWaitingVideo = useCallback((element: Element) => {
-    const waitingPin = element.querySelector('#waiting-pin') as HTMLDivElement;
-    waitingPin.classList.remove('waiting');
+  const handleNoWaitingVideo = useCallback((element: Element | null) => {
+    const waitingPin = element?.querySelector('#waiting-pin');
+    waitingPin?.classList.remove('waiting');
   }, []);
 
   const handleVideoCompleteLoad = useCallback(
-    (element: Element) => {
-      const videoTime = element.querySelector('.video-time') as HTMLSpanElement;
-      const videoDurationC = element.querySelector('video')?.duration as number;
-      handleAddDurationVideo(videoTime, videoDuration(videoDurationC));
+    (element: Element | null) => {
       handleNoWaitingVideo(element);
-      handleRemoveLoading(element);
+      // handleRemoveLoading(element);
     },
-    [handleAddDurationVideo, handleNoWaitingVideo, handleRemoveLoading]
+    [handleNoWaitingVideo]
   );
 
-  const handleVideoPlay = useCallback((element: Element) => {
-    const videoTime = element.querySelector('.video-time') as HTMLSpanElement;
-    videoTime.classList.add('hidden-video-time');
+  const handleVideoPlay = useCallback((element: Element | null) => {
+    // const videoTime = element?.querySelector('.video-time');
+    // videoTime?.classList.add('hidden-video-time');
   }, []);
 
-  const handleWaitingVideo = useCallback((element: Element) => {
-    const waitingPin = element.querySelector('#waiting-pin') as HTMLDivElement;
-    waitingPin.classList.add('waiting');
+  const handleWaitingVideo = useCallback((element: Element | null) => {
+    const waitingPin = element?.querySelector('#waiting-pin');
+    waitingPin?.classList.add('waiting');
   }, []);
+
+  const handleGetElement = (id: string, index: number) => {
+    return document.querySelector(`#pin-${id}-${index}`);
+  };
 
   const handleManageNextPage = () => {
     switch (masonryPage) {
@@ -185,6 +177,28 @@ export default function Masonry({
     }
   };
 
+  const handlePLayVideo = (event: MouseEvent<HTMLAnchorElement>) => {
+    // if (event.target !== event.currentTarget) return event.stopPropagation();
+    const currentTarget = event.currentTarget;
+    const pinPLay = currentTarget.querySelector('.pin-play') as HTMLDivElement;
+    const pinThumb = currentTarget.querySelector('img') as HTMLImageElement;
+    const pinVideo = currentTarget.querySelector('video') as HTMLVideoElement;
+    pinThumb.style.zIndex = '1';
+    pinPLay.style.zIndex = '2';
+    pinVideo.currentTime = 0;
+    if (pinVideo.readyState >= 1) pinVideo.play();
+  };
+
+  const handlePauseVideo = (event: MouseEvent<HTMLAnchorElement>) => {
+    const currentTarget = event.currentTarget;
+    const pinPLay = currentTarget.querySelector('.pin-play') as HTMLDivElement;
+    const pinThumb = currentTarget.querySelector('img') as HTMLImageElement;
+    const pinVideo = currentTarget.querySelector('video') as HTMLVideoElement;
+    pinPLay.style.zIndex = '1';
+    pinThumb.style.zIndex = '2';
+    if (pinVideo.readyState >= 1) pinVideo.pause();
+  };
+
   return (
     <Container>
       {currentPage.current > 2 && <ScrollTop />}
@@ -223,7 +237,9 @@ export default function Masonry({
                     <Link
                       href={`/pin/${midiaValue._id}`}
                       className="pin"
-                      id={`pin-${midiaValue._id}-${midiaValue.midiaType}-${midiaIndex}`}
+                      id={`pin-${midiaValue._id}-${midiaIndex}`}
+                      onMouseEnter={handlePLayVideo}
+                      onMouseLeave={handlePauseVideo}
                       style={{
                         width: `${columnWidth.toFixed(0)}px`,
                         height: `${calHeight({
@@ -233,7 +249,7 @@ export default function Masonry({
                         })}px`,
                       }}
                     >
-                      <span className="video-time">0:00</span>
+                      <span className="video-time">{midiaValue.duration}</span>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width={30}
@@ -243,38 +259,52 @@ export default function Masonry({
                       >
                         <path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z" />
                       </svg>
+                      <Image
+                        src={midiaValue.thumb ? midiaValue.thumb : ''}
+                        alt={midiaValue.title}
+                        priority
+                        fill
+                        sizes="100%"
+                        style={{ position: 'absolute', inset: 0, zIndex: 2 }}
+                        onLoadingComplete={() =>
+                          handleRemoveLoading(
+                            handleGetElement(midiaValue._id, midiaIndex)
+                          )
+                        }
+                        onError={() =>
+                          handleRemoveLoading(
+                            handleGetElement(midiaValue._id, midiaIndex)
+                          )
+                        }
+                      />
                       <ReactPlayer
                         url={midiaValue.url}
                         controls={false}
+                        style={{ position: 'absolute', inset: 0, zIndex: 1 }}
                         width="100%"
                         height="100%"
+                        className="pin-play"
                         // playing
-                        // muted
-                        // loop
+                        muted
+                        loop
                         onPlay={() =>
                           handleVideoPlay(
-                            document.querySelector(
-                              `#pin-${midiaValue._id}-${midiaValue.midiaType}-${midiaIndex}`
-                            ) as HTMLElement
+                            handleGetElement(midiaValue._id, midiaIndex)
                           )
                         }
                         onReady={() =>
                           handleVideoCompleteLoad(
-                            document.querySelector(
-                              `#pin-${midiaValue._id}-${midiaValue.midiaType}-${midiaIndex}`
-                            ) as HTMLElement
+                            handleGetElement(midiaValue._id, midiaIndex)
                           )
                         }
                         onBuffer={() =>
                           handleWaitingVideo(
-                            document.querySelector(
-                              `#pin-${midiaValue._id}-${midiaValue.midiaType}-${midiaIndex}`
-                            ) as HTMLElement
+                            handleGetElement(midiaValue._id, midiaIndex)
                           )
                         }
                       />
                       <LoadingPin />
-                      <WaitingPin />
+                      {/* <WaitingPin /> */}
                     </Link>
                     {visibleUserInfo && (
                       <div className="pin-title-and-user">
@@ -296,7 +326,7 @@ export default function Masonry({
                   </div>
                 ) : (
                   <div
-                    key={midiaValue._id}
+                    key={`${midiaValue._id}-${midiaIndex}`}
                     // eslint-disable-next-line
                     className={`pin-container ${masonryPublishs ? 'pin-publishs-container' : ''}`}
                     data-index={
@@ -308,7 +338,7 @@ export default function Masonry({
                     <Link
                       href={`/pin/${midiaValue._id} `}
                       className="pin"
-                      id={`pin-${midiaValue._id}-${midiaValue.midiaType}-${midiaIndex}`}
+                      id={`pin-${midiaValue._id}-${midiaIndex}`}
                       style={{
                         width: `${columnWidth.toFixed(0)}px`,
                         height: `${calHeight({
@@ -326,16 +356,12 @@ export default function Masonry({
                         sizes="100%"
                         onLoadingComplete={() =>
                           handleRemoveLoading(
-                            document.querySelector(
-                              `#pin-${midiaValue._id}-${midiaValue.midiaType}-${midiaIndex}`
-                            ) as HTMLElement
+                            handleGetElement(midiaValue._id, midiaIndex)
                           )
                         }
                         onError={() =>
                           handleRemoveLoading(
-                            document.querySelector(
-                              `#pin-${midiaValue._id}-${midiaValue.midiaType}-${midiaIndex}`
-                            ) as HTMLElement
+                            handleGetElement(midiaValue._id, midiaIndex)
                           )
                         }
                       />

@@ -1,10 +1,9 @@
-import { notFound } from 'next/navigation';
-
 import styles from './page.module.css';
 
 import Masonry from '@/components/masonry';
 import { UserIdResultsType } from '@/components/masonry/userPin';
 import { LikesType } from './pin/[pinid]/page';
+import NotFoundPage from './not-found';
 
 export interface MidiaType {
   midia: {
@@ -27,6 +26,8 @@ export interface MidiaResultsType {
   description: string;
   userId: UserIdResultsType;
   url: string;
+  thumb?: string;
+  duration?: string;
   createIn: string;
 }
 
@@ -42,7 +43,7 @@ export default async function Home() {
     }
   );
   if (!res.ok) {
-    notFound();
+    return <NotFoundPage />;
   }
   const {
     midia: { results },

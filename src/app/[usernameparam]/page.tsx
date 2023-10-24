@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { cookies } from 'next/headers';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Metadata } from 'next';
@@ -10,6 +10,7 @@ import jwt from 'jsonwebtoken';
 import UserProfile from '@/components/userProfile';
 import { MidiaType } from '../page';
 import UserPublishsSaves from '@/components/userPublishsSaves';
+import NotFoundPage from '../not-found';
 
 import styles from './styles.module.css';
 
@@ -41,10 +42,10 @@ const getUser = async (usernameparam: string) => {
       }
     );
     const data = (await response.json()) as UserType;
-    if (!response.ok) notFound();
+    if (!response.ok) return null;
     return data;
   } catch {
-    throw new Error('Internal server error.');
+    // notFound();
   }
 };
 
@@ -56,7 +57,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const data = await getUser(usernameparam);
 
   return {
-    title: `Pornonly - ${data.username}`,
+    title: `Pornonly - ${data ? data.username : 'Error 404'}`,
   };
 }
 
@@ -65,6 +66,8 @@ export default async function Page({ params }: Props) {
   const { usernameparam } = params;
 
   const userData = await getUser(usernameparam);
+  if (!userData || userData.username !== usernameparam) return <NotFoundPage />;
+
   const { profilePhoto, username, email } = userData;
 
   const resUserMidia = await fetch(

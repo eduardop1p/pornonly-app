@@ -1,10 +1,10 @@
 import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
 
 import styles from './page.module.css';
 
 import Masonry from '@/components/masonry';
 import { MidiaType } from '../page';
+import NotFoundPage from '../not-found';
 
 export const metadata: Metadata = {
   title: 'Pornonly - Ruivas',
@@ -23,7 +23,7 @@ export default async function New() {
     }
   );
   if (!res.ok) {
-    notFound();
+    return <NotFoundPage />;
   }
   const {
     midia: { results },

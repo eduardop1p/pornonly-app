@@ -1,4 +1,3 @@
-import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { cookies } from 'next/headers';
 
@@ -15,6 +14,7 @@ import UserAvatar from '@/components/userAvatar';
 import UserPin from '@/components/masonry/userPin';
 import { UserType } from '@/app/[usernameparam]/page';
 import Masonry from '@/components/masonry';
+import NotFoundPage from '@/app/not-found';
 
 interface Props {
   params: { pinid: string };
@@ -64,13 +64,13 @@ const getPinToId = async (pinId: string) => {
       }
     );
     if (!response.ok) {
-      notFound();
+      return null;
       // throw new Error('server connection error.');
     }
     const data = (await response.json()) as MidiaResultsType;
     return data;
   } catch {
-    notFound();
+    return null;
   }
 };
 
@@ -78,6 +78,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { pinid } = params;
 
   const data = await getPinToId(pinid);
+  if (!data)
+    return {
+      title: 'Pornonly - Error 404',
+    };
 
   return {
     title: `Pornonly - ${data.title}`,
@@ -100,6 +104,7 @@ export default async function Page({ params }: Props) {
   const isAuth = cookies().has('token');
 
   const dataPin = await getPinToId(pinid);
+  if (!dataPin) return <NotFoundPage />;
 
   let isSave = false;
   let userId = null;
@@ -128,7 +133,7 @@ export default async function Page({ params }: Props) {
     }
   );
   if (!resComments.ok) {
-    notFound();
+    return <NotFoundPage />;
   }
   const { commentsMidia } = (await resComments.json()) as CommentsType;
   const resultsComments = commentsMidia.results.map((value, indexComm) => ({

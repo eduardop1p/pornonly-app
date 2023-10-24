@@ -7,6 +7,7 @@ import Image from 'next/image';
 
 import { Container, ContainerFullScreen } from './styled';
 import Loading from '../../form/loading';
+import { default as LoadingFullScreen } from '../loading';
 import { GlobalError } from '@/components/form/globalError';
 import { GlobalSuccess } from '@/components/form/globalSuccess';
 import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
@@ -34,6 +35,7 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
   const pathName = usePathname();
 
   const [showFullScreen, setShowFullScreen] = useState(false);
+  const [isLoadingFullScreen, setIsLoadingFullScreen] = useState(true);
   const [showMoreOptions, setShowMoreOptions] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [pinIsSave, setPinIsSave] = useState(isSave);
@@ -49,17 +51,6 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
   const pinProportion = data.width / data.height;
   const newHeight = document.documentElement.clientHeight;
   const newWidth = Math.round(newHeight * pinProportion);
-
-  useEffect(() => {
-    const onresize = () => {
-      const pinProportion = data.width / data.height;
-      const newHeight = document.documentElement.clientHeight;
-      const newWidth = Math.round(newHeight * pinProportion);
-    };
-    window.addEventListener('resize', onresize);
-
-    return () => window.removeEventListener('resize', onresize);
-  }, [data]);
 
   const handleOnBlur = (event: FocusEvent<HTMLDivElement>) => {
     if (!refMoreOptions.current?.contains(event.relatedTarget)) {
@@ -190,11 +181,13 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
             className="pin-full-screen"
             onClick={event => event.stopPropagation()}
           >
+            {isLoadingFullScreen && <LoadingFullScreen fullScreen />}
             <Image
               src={data.url}
               height={newHeight}
               width={newWidth}
               alt={data.title}
+              onLoadingComplete={() => setIsLoadingFullScreen(false)}
             />
           </div>
         </ContainerFullScreen>

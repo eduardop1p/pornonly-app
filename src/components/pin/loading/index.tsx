@@ -1,9 +1,13 @@
 import styles from './styles.module.css';
 
-export default function Loading() {
+export default function Loading({
+  fullScreen = false,
+}: {
+  fullScreen?: boolean;
+}) {
   return (
-    <div className={styles.container}>
-      <div className={styles['icon-container']}>
+    <div className={styles.container} data-full-screen={fullScreen}>
+      <div className={styles['icon-container']} data-full-screen={fullScreen}>
         <svg
           height="40"
           width="40"

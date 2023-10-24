@@ -1,10 +1,10 @@
 import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
 
 import styles from './page.module.css';
 
 import Masonry from '@/components/masonry';
 import { MidiaType } from '../page';
+import NotFoundPage from '../not-found';
 
 interface Props {
   searchParams: { search_query: string };
@@ -30,7 +30,7 @@ export default async function New({ searchParams: { search_query } }: Props) {
     }
   );
   if (!res.ok) {
-    notFound();
+    return <NotFoundPage />;
   }
   let {
     midia: { results },
