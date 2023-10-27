@@ -3,355 +3,453 @@ import styled, { css } from 'styled-components';
 import { TypeTheme } from '@/utils/theme/myTheme';
 
 export const Container = styled.div<TypeTheme>`
-  ${({ theme }) => css`
+  height: 100%;
+
+  & > .container-created-title {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
     width: 100%;
 
-    & > form {
+    & > .container-new-pin-and-title {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      flex-direction: column;
       width: 100%;
 
-      & > .publish-and-btn {
+      & > .container-pin-title {
+        width: 100%;
+        height: 81px;
+        padding: 0 2rem;
         display: flex;
-        flex-direction: column;
-        margin-right: 2rem;
-        flex: none;
-        width: 270px;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid ${({ theme }) => theme.colors.g_border_color01};
 
-        & > .publish {
-          border-radius: 12px;
-          background-color: ${theme.colors.g_colorBgRgb_229};
-          height: 495px;
-          flex: none;
-          padding: 1rem;
-          position: relative;
-          overflow: hidden;
-          margin-bottom: 1rem;
-
-          & > .preview {
-            position: absolute;
-            width: 100%;
-            z-index: 2;
-            background-color: ${theme.colors.g_colorGray400};
-            left: 0;
-            top: 0;
-
-            & > .progress-pin-upload {
-              position: absolute;
-              left: 50%;
-              width: 100%;
-              background-color: ${theme.colors.g_colorTransparentGray800};
-              height: 100%;
-              top: 50%;
-              transform: translate(-50%, -50%);
-              z-index: 3;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-
-              circle {
-                stroke-width: 4.3px;
-              }
-
-              & > .upload-progress-value {
-                font-size: ${theme.font_size.font_size_1rem};
-                font-weight: ${theme.font_weight.font_weight_500};
-                position: absolute;
-                color: ${theme.colors.g_colorGray0};
-              }
-            }
-
-            & > button {
-              position: absolute;
-              cursor: pointer;
-              z-index: 3;
-              top: 1rem;
-              right: 1rem;
-              width: 48px;
-              height: 48px;
-              background-color: ${theme.colors.g_colorGray0};
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              border-radius: 100%;
-
-              & > svg {
-                flex: none;
-                fill: ${theme.colors.g_colorGray111111};
-              }
-            }
-
-            & > img,
-            & > video {
-              width: 100%;
-              height: 100%;
-              position: absolute;
-              object-fit: contain;
-              inset: 0;
-
-              &::-webkit-media-controls {
-                visibility: hidden;
-              }
-              &::-webkit-media-controls-enclosure {
-                visibility: visible;
-              }
-            }
-          }
-
-          & > .border-dashed {
-            border: 2px dashed ${theme.colors.g_colorGray150Hovered};
-          }
-
-          & > .border-dashed-no-upload-file {
-            border: 2px dashed ${theme.colors.g_colorRed100};
-
-            & > span {
-              color: ${theme.colors.g_colorRed100};
-            }
-          }
-
-          & > div {
-            padding: 8px;
-            width: 100%;
-            height: 100%;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            position: relative;
-
-            & > input {
-              display: none;
-            }
-
-            & > label {
-              width: 100%;
-              height: 100%;
-              position: absolute;
-              z-index: 1;
-              display: flex;
-              align-items: center;
-              left: 0;
-              top: 0;
-              justify-content: center;
-              cursor: pointer;
-
-              & > .upload-photo {
-                margin: 0 auto;
-                max-width: 70%;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-
-                &.no-file-upload {
-                  & > div {
-                    animation-name: noImgUpload;
-                    animation-duration: 100ms;
-                    animation-iteration-count: 1;
-                    animation-timing-function: linear;
-                    background-color: ${theme.colors.g_colorRed100};
-
-                    @keyframes noImgUpload {
-                      0% {
-                        transform: translateX(10px);
-                      }
-                      50% {
-                        transform: translateX(-10px);
-                      }
-                      100% {
-                        transform: translateX(0px);
-                      }
-                    }
-                  }
-
-                  & > span {
-                    color: ${theme.colors.g_colorRed100};
-                  }
-                }
-
-                & > div {
-                  background-color: ${theme.colors.g_color5f5f5f};
-                  margin-bottom: 1rem;
-                  width: 25px;
-                  height: 25px;
-                  display: flex;
-                  align-items: center;
-                  justify-content: center;
-                  border-radius: 100%;
-
-                  & > svg {
-                    stroke-width: 2rem;
-                    stroke: ${theme.colors.g_colorBgRgb_229};
-                    fill: ${theme.colors.g_colorBgRgb_229};
-                  }
-                }
-
-                & > span {
-                  line-height: 1.2;
-                  font-size: ${theme.font_size.font_size_0_90rem};
-                  font-weight: ${theme.font_weight.font_weight_500};
-                }
-              }
-            }
-
-            & > span {
-              font-size: ${theme.font_size.font_size_0_75rem};
-              line-height: 1.3;
-              max-width: 90%;
-              margin: 0 auto;
-              text-align: center;
-            }
-          }
+        & > .pin-title {
+          font-weight: ${({ theme }) => theme.font_weight.font_weight_600};
+          font-size: ${({ theme }) => theme.font_size.font_size_1_25rem};
         }
+      }
+    }
+  }
+`;
 
-        & > button {
-          width: 100%;
-          font-size: ${theme.font_size.font_size_1rem};
-          font-weight: ${theme.font_weight.font_weight_500};
-          color: ${theme.colors.g_colorGray0};
-          height: 45px;
-          display: flex;
-          background-color: ${theme.colors.g_colorRed100};
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          border-radius: 24px;
-          transition: background 200ms ease-in-out;
+export const ContainerNewPin = styled.div<TypeTheme>`
+  width: calc(100% - 15rem);
+  margin: 0 auto;
+  height: 100%;
+  /* overflow: hidden auto; */
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
 
-          &:hover {
-            background-color: ${theme.colors.g_colorRed100Hovered};
-          }
+  & > .container-file-img-current {
+    position: relative;
+    flex: none;
+    width: 342px;
+    height: auto;
+    /* height: calc(100vh - 5rem); */
+
+    & > button {
+      position: absolute;
+      cursor: pointer;
+      z-index: 3;
+      top: 1rem;
+      right: 1rem;
+      width: 48px;
+      height: 48px;
+      background-color: ${({ theme }) => theme.colors.g_colorGray0};
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 100%;
+
+      & > svg {
+        flex: none;
+        fill: ${({ theme }) => theme.colors.g_colorGray111111};
+      }
+    }
+
+    img,
+    video {
+      width: 100%;
+      height: auto !important;
+      border-radius: 2rem;
+
+      &::-webkit-media-controls {
+        visibility: hidden;
+      }
+      &::-webkit-media-controls-enclosure {
+        visibility: visible;
+      }
+    }
+  }
+
+  & > .file-upload {
+    flex: none;
+    width: 375px;
+    height: 453px;
+    border: 2px dashed ${({ theme }) => theme.colors.g_colorGray150Hovered};
+    background-color: ${({ theme }) => theme.colors.g_colore9e9e9};
+    border-radius: 2rem;
+    position: relative;
+
+    & > label {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      background-color: transparent;
+      z-index: 2;
+      inset: 0;
+      cursor: pointer;
+
+      & > input[type='file'] {
+        width: 100%;
+        height: 100%;
+        display: none;
+      }
+    }
+
+    & > .container-suggestion-and-icon {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      & > svg {
+        margin-bottom: 1rem;
+      }
+
+      & > span {
+        color: ${({ theme }) => theme.colors.g_colorGray300};
+        font-size: ${({ theme }) => theme.font_size.font_size_1rem};
+        font-weight: ${({ theme }) => theme.font_weight.font_weight_400};
+        line-height: 1.2;
+        text-align: center;
+      }
+    }
+
+    & > .warning-file {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      width: calc(100% - 2rem);
+      color: ${({ theme }) => theme.colors.g_colorGray300};
+      font-size: ${({ theme }) => theme.font_size.font_size_0_90rem};
+      font-weight: ${({ theme }) => theme.font_weight.font_weight_400};
+    }
+  }
+`;
+
+export const ContainerFormNewPin = styled.form<TypeTheme>`
+  display: flex;
+  flex-direction: column;
+  margin-left: 4rem;
+  width: 100%;
+
+  & > .container-input {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    & > label {
+      color: ${({ theme }) => theme.colors.g_colorGray111111};
+      font-size: ${({ theme }) => theme.font_size.font_size_0_90rem};
+      font-weight: ${({ theme }) => theme.font_weight.font_weight_400};
+      margin-bottom: 10px;
+    }
+
+    & > input {
+      width: 100%;
+      height: 48px;
+      border-radius: 1rem;
+      width: 100%;
+      background-color: transparent;
+      border: 2px solid ${({ theme }) => theme.colors.g_border_color01};
+      padding: 8px 1rem;
+      font-size: ${({ theme }) => theme.font_size.font_size_1rem};
+      font-weight: ${({ theme }) => theme.font_weight.font_weight_400};
+
+      &:focus {
+        box-shadow: ${({ theme }) => theme.box_shadow.box_shadow_02};
+      }
+    }
+  }
+`;
+
+export const ContainerCreatedPinsList = styled.div<TypeTheme>`
+  border-radius: 1rem;
+  cursor: pointer;
+  padding: 10px;
+  height: 88px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* transition: background 100ms ease-in-out; */
+  margin-bottom: 10px;
+
+  &.selected {
+    background-color: ${({ theme }) => theme.colors.g_colorGray300};
+  }
+
+  &:not(&.selected):hover {
+    background-color: ${({ theme }) => theme.colors.g_colorGray150};
+    /* background-color: ${({ theme }) =>
+      theme.colors.g_colorGray150Hovered}; */
+  }
+
+  & > .container-img-preview-and-title {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+
+    & > .img-preview {
+      flex: none;
+      width: 72px;
+      height: 72px;
+      position: relative;
+      border-radius: 1rem;
+      overflow: hidden;
+      margin-right: 10px;
+
+      & > img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    & > span {
+      color: ${({ theme }) => theme.colors.g_colorGray300};
+      font-size: ${({ theme }) => theme.font_size.font_size_1rem};
+      font-weight: ${({ theme }) => theme.font_weight.font_weight_400};
+
+      &.selected {
+        color: ${({ theme }) => theme.colors.g_colorGray0};
+      }
+    }
+  }
+
+  & > .more-options {
+    flex: none;
+    position: relative;
+    z-index: 2;
+
+    & > .btn-more-options {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      width: 30px;
+      height: 30px;
+      border-radius: 100%;
+      transition: background 150ms ease-in-out;
+
+      @keyframes animationCategory {
+        0% {
+          scale: 0.95;
+        }
+        50% {
+          scale: 0.9;
+        }
+        100% {
+          scale: 1;
         }
       }
 
-      & > .title-description-tags {
+      &.click {
+        animation-name: animationCategory;
+        animation-duration: 300ms;
+        animation-timing-function: ease-in-out;
+      }
+
+      &:not(&.selected):hover {
+        background-color: ${({ theme }) => theme.colors.g_colorGray150Hovered};
+      }
+
+      &.selected {
+        & > svg {
+          fill: ${({ theme }) => theme.colors.g_colorGray0};
+        }
+      }
+
+      & > svg {
+        flex: none;
+      }
+    }
+
+    & > .container-delete-created-pin {
+      position: absolute;
+      bottom: -3.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: ${({ theme }) => theme.colors.g_colorGray0};
+      padding: 8px;
+      border-radius: 1rem;
+      width: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: left;
+      box-shadow: ${({ theme }) => theme.box_shadow.box_shadow_04};
+      transition: background 200ms ease-in-out;
+
+      & > button {
+        padding: 8px 10px;
+        color: ${({ theme }) => theme.colors.g_colorGray300};
+        font-size: ${({ theme }) => theme.font_size.font_size_1rem};
+        font-weight: ${({ theme }) => theme.font_weight.font_weight_600};
+        width: 100%;
+        cursor: pointer;
+        text-align: left;
+        border-radius: 10px;
+
+        &:hover {
+          background-color: ${({ theme }) => theme.colors.g_colore9e9e9};
+        }
+      }
+    }
+  }
+`;
+
+export const ContainerPublishsCreated = styled.div<TypeTheme>`
+  ${({ theme }) => css`
+    border-right: 1px solid ${theme.colors.g_border_color01};
+    min-height: 100vh;
+    width: 80px;
+    transition: width 100ms ease-in-out;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+
+    &.btn-active {
+      width: 400px;
+    }
+
+    & > .container-btns-created-pins {
+      margin-bottom: 1rem;
+      width: 100%;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid ${theme.colors.g_border_color01};
+      height: fit-content;
+
+      & > .btns-drafts-show {
         display: flex;
         flex-direction: column;
         width: 100%;
-        position: relative;
 
-        & > div:not(.user) {
-          min-height: 70px;
-        }
+        & > div {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
 
-        & > .add-tags {
-          margin-top: 1rem;
-
-          & > .container-input-tags {
-            width: 100%;
-            padding-bottom: 10px;
-            box-shadow: ${theme.box_shadow.box_shadow_05};
+          & > .container-created-pins {
             display: flex;
             align-items: center;
-            justify-content: left;
-            flex-wrap: wrap;
-            position: relative;
 
-            &[data-tags-focus='true'] {
-              box-shadow: ${theme.box_shadow.box_shadow_06};
+            & > * {
+              white-space: nowrap;
+              font-size: ${theme.font_size.font_size_1_25rem};
+              color: ${theme.colors.g_colorGray300};
             }
-
-            & > input {
-              border: none;
-              font-size: ${theme.font_size.font_size_1rem};
-              font-weight: ${theme.font_weight.font_weight_400};
-              margin-top: 8px;
+            & > h2 {
+              font-weight: ${theme.font_weight.font_weight_600};
             }
 
             & > span {
-              margin-right: 10px;
-              background-color: ${theme.colors.g_colore9e9e9};
-              color: ${theme.colors.g_colorGray400};
-              font-weight: ${theme.font_weight.font_weight_500};
-              font-size: ${theme.font_size.font_size_0_90rem};
-              padding: 8px 12px;
-              border-radius: 2rem;
-              position: relative;
-              white-space: nowrap;
-              margin-top: 8px;
-
-              & > svg {
-                position: absolute;
-                border-radius: 100%;
-                cursor: pointer;
-                top: -5px;
-                right: -3px;
-                padding: 5px;
-                background-color: ${theme.colors.g_colore9e9e9};
-                fill: ${theme.colors.g_colorRed100};
-              }
-            }
-
-            & > button {
-              appearance: none;
-              background: transparent;
-              cursor: pointer;
-              flex: none;
-              position: absolute;
-              right: 0;
-
-              & > svg {
-                fill: ${theme.colors.g_color5f5f5f};
-                opacity: 0.7;
-              }
+              margin-left: 5px;
+              font-weight: ${theme.font_weight.font_weight_400};
             }
           }
         }
 
-        & > .user {
-          margin-bottom: 2rem;
-        }
-
-        .info-input {
+        & > .btn-add-new-publish-pin {
+          width: 100%;
           display: flex;
           align-items: center;
-          width: 100%;
-          justify-content: space-between;
-          margin-top: 8px;
+          justify-content: center;
+          margin-top: 1rem;
+          background-color: ${theme.colors.g_colore9e9e9};
+          border-radius: 1.5rem;
+          text-align: center;
+          padding: 0 8px;
+          height: 40px;
+          cursor: pointer;
+          font-size: ${theme.font_size.font_size_1rem};
+          color: ${theme.colors.g_colorGray300};
+          font-weight: ${theme.font_weight.font_weight_600};
+          transition: background 150ms ease-in-out;
 
-          & > span {
-            color: ${theme.colors.g_colorGray111111};
-            font-weight: ${theme.font_weight.font_weight_400};
-            font-size: ${theme.font_size.font_size_0_75rem};
-          }
-        }
-
-        & > .add-title,
-        & > .add-description {
-          & > #title,
-          & > textarea {
-            width: 100%;
-            border: none;
-            box-shadow: ${theme.box_shadow.box_shadow_05};
-            color: ${theme.colors.g_colorGray400};
-
-            &:focus {
-              box-shadow: ${theme.box_shadow.box_shadow_06};
-            }
-          }
-
-          & > #title {
-            padding-bottom: 10px;
-
-            font-weight: ${theme.font_weight.font_weight_700};
-            font-size: ${theme.font_size.font_size_2_5rem};
-          }
-
-          & > #description {
-            padding: 0 10px;
-            font-size: ${theme.font_size.font_size_1rem};
-            font-weight: ${theme.font_weight.font_weight_400};
-            resize: none;
-            overflow: hidden;
-            min-height: 32px !important;
+          &:hover {
+            background-color: ${theme.colors.g_colorGray100Hovered};
           }
         }
       }
+
+      & > .btns-drafts-hidden {
+        display: flex;
+        flex-direction: column;
+
+        & > :first-child {
+          margin-bottom: 2rem;
+        }
+      }
+    }
+
+    & > .container-created-pins-list {
+      width: calc(100% - 1rem);
+    }
+  `}
+`;
+
+export const ContainerBtnPublishsCreated = styled.button<TypeTheme>`
+  width: 48px;
+  height: 48px;
+  border-radius: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 150ms ease-in-out;
+
+  & > svg {
+    flex: none;
+    transition: transform 200ms ease-in-out;
+
+    &.btn-active {
+      transform: rotate(-180deg);
+    }
+  }
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.g_colore9e9e9};
+  }
+`;
+
+export const ContainerBntPublish = styled.button<TypeTheme>`
+  ${({ theme }) => css`
+    background-color: ${theme.colors.g_colorRed100};
+    color: ${theme.colors.g_colorGray0};
+    font-size: ${theme.font_size.font_size_1rem};
+    font-weight: ${theme.font_weight.font_weight_600};
+    padding: 8px 12px;
+    border-radius: 24px;
+    min-width: 60px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 150ms ease-in-out;
+
+    &:hover {
+      background-color: ${theme.colors.g_colorRed100Hovered};
     }
   `}
 `;

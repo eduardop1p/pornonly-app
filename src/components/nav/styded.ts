@@ -64,8 +64,8 @@ export const Container = styled.nav<TypeTheme>`
 
       & > a {
         padding: 8px 12px;
-        font-size: var(--font-size-1rem);
-        font-weight: var(--font-weight-500);
+        font-size: ${theme.font_size.font_size_1rem};
+        font-weight: ${theme.font_weight.font_weight_500};
         width: 120px;
         border-radius: 24px;
         display: flex;
@@ -76,20 +76,20 @@ export const Container = styled.nav<TypeTheme>`
         transition: background 150ms ease-in-out;
 
         &.login {
-          background-color: var(--g-colorRed100);
-          color: var(--g-colorGray0);
+          background-color: ${theme.colors.g_colorRed100};
+          color: ${theme.colors.g_colorGray0};
 
           &:hover {
-            background-color: var(--g-colorRed100Hovered);
+            background-color: ${theme.colors.g_colorRed100Hovered};
           }
         }
 
         &.create-account {
-          color: var(--g-colorGray300);
-          background-color: var(--g-colorGray100);
+          color: ${theme.colors.g_colorGray300};
+          background-color: ${theme.colors.g_colorGray100};
 
           &:hover {
-            background-color: var(--g-colorGray100Hovered);
+            background-color: ${theme.colors.g_colorGray100Hovered};
           }
         }
       }
@@ -115,7 +115,7 @@ export const ContainerArrowMore = styled.div<TypeTheme>`
       margin-left: 7px;
       flex: none;
       transform: rotate(0);
-      transition: transform 300ms ease-in-out;
+      transition: transform 200ms ease-in-out;
 
       &[data-publish-active='true'] {
         transform: rotate(180deg);
@@ -126,14 +126,14 @@ export const ContainerArrowMore = styled.div<TypeTheme>`
       visibility: hidden;
       opacity: 0;
       width: 180px;
-      background-color: var(--g-colorGray0);
+      background-color: ${theme.colors.g_colorGray0};
       border-radius: 1rem;
       position: absolute;
       top: 2.5rem;
       padding: 8px;
       left: 50%;
       transform: translateX(-50%);
-      box-shadow: var(--box-shadow_04);
+      box-shadow: ${theme.box_shadow.box_shadow_04};
       z-index: 1;
       display: flex;
       flex-direction: column;
@@ -150,9 +150,9 @@ export const ContainerArrowMore = styled.div<TypeTheme>`
       }
 
       & > a {
-        color: var(--g-colorGray400);
-        font-size: var(--font-size-1rem);
-        font-weight: var(--font-weight-500);
+        color: ${theme.colors.g_colorGray400};
+        font-size: ${theme.font_size.font_size_1rem};
+        font-weight: ${theme.font_weight.font_weight_500};
         padding: 8px;
         width: 100%;
         text-align: left;
@@ -160,11 +160,11 @@ export const ContainerArrowMore = styled.div<TypeTheme>`
         transition: background 200ms ease-in-out;
 
         &.link-active-publish {
-          background-color: var(--g-colore9e9e9);
+          background-color: ${theme.colors.g_colore9e9e9};
         }
 
         &:hover {
-          background-color: var(--g-colore9e9e9);
+          background-color: ${theme.colors.g_colore9e9e9};
         }
       }
     }

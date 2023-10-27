@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { ReactNode, useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 
-import { Container, ContainerArrowMore } from './stlyde';
+import { Container, ContainerArrowMore } from './styded';
 
 import Search from '../search';
 import Logout from '../form/logout';
