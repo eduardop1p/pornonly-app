@@ -277,9 +277,10 @@ export const ContainerShowTags = styled.div<TypeTheme>`
 export const ContainerSelectedTags = styled.div<TypeTheme>`
   ${({ theme }) => css`
     width: 100%;
+    margin-left: 2px;
     display: flex;
     flex-wrap: wrap;
-    margin-top: 1.5rem;
+    justify-content: left;
 
     & > :not(:last-child) {
       margin-right: 12px;
@@ -292,6 +293,7 @@ export const ContainerSelectedTags = styled.div<TypeTheme>`
       border-radius: 2rem;
       height: 40px;
       display: flex;
+      margin-top: 1rem;
       align-items: center;
       justify-content: center;
 
@@ -299,6 +301,7 @@ export const ContainerSelectedTags = styled.div<TypeTheme>`
         color: ${theme.colors.g_colorGray0};
         font-weight: ${theme.font_weight.font_weight_500};
         font-size: ${theme.font_size.font_size_1rem};
+        white-space: nowrap;
       }
 
       & > button {

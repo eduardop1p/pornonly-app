@@ -202,7 +202,7 @@ const NewPin = forwardRef(
     >([]);
     const [showTagsArr, setShowTagsArr] = useState(false);
     const [tagValue, setTagValue] = useState('');
-    const [manageTag, setManageTag] = useState(false);
+    const [manageTitleTag, setManageTitleTag] = useState(false);
 
     let refCreatedPinCurrent = useRef<CreatePinsType>(createdPinCurrent);
     useEffect(() => {
@@ -242,11 +242,11 @@ const NewPin = forwardRef(
     );
 
     useEffect(() => {
-      if (manageTag) {
+      if (manageTitleTag) {
         handleFormErrors(createdPinCurrent.title, createdPinCurrent.tags);
-        setManageTag(false);
+        setManageTitleTag(false);
       }
-    }, [createdPinCurrent, manageTag, handleFormErrors]);
+    }, [createdPinCurrent, manageTitleTag, handleFormErrors]);
 
     const handleResetFilds = () => {
       resetField('title');
@@ -492,7 +492,7 @@ const NewPin = forwardRef(
                     ...state,
                     title: value,
                   }));
-                  handleFormErrors(value, createdPinCurrent.tags);
+                  setManageTitleTag(true);
                 },
                 disabled:
                   !createdPinCurrent.file || !createdPinCurrent.pinSrc
@@ -555,7 +555,7 @@ const NewPin = forwardRef(
                             ? [...state.tags, value.tag]
                             : state.tags,
                         }));
-                        setManageTag(true);
+                        setManageTitleTag(true);
                       }}
                     >
                       <button type="button">{value.tag}</button>
@@ -577,13 +577,6 @@ const NewPin = forwardRef(
                     value ? setShowTagsArr(true) : setShowTagsArr(false);
                     handleSearchTags(value);
                   },
-                  // onBlur(event) {
-                  //   console.log(event.relatedTarget);
-                  //   const parentElement = event.currentTarget
-                  //     .parentElement as Element;
-                  //   if (!parentElement.contains(event.relatedTarget))
-                  //     setShowTagsArr(false);
-                  // },
                   disabled:
                     !createdPinCurrent.file || !createdPinCurrent.pinSrc
                       ? true
@@ -607,7 +600,7 @@ const NewPin = forwardRef(
                         ...state,
                         tags: state.tags.filter(val => val !== tag),
                       }));
-                      setManageTag(true);
+                      setManageTitleTag(true);
                     }}
                   >
                     <svg height="12" width="12" viewBox="0 0 24 24">
