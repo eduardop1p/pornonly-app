@@ -150,35 +150,162 @@ export const ContainerFormNewPin = styled.form<TypeTheme>`
   flex-direction: column;
   margin-left: 4rem;
   width: 100%;
+  position: relative;
+
+  &[data-hidden-form='true'] {
+    pointer-events: none;
+    cursor: default;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-color: ${({ theme }) => theme.colors.g_colorBgRgb_255};
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+      cursor: default;
+    }
+  }
+
+  & > :not(:last-child) {
+    margin-bottom: 2rem;
+  }
 
   & > .container-input {
     display: flex;
     flex-direction: column;
     width: 100%;
+    position: relative;
 
     & > label {
-      color: ${({ theme }) => theme.colors.g_colorGray111111};
+      color: ${({ theme }) => theme.colors.g_colorGray400};
       font-size: ${({ theme }) => theme.font_size.font_size_0_90rem};
       font-weight: ${({ theme }) => theme.font_weight.font_weight_400};
       margin-bottom: 10px;
     }
 
-    & > input {
-      width: 100%;
-      height: 48px;
+    & > input,
+    & > textarea {
       border-radius: 1rem;
       width: 100%;
       background-color: transparent;
       border: 2px solid ${({ theme }) => theme.colors.g_border_color01};
-      padding: 8px 1rem;
       font-size: ${({ theme }) => theme.font_size.font_size_1rem};
       font-weight: ${({ theme }) => theme.font_weight.font_weight_400};
+      color: ${({ theme }) => theme.colors.g_colorGray111111};
+
+      &[data-input-error='true'] {
+        border: 2px solid ${({ theme }) => theme.colors.g_colorRed100};
+      }
 
       &:focus {
         box-shadow: ${({ theme }) => theme.box_shadow.box_shadow_02};
       }
     }
+
+    & > input {
+      height: 48px;
+      padding: 8px 1rem;
+    }
+
+    & > textarea {
+      min-height: 104px !important;
+      padding: 1rem;
+      resize: none;
+      overflow: hidden;
+    }
   }
+`;
+
+export const ContainerShowTags = styled.div<TypeTheme>`
+  ${({ theme }) => css`
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    background-color: ${theme.colors.g_colorGray0};
+    top: -13rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 400px;
+    height: 220px;
+    box-shadow: ${theme.box_shadow.box_shadow_04};
+    border-radius: 1rem;
+    overflow: hidden;
+
+    & > .container-search-tags {
+      height: 100%;
+      width: 100%;
+      overflow: hidden auto;
+
+      & > span {
+        width: 100%;
+        display: inline-block;
+        text-align: left;
+        padding: 1rem 1rem 6px 1rem;
+        color: ${theme.colors.g_color5f5f5f};
+        font-weight: ${theme.font_weight.font_weight_400};
+        font-size: ${theme.font_size.font_size_0_75rem};
+      }
+
+      & > div {
+        width: 100%;
+        padding: 10px 1rem;
+        cursor: pointer;
+
+        &:hover {
+          background-color: ${theme.colors.g_colore9e9e9};
+        }
+
+        & > button {
+          cursor: inherit;
+          color: ${theme.colors.g_colorGray111111};
+          font-weight: ${theme.font_weight.font_weight_500};
+          font-size: ${theme.font_size.font_size_1rem};
+        }
+      }
+    }
+  `}
+`;
+
+export const ContainerSelectedTags = styled.div<TypeTheme>`
+  ${({ theme }) => css`
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+
+    & > :not(:last-child) {
+      margin-right: 12px;
+    }
+
+    & > .pin-tag {
+      width: fit-content;
+      background-color: ${theme.colors.g_colorGray111111};
+      padding: 8px 1rem;
+      border-radius: 2rem;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      & > span {
+        color: ${theme.colors.g_colorGray0};
+        font-weight: ${theme.font_weight.font_weight_500};
+        font-size: ${theme.font_size.font_size_1rem};
+      }
+
+      & > button {
+        cursor: pointer;
+        margin-left: 10px;
+        margin-top: 3px;
+
+        & > svg {
+          fill: ${theme.colors.g_colorGray0};
+        }
+      }
+    }
+  `}
 `;
 
 export const ContainerCreatedPinsList = styled.div<TypeTheme>`

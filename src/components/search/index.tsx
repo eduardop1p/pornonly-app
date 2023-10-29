@@ -133,7 +133,7 @@ export default function Search() {
       );
       if (!res.ok) return;
       const data = await res.json();
-      setTitleSugestions(data.titlesMidia);
+      setTitleSugestions(data.midiaTitles);
     } catch (err) {
       console.log(err);
     }

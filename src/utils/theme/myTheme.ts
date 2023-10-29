@@ -41,6 +41,7 @@ const myTheme = {
     g_colorRed100Active: '#a3081a',
     g_blueActive: '#4a85c9',
     g_colorBgRgb_229: 'rgb(239, 239, 239)',
+    g_colorBgRgb_255: 'rgba(255, 255, 255, 0.8)',
     g_colorTransparentDarkGray: 'rgba(51,51,51,.8)',
     g_colorTransparentWhite: ' hsla(0,0%,100%,.8)',
     g_colorTransparentGray60: 'rgba(0,0,0,.06)',

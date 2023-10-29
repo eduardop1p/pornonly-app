@@ -7,12 +7,13 @@ import {
   forwardRef,
   useImperativeHandle,
   useRef,
+  useCallback,
 } from 'react';
 import type { SetStateAction, Dispatch, MouseEvent, ChangeEvent } from 'react';
 import Image from 'next/image';
 import { UseFormResetField, useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+// import { zodResolver } from '@hookform/resolvers/zod';
+// import { z } from 'zod';
 import axios from 'axios';
 import { get } from 'lodash';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -26,6 +27,8 @@ import {
   ContainerCreatedPinsList,
   ContainerNewPin,
   ContainerFormNewPin,
+  ContainerShowTags,
+  ContainerSelectedTags,
 } from './styled';
 
 import ErrorMsg from '../errorMsg';
@@ -51,28 +54,25 @@ interface CreatePinsType {
   tags: string[];
 }
 
-const ZodUserSchema = z.object({
-  title: z
-    .string()
-    .trim()
-    .superRefine((val, ctx) => {
-      if (val.length < 4) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Titulo muito curto.',
-        });
-      }
-      if (val.length > 100) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Titulo muito grande.',
-        });
-      }
-    }),
-  // description: z.string().trim()
-});
+// const ZodUserSchema = z.object({
+//   title: z.string().trim(),
+//   description: z.string().trim(),
+//   tags: z.string().trim(),
+//   // tags: z
+//   //   .string()
+//   //   .array()
+//   //   .refine(val => {
+//   //     return val.length >= 2 && val.length <= 2;
+//   //   }, 'Você tem que adcionar no minimo 2 tags.'),
+// });
 
-export type BodyFile = z.infer<typeof ZodUserSchema>;
+// export type BodyFile = z.infer<typeof ZodUserSchema>;
+
+interface BodyForm {
+  title: string;
+  description: string;
+  tags: string;
+}
 
 const defaultCreatedPinCurrent = {
   fileType: '',
@@ -133,7 +133,8 @@ export default function PublishPin({ token }: Props) {
           selectCreatedPinIndex={selectCreatedPinIndex}
           setCreatedPinCurrent={setCreatedPinCurrent}
           createdPinCurrent={createdPinCurrent}
-          resetField={childNewPinRef.current?.resetField}
+          handleResetFilds={childNewPinRef.current?.handleResetFilds}
+          handleServerError={handleServerError}
         />
         <div className="container-new-pin-and-title">
           <div className="container-pin-title">
@@ -191,12 +192,17 @@ const NewPin = forwardRef(
       handleSubmit,
       formState: { errors },
       resetField,
-      setValue,
-    } = useForm<BodyFile>({
-      resolver: zodResolver(ZodUserSchema),
-    });
+      setError,
+      clearErrors,
+    } = useForm<BodyForm>({ reValidateMode: undefined });
 
     const [uploadProgress, setUploadProgress] = useState(0);
+    const [searchTagsArr, setSearchTagsArr] = useState<
+      { _id: string; tag: string }[]
+    >([]);
+    const [showTagsArr, setShowTagsArr] = useState(false);
+    const [tagValue, setTagValue] = useState('');
+    const [manageTag, setManageTag] = useState(false);
 
     let refCreatedPinCurrent = useRef<CreatePinsType>(createdPinCurrent);
     useEffect(() => {
@@ -205,48 +211,93 @@ const NewPin = forwardRef(
 
     useImperativeHandle(ref, () => ({
       handleSubmitPin: handleSubmitPin,
-      resetField: resetField,
+      handleResetFilds: handleResetFilds,
     }));
+
+    const handleFormErrors = useCallback(
+      (title: string, tags: string[]) => {
+        let controller = true;
+        // console.log(title.trim().length);
+        clearErrors('title');
+        clearErrors('tags');
+
+        if (title.trim().length < 4) {
+          setError('title', { message: 'Titulo muito curto.' });
+          controller = false;
+        }
+        if (title.trim().length > 100) {
+          setError('title', { message: 'Titulo muito grande.' });
+          controller = false;
+        }
+        if (tags.length < 2) {
+          setError('tags', {
+            message: 'Você tem que adcionar no minimo 2 tags.',
+          });
+          controller = false;
+        }
+
+        return controller;
+      },
+      [setError, clearErrors]
+    );
+
+    useEffect(() => {
+      if (manageTag) {
+        handleFormErrors(createdPinCurrent.title, createdPinCurrent.tags);
+        setManageTag(false);
+      }
+    }, [createdPinCurrent, manageTag, handleFormErrors]);
+
+    const handleResetFilds = () => {
+      resetField('title');
+      resetField('description');
+      resetField('tags');
+      setTagValue('');
+    };
 
     const handleSubmitPin = async () => {
       if (isLoading) return;
+
       const { description, tags, title, file, videoThumb } =
         refCreatedPinCurrent.current;
+      if (!handleFormErrors(title, tags)) return;
 
-      const formData = new FormData();
-      formData.append('midia', file);
-      formData.append('thumb', videoThumb);
-      formData.append('title', title);
-      formData.append('description', description);
-      formData.append('tags', tags.join(','));
+      console.log(refCreatedPinCurrent.current);
 
-      try {
-        setIsLoading(true);
-        await axios.post(`${process.env.NEXT_PUBLIC_URL_API}/midia`, formData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data',
-          },
-          onUploadProgress(progressEvent) {
-            const loaded = progressEvent.loaded;
-            const total = progressEvent.total || 0;
-            const percentage = Math.round((loaded / total) * 100);
-            setUploadProgress(percentage);
-          },
-        });
-        await revalidatePin();
-        handleServerSuccess('Pin adcionado ao feed');
-      } catch (err: any) {
-        // console.log(err);
-        if (get(err, 'response.data.error', false)) {
-          handleServerError(err.response.data.error);
-          return;
-        }
-        handleServerError('Parece que você está offline');
-      } finally {
-        setIsLoading(false);
-        setUploadProgress(0);
-      }
+      // const formData = new FormData();
+      // formData.append('midia', file);
+      // formData.append('thumb', videoThumb);
+      // formData.append('title', title.trim());
+      // formData.append('description', description.trim());
+      // formData.append('tags', tags.join(',').trim());
+
+      // try {
+      //   setIsLoading(true);
+      //   await axios.post(`${process.env.NEXT_PUBLIC_URL_API}/midia`, formData, {
+      //     headers: {
+      //       Authorization: `Bearer ${token}`,
+      //       'Content-Type': 'multipart/form-data',
+      //     },
+      //     onUploadProgress(progressEvent) {
+      //       const loaded = progressEvent.loaded;
+      //       const total = progressEvent.total || 0;
+      //       const percentage = Math.round((loaded / total) * 100);
+      //       setUploadProgress(percentage);
+      //     },
+      //   });
+      //   await revalidatePin();
+      //   handleServerSuccess('Pin adcionado ao feed');
+      // } catch (err: any) {
+      //   // console.log(err);
+      //   if (get(err, 'response.data.error', false)) {
+      //     handleServerError(err.response.data.error);
+      //     return;
+      //   }
+      //   handleServerError('Erro interno no servidor');
+      // } finally {
+      //   setIsLoading(false);
+      //   setUploadProgress(0);
+      // }
     };
 
     const handleChangeFile = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -314,6 +365,40 @@ const NewPin = forwardRef(
       waitingPin.classList.remove('waiting');
     };
 
+    const handleChangeTextatera = (event: ChangeEvent<HTMLTextAreaElement>) => {
+      const currentTarget = event.currentTarget;
+      if (currentTarget.value == '\n') currentTarget.value = ''; // bug das linhas infinitas apertando o enter consertado aqui
+      if (!currentTarget.value) return;
+
+      currentTarget.style.height = '5px';
+      currentTarget.style.paddingBottom = '1rem';
+      currentTarget.style.height = `${currentTarget.scrollHeight}px`;
+    };
+
+    const handleSearchTags = async (tag: string) => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all-midia-tags?tag=${tag}`,
+          {
+            method: 'GET',
+          }
+        );
+        const data = await res.json();
+        if (!res.ok) {
+          handleServerError(data.error);
+          return;
+        }
+        setSearchTagsArr(data.midiaTags);
+      } catch (err: any) {
+        // console.log(err);
+        // if (get(err, 'response.data.error', false)) {
+        //   handleServerError(err.response.data.eraror);
+        //   return;
+        // }
+        // handleServerError('Erro interno no servidor');
+      }
+    };
+
     return (
       <ContainerNewPin>
         {createdPinCurrent.file || createdPinCurrent.pinSrc ? (
@@ -321,6 +406,7 @@ const NewPin = forwardRef(
             <button
               type="button"
               onClick={() => {
+                handleResetFilds();
                 setSelectCreatedPinIndex(undefined);
                 setCreatedPinCurrent(defaultCreatedPinCurrent);
               }}
@@ -383,25 +469,143 @@ const NewPin = forwardRef(
             </span>
           </div>
         )}
-        <ContainerFormNewPin onSubmit={handleSubmit(handleSubmitPin)}>
+        <ContainerFormNewPin
+          onSubmit={handleSubmit(handleSubmitPin)}
+          data-hidden-form={
+            !createdPinCurrent.file || !createdPinCurrent.pinSrc ? true : false
+          }
+        >
           <div className="container-input">
-            <label htmlFor="title">Titulo</label>
+            <label htmlFor="title">Titulo&nbsp;*</label>
             <input
+              data-input-error={errors.title ? true : false}
               id="title"
               placeholder="Adicione um título"
               maxLength={100}
+              value={createdPinCurrent.title}
               type="text"
               {...register('title', {
                 onChange(event) {
-                  setCreatedPinCurrent(state => {
-                    state.title = event.target.value;
-                    return state;
-                  });
+                  const value = event.target.value;
+                  setCreatedPinCurrent(state => ({
+                    ...state,
+                    title: value,
+                  }));
+                  handleFormErrors(value, createdPinCurrent.tags);
                 },
+                disabled:
+                  !createdPinCurrent.file || !createdPinCurrent.pinSrc
+                    ? true
+                    : false,
               })}
             />
             {errors.title && <ErrorMsg errorMsg={errors.title.message} />}
           </div>
+          <div className="container-input">
+            <label htmlFor="description">Descrição</label>
+            <textarea
+              disabled={
+                !createdPinCurrent.file || !createdPinCurrent.pinSrc
+                  ? true
+                  : false
+              }
+              id="description"
+              value={createdPinCurrent.description}
+              placeholder="Adicione uma descrição detalhada"
+              maxLength={500}
+              {...register('description', {
+                onChange(event) {
+                  handleChangeTextatera(event);
+                  setCreatedPinCurrent(state => ({
+                    ...state,
+                    description: event.target.value,
+                  }));
+                },
+              })}
+            ></textarea>
+          </div>
+          <div className="container-input">
+            <ContainerShowTags
+              style={{ display: showTagsArr ? 'flex' : 'none' }}
+            >
+              <div className="container-search-tags">
+                <span>Tags correspondentes ({searchTagsArr.length})</span>
+                {searchTagsArr.map(value => (
+                  <div
+                    key={value._id}
+                    tabIndex={1}
+                    onClick={() => {
+                      if (createdPinCurrent.tags.length >= 5) {
+                        handleServerError('Número máximo de tags excedido');
+                        return;
+                      }
+                      setCreatedPinCurrent(state => ({
+                        ...state,
+                        tags: !state.tags.includes(value.tag)
+                          ? [...state.tags, value.tag]
+                          : state.tags,
+                      }));
+                      setManageTag(true);
+                    }}
+                  >
+                    <button type="button">{value.tag}</button>
+                  </div>
+                ))}
+              </div>
+            </ContainerShowTags>
+            <label htmlFor="tags">Tags&nbsp;*</label>
+            <input
+              data-input-error={errors.tags ? true : false}
+              id="tags"
+              placeholder="Procure uma tag"
+              maxLength={50}
+              type="text"
+              value={tagValue}
+              {...register('tags', {
+                onChange(event) {
+                  const value = event.target.value;
+                  setTagValue(value);
+                  value ? setShowTagsArr(true) : setShowTagsArr(false);
+                  handleSearchTags(value);
+                },
+                onBlur(event) {
+                  // if (!event.currentTarget.contains(event.relatedTarget))
+                  //   setShowTagsArr(false);
+                },
+                disabled:
+                  !createdPinCurrent.file || !createdPinCurrent.pinSrc
+                    ? true
+                    : false,
+              })}
+              onFocus={() =>
+                tagValue ? setShowTagsArr(true) : setShowTagsArr(false)
+              }
+            />
+            {errors.tags && <ErrorMsg errorMsg={errors.tags.message} />}
+            <ContainerSelectedTags>
+              {createdPinCurrent.tags.map((tag, index) => (
+                <div key={index} className="pin-tag">
+                  <span>{tag}</span>
+                  <button
+                    type="button"
+                    tabIndex={1}
+                    onClick={() => {
+                      setCreatedPinCurrent(state => ({
+                        ...state,
+                        tags: state.tags.filter(val => val !== tag),
+                      }));
+                      setManageTag(true);
+                    }}
+                  >
+                    <svg height="12" width="12" viewBox="0 0 24 24">
+                      <path d="m15.18 12 7.16-7.16c.88-.88.88-2.3 0-3.18-.88-.88-2.3-.88-3.18 0L12 8.82 4.84 1.66c-.88-.88-2.3-.88-3.18 0-.88.88-.88 2.3 0 3.18L8.82 12l-7.16 7.16c-.88.88-.88 2.3 0 3.18.44.44 1.01.66 1.59.66.58 0 1.15-.22 1.59-.66L12 15.18l7.16 7.16c.44.44 1.01.66 1.59.66.58 0 1.15-.22 1.59-.66.88-.88.88-2.3 0-3.18L15.18 12z"></path>
+                    </svg>
+                  </button>
+                </div>
+              ))}
+            </ContainerSelectedTags>
+          </div>
+          <input type="submit" style={{ visibility: 'hidden', opacity: 0 }} />
         </ContainerFormNewPin>
       </ContainerNewPin>
     );
@@ -415,7 +619,8 @@ function PublishsCreated({
   selectCreatedPinIndex,
   setCreatedPinCurrent,
   createdPinCurrent,
-  resetField,
+  handleServerError,
+  handleResetFilds,
 }: {
   createdPins: CreatePinsType[];
   setCreatedPins: Dispatch<SetStateAction<CreatePinsType[]>>;
@@ -423,9 +628,38 @@ function PublishsCreated({
   setSelectCreatedPinIndex: Dispatch<SetStateAction<number | undefined>>;
   setCreatedPinCurrent: Dispatch<SetStateAction<CreatePinsType>>;
   createdPinCurrent: CreatePinsType;
-  resetField: UseFormResetField<BodyFile>;
+  handleServerError(msg: string): void;
+  handleResetFilds(): void;
 }) {
   const [btnDraftsActive, setbtnDraftsActive] = useState(false);
+
+  const handleAddNewPublishPin = () => {
+    if (createdPins.length >= 5) {
+      handleServerError('Número máximo de rascunhos atingido');
+      return;
+    }
+    handleResetFilds();
+    const index = createdPins.findIndex(
+      val => val.pinSrc === createdPinCurrent.pinSrc
+    );
+    if (
+      (createdPinCurrent.file || createdPinCurrent.pinSrc) &&
+      !createdPins.some(val => val.pinSrc === createdPinCurrent.pinSrc)
+    )
+      setCreatedPins(state => [...state, createdPinCurrent]);
+
+    if (
+      createdPins.some(val => val.pinSrc === createdPinCurrent.pinSrc) &&
+      index !== -1
+    ) {
+      setCreatedPins(state => {
+        state[index] = createdPinCurrent;
+        return state;
+      });
+    }
+    setSelectCreatedPinIndex(undefined);
+    setCreatedPinCurrent(defaultCreatedPinCurrent);
+  };
 
   return (
     <ContainerPublishsCreated className={btnDraftsActive ? 'btn-active' : ''}>
@@ -434,7 +668,7 @@ function PublishsCreated({
           <div className="btns-drafts-show">
             <div>
               <div className="container-created-pins">
-                <h2>Pins criados</h2>
+                <h2>Seus rascunhos</h2>
                 {createdPins.length ? (
                   <span>({createdPins.length})</span>
                 ) : null}
@@ -447,13 +681,7 @@ function PublishsCreated({
             <button
               type="button"
               className="btn-add-new-publish-pin"
-              onClick={() => {
-                resetField('title');
-                if (createdPinCurrent.file || createdPinCurrent.pinSrc)
-                  setCreatedPins(state => [...state, createdPinCurrent]);
-                setSelectCreatedPinIndex(undefined);
-                setCreatedPinCurrent(defaultCreatedPinCurrent);
-              }}
+              onClick={handleAddNewPublishPin}
             >
               Criar novo
             </button>
@@ -469,8 +697,10 @@ function PublishsCreated({
               setCreatedPinCurrent={setCreatedPinCurrent}
               setCreatedPins={setCreatedPins}
               createdPinCurrent={createdPinCurrent}
-              resetField={resetField}
+              handleResetFilds={handleResetFilds}
               setbtnDraftsActive={setbtnDraftsActive}
+              createdPins={createdPins}
+              handleServerError={handleServerError}
             />
           </div>
         )}
@@ -493,7 +723,6 @@ function PublishsCreated({
               selected={selectCreatedPinIndex === index}
               createdPin={createdPin}
               setCreatedPins={setCreatedPins}
-              setCreatedPinCurrent={setCreatedPinCurrent}
               setSelectCreatedPinIndex={setSelectCreatedPinIndex}
             />
           </div>
@@ -506,13 +735,11 @@ function CreatedPinsList({
   createdPin,
   selected,
   setCreatedPins,
-  setCreatedPinCurrent,
   setSelectCreatedPinIndex,
 }: {
   createdPin: CreatePinsType;
   selected: boolean;
   setCreatedPins: Dispatch<SetStateAction<CreatePinsType[]>>;
-  setCreatedPinCurrent: Dispatch<SetStateAction<CreatePinsType>>;
   setSelectCreatedPinIndex: Dispatch<SetStateAction<number | undefined>>;
 }) {
   const [activeDelete, setActiveDelete] = useState(false);
@@ -538,9 +765,8 @@ function CreatedPinsList({
           />
         </div>
         <span className={`${selected ? 'selected' : ''}`}>
-          {createdPin.title.length > 50
-            ? `${createdPin.title.slice(0, 50)}...`
-            : createdPin.title}
+          {/* eslint-disable-next-line */}
+          {createdPin.title.length > 50 ? `${createdPin.title.slice(0, 50)}...` : createdPin.title.length ? createdPin.title : '(Sem título)'}
         </span>
       </div>
       <div
@@ -579,7 +805,6 @@ function CreatedPinsList({
               data-st-ev={true}
               onClick={() => {
                 setSelectCreatedPinIndex(undefined);
-                setCreatedPinCurrent(defaultCreatedPinCurrent);
                 setCreatedPins(state =>
                   state.filter(val => val.pinSrc !== createdPin.pinSrc)
                 );
@@ -624,29 +849,51 @@ function BtnAddNewPublishPin({
   setCreatedPinCurrent,
   createdPinCurrent,
   setCreatedPins,
-  resetField,
   setbtnDraftsActive,
+  createdPins,
+  handleServerError,
+  handleResetFilds,
 }: {
   setSelectCreatedPinIndex: Dispatch<SetStateAction<number | undefined>>;
   setCreatedPinCurrent: Dispatch<SetStateAction<CreatePinsType>>;
   createdPinCurrent: CreatePinsType;
   setCreatedPins: Dispatch<SetStateAction<CreatePinsType[]>>;
-  resetField: UseFormResetField<BodyFile>;
   setbtnDraftsActive: Dispatch<SetStateAction<boolean>>;
+  createdPins: CreatePinsType[];
+  handleServerError(msg: string): void;
+  handleResetFilds(): void;
 }) {
+  const handleAddNewPublishPin = () => {
+    if (createdPins.length >= 5) {
+      handleServerError('Número máximo de rascunhos atingido');
+      return;
+    }
+    handleResetFilds();
+    const index = createdPins.findIndex(
+      val => val.pinSrc === createdPinCurrent.pinSrc
+    );
+    if (
+      (createdPinCurrent.file || createdPinCurrent.pinSrc) &&
+      !createdPins.some(val => val.pinSrc === createdPinCurrent.pinSrc)
+    ) {
+      setbtnDraftsActive(true);
+      setCreatedPins(state => [...state, createdPinCurrent]);
+    }
+    if (
+      createdPins.some(val => val.pinSrc === createdPinCurrent.pinSrc) &&
+      index !== -1
+    ) {
+      setCreatedPins(state => {
+        state[index] = createdPinCurrent;
+        return state;
+      });
+    }
+    setSelectCreatedPinIndex(undefined);
+    setCreatedPinCurrent(defaultCreatedPinCurrent);
+  };
+
   return (
-    <ContainerBtnPublishsCreated
-      type="button"
-      onClick={() => {
-        resetField('title');
-        if (createdPinCurrent.file || createdPinCurrent.pinSrc) {
-          setbtnDraftsActive(true);
-          setCreatedPins(state => [...state, createdPinCurrent]);
-        }
-        setSelectCreatedPinIndex(undefined);
-        setCreatedPinCurrent(defaultCreatedPinCurrent);
-      }}
-    >
+    <ContainerBtnPublishsCreated type="button" onClick={handleAddNewPublishPin}>
       <svg height="20" width="20" viewBox="0 0 24 24" role="img">
         <path d="M22 10h-8V2a2 2 0 0 0-4 0v8H2a2 2 0 0 0 0 4h8v8a2 2 0 0 0 4 0v-8h8a2 2 0 0 0 0-4"></path>
       </svg>
