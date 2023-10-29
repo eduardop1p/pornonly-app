@@ -185,8 +185,13 @@ export const ContainerFormNewPin = styled.form<TypeTheme>`
       margin-bottom: 10px;
     }
 
+    & > .container-show-tags-and-input {
+      width: 100%;
+    }
+
     & > input,
-    & > textarea {
+    & > textarea,
+    & > .container-show-tags-and-input > input {
       border-radius: 1rem;
       width: 100%;
       background-color: transparent;
@@ -204,7 +209,8 @@ export const ContainerFormNewPin = styled.form<TypeTheme>`
       }
     }
 
-    & > input {
+    & > input,
+    & > .container-show-tags-and-input > input {
       height: 48px;
       padding: 8px 1rem;
     }

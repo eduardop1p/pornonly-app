@@ -253,6 +253,7 @@ const NewPin = forwardRef(
       resetField('description');
       resetField('tags');
       setTagValue('');
+      setShowTagsArr(false);
     };
 
     const handleSubmitPin = async () => {
@@ -525,62 +526,74 @@ const NewPin = forwardRef(
             ></textarea>
           </div>
           <div className="container-input">
-            <ContainerShowTags
-              style={{ display: showTagsArr ? 'flex' : 'none' }}
-            >
-              <div className="container-search-tags">
-                <span>Tags correspondentes ({searchTagsArr.length})</span>
-                {searchTagsArr.map(value => (
-                  <div
-                    key={value._id}
-                    tabIndex={1}
-                    onClick={() => {
-                      if (createdPinCurrent.tags.length >= 5) {
-                        handleServerError('Número máximo de tags excedido');
-                        return;
-                      }
-                      setCreatedPinCurrent(state => ({
-                        ...state,
-                        tags: !state.tags.includes(value.tag)
-                          ? [...state.tags, value.tag]
-                          : state.tags,
-                      }));
-                      setManageTag(true);
-                    }}
-                  >
-                    <button type="button">{value.tag}</button>
-                  </div>
-                ))}
-              </div>
-            </ContainerShowTags>
             <label htmlFor="tags">Tags&nbsp;*</label>
-            <input
-              data-input-error={errors.tags ? true : false}
-              id="tags"
-              placeholder="Procure uma tag"
-              maxLength={50}
-              type="text"
-              value={tagValue}
-              {...register('tags', {
-                onChange(event) {
-                  const value = event.target.value;
-                  setTagValue(value);
-                  value ? setShowTagsArr(true) : setShowTagsArr(false);
-                  handleSearchTags(value);
-                },
-                onBlur(event) {
-                  // if (!event.currentTarget.contains(event.relatedTarget))
-                  //   setShowTagsArr(false);
-                },
-                disabled:
-                  !createdPinCurrent.file || !createdPinCurrent.pinSrc
-                    ? true
-                    : false,
-              })}
-              onFocus={() =>
-                tagValue ? setShowTagsArr(true) : setShowTagsArr(false)
-              }
-            />
+            <div
+              className="container-show-tags-and-input"
+              tabIndex={1}
+              onBlur={event => {
+                if (!event.currentTarget.contains(event.relatedTarget))
+                  setShowTagsArr(false);
+              }}
+            >
+              <ContainerShowTags
+                style={{ display: showTagsArr ? 'flex' : 'none' }}
+              >
+                <div className="container-search-tags">
+                  <span>Tags correspondentes ({searchTagsArr.length})</span>
+                  {searchTagsArr.map(value => (
+                    <div
+                      key={value._id}
+                      tabIndex={1}
+                      onClick={() => {
+                        if (createdPinCurrent.tags.length >= 5) {
+                          handleServerError('Número máximo de tags excedido');
+                          return;
+                        }
+                        setCreatedPinCurrent(state => ({
+                          ...state,
+                          tags: !state.tags.includes(value.tag)
+                            ? [...state.tags, value.tag]
+                            : state.tags,
+                        }));
+                        setManageTag(true);
+                      }}
+                    >
+                      <button type="button">{value.tag}</button>
+                    </div>
+                  ))}
+                </div>
+              </ContainerShowTags>
+              <input
+                data-input-error={errors.tags ? true : false}
+                id="tags"
+                placeholder="Procure uma tag"
+                maxLength={50}
+                type="text"
+                value={tagValue}
+                {...register('tags', {
+                  onChange(event) {
+                    const value = event.target.value;
+                    setTagValue(value);
+                    value ? setShowTagsArr(true) : setShowTagsArr(false);
+                    handleSearchTags(value);
+                  },
+                  // onBlur(event) {
+                  //   console.log(event.relatedTarget);
+                  //   const parentElement = event.currentTarget
+                  //     .parentElement as Element;
+                  //   if (!parentElement.contains(event.relatedTarget))
+                  //     setShowTagsArr(false);
+                  // },
+                  disabled:
+                    !createdPinCurrent.file || !createdPinCurrent.pinSrc
+                      ? true
+                      : false,
+                })}
+                onFocus={() =>
+                  tagValue ? setShowTagsArr(true) : setShowTagsArr(false)
+                }
+              />
+            </div>
             {errors.tags && <ErrorMsg errorMsg={errors.tags.message} />}
             <ContainerSelectedTags>
               {createdPinCurrent.tags.map((tag, index) => (
