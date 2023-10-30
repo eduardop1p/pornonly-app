@@ -952,7 +952,7 @@ function BntPublish({ handleSubmitPin }: { handleSubmitPin(): void }) {
 }
 
 function LinearProgressWithLabel(
-  props: LinearProgressProps & { value: number }
+  props: LinearProgressProps & { value: number; valueBuffer: number }
 ) {
   return (
     <Box
@@ -964,7 +964,7 @@ function LinearProgressWithLabel(
       }}
     >
       <Box sx={{ width: '100%' }}>
-        <LinearProgress variant="determinate" color="error" {...props} />
+        <LinearProgress variant="buffer" color="error" {...props} />
       </Box>
       <Box sx={{ minWidth: 35, marginTop: '5px' }}>
         <Typography
@@ -986,7 +986,7 @@ function UploadPinProgress({ progress }: { progress: number }) {
         zIndex: 10,
       }}
     >
-      <LinearProgressWithLabel value={progress} />
+      <LinearProgressWithLabel value={progress} valueBuffer={progress} />
     </Box>
   );
 }
