@@ -42,44 +42,49 @@ export const ContainerNewPin = styled.div<TypeTheme>`
   align-items: flex-start;
   justify-content: center;
 
-  & > .container-file-img-current {
-    position: relative;
-    flex: none;
+  & > .container-img-100vh {
     width: 342px;
-    height: auto;
-    /* height: calc(100vh - 5rem); */
+    flex: none;
 
-    & > button {
-      position: absolute;
-      cursor: pointer;
-      z-index: 3;
-      top: 1rem;
-      right: 1rem;
-      width: 48px;
-      height: 48px;
-      background-color: ${({ theme }) => theme.colors.g_colorGray0};
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 100%;
-
-      & > svg {
-        flex: none;
-        fill: ${({ theme }) => theme.colors.g_colorGray111111};
-      }
-    }
-
-    img,
-    video {
+    & > .container-file-img-current {
+      position: relative;
       width: 100%;
-      height: auto !important;
-      border-radius: 2rem;
+      height: auto;
+      /* height: calc(100vh - 5rem); */
 
-      &::-webkit-media-controls {
-        visibility: hidden;
+      & > button {
+        position: absolute;
+        cursor: pointer;
+        z-index: 3;
+        top: 1rem;
+        right: 1rem;
+        width: 48px;
+        height: 48px;
+        background-color: ${({ theme }) => theme.colors.g_colorGray0};
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 100%;
+
+        & > svg {
+          flex: none;
+          fill: ${({ theme }) => theme.colors.g_colorGray111111};
+        }
       }
-      &::-webkit-media-controls-enclosure {
-        visibility: visible;
+
+      img,
+      video {
+        position: static !important;
+        width: 100%;
+        height: auto !important;
+        border-radius: 2rem;
+
+        &::-webkit-media-controls {
+          visibility: hidden;
+        }
+        &::-webkit-media-controls-enclosure {
+          visibility: visible;
+        }
       }
     }
   }
