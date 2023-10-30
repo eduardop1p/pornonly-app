@@ -352,7 +352,8 @@ export const ContainerCreatedPinsList = styled.div<TypeTheme>`
       overflow: hidden;
       margin-right: 10px;
 
-      & > img {
+      & > img,
+      & > video {
         width: 100%;
         height: 100%;
         object-fit: cover;

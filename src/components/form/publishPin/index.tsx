@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable react/display-name */
 'use client';
 
@@ -75,6 +76,7 @@ interface BodyForm {
 }
 
 const defaultCreatedPinCurrent = {
+  index: undefined,
   fileType: '',
   description: '',
   pinSrc: '',
@@ -139,7 +141,7 @@ export default function PublishPin({ token }: Props) {
         <div className="container-new-pin-and-title">
           <div className="container-pin-title">
             <h2 className="pin-title">Criar pin</h2>
-            {(createdPinCurrent.file || createdPinCurrent.pinSrc) && (
+            {createdPinCurrent.file && (
               <BntPublish
                 handleSubmitPin={childNewPinRef.current.handleSubmitPin}
               />
@@ -152,6 +154,8 @@ export default function PublishPin({ token }: Props) {
             handleServerSuccess={handleServerSuccess}
             setCreatedPinCurrent={setCreatedPinCurrent}
             setSelectCreatedPinIndex={setSelectCreatedPinIndex}
+            selectCreatedPinIndex={selectCreatedPinIndex}
+            setCreatedPins={setCreatedPins}
             isLoading={isLoading}
             setIsLoading={setIsLoading}
             token={token}
@@ -166,10 +170,12 @@ const NewPin = forwardRef(
   (
     props: {
       createdPinCurrent: CreatePinsType;
+      setCreatedPins: Dispatch<SetStateAction<CreatePinsType[]>>;
       handleServerError(msg: string): void;
       handleServerSuccess(msg: string): void;
       setCreatedPinCurrent: Dispatch<SetStateAction<CreatePinsType>>;
       setSelectCreatedPinIndex: Dispatch<SetStateAction<number | undefined>>;
+      selectCreatedPinIndex: number | undefined;
       isLoading: boolean;
       setIsLoading: Dispatch<SetStateAction<boolean>>;
       token: string;
@@ -185,6 +191,8 @@ const NewPin = forwardRef(
       isLoading,
       setIsLoading,
       token,
+      selectCreatedPinIndex,
+      setCreatedPins,
     } = props;
 
     const {
@@ -205,6 +213,8 @@ const NewPin = forwardRef(
     const [manageTitleTag, setManageTitleTag] = useState(false);
 
     let refCreatedPinCurrent = useRef<CreatePinsType>(createdPinCurrent);
+    let submitForm = useRef(false);
+
     useEffect(() => {
       refCreatedPinCurrent.current = createdPinCurrent;
     }, [createdPinCurrent]);
@@ -242,7 +252,7 @@ const NewPin = forwardRef(
     );
 
     useEffect(() => {
-      if (manageTitleTag) {
+      if (manageTitleTag && submitForm.current) {
         handleFormErrors(createdPinCurrent.title, createdPinCurrent.tags);
         setManageTitleTag(false);
       }
@@ -254,9 +264,11 @@ const NewPin = forwardRef(
       resetField('tags');
       setTagValue('');
       setShowTagsArr(false);
+      submitForm.current = false;
     };
 
     const handleSubmitPin = async () => {
+      submitForm.current = true;
       if (isLoading) return;
 
       const { description, tags, title, file, videoThumb } =
@@ -321,13 +333,27 @@ const NewPin = forwardRef(
       } else {
         pinSrc = URL.createObjectURL(file);
       }
-      setSelectCreatedPinIndex(undefined);
+      if (typeof selectCreatedPinIndex !== 'undefined') {
+        setCreatedPinCurrent(state => ({
+          ...state,
+          fileType,
+          pinSrc,
+          file,
+          videoThumb: videoThumbBlob,
+        }));
+        setCreatedPins(state => {
+          state[selectCreatedPinIndex] = { ...createdPinCurrent, file, pinSrc, fileType, videoThumb: videoThumbBlob }
+          return state;
+        });
+        return;
+      }
+
       setCreatedPinCurrent({
-        fileType,
         description: '',
-        pinSrc,
         tags: [],
         title: '',
+        fileType,
+        pinSrc,
         file,
         videoThumb: videoThumbBlob,
       });
@@ -402,14 +428,14 @@ const NewPin = forwardRef(
 
     return (
       <ContainerNewPin>
-        {createdPinCurrent.file || createdPinCurrent.pinSrc ? (
+        {createdPinCurrent.file ? (
           <div className="container-file-img-current">
             <button
               type="button"
               onClick={() => {
-                handleResetFilds();
-                setSelectCreatedPinIndex(undefined);
-                setCreatedPinCurrent(defaultCreatedPinCurrent);
+                clearErrors('root');
+                submitForm.current = false;
+                setCreatedPinCurrent(state => ({ ...state, file: '' }));
               }}
             >
               <svg
@@ -472,12 +498,10 @@ const NewPin = forwardRef(
         )}
         <ContainerFormNewPin
           onSubmit={handleSubmit(handleSubmitPin)}
-          data-hidden-form={
-            !createdPinCurrent.file || !createdPinCurrent.pinSrc ? true : false
-          }
+          data-hidden-form={!createdPinCurrent.file ? true : false}
         >
           <div className="container-input">
-            <label htmlFor="title">Titulo&nbsp;*</label>
+            <label htmlFor="title">Titulo</label>
             <input
               data-input-error={errors.title ? true : false}
               id="title"
@@ -493,11 +517,16 @@ const NewPin = forwardRef(
                     title: value,
                   }));
                   setManageTitleTag(true);
+                  if (
+                    typeof selectCreatedPinIndex !== 'undefined'
+                  ) {
+                    setCreatedPins(state => {
+                      state[selectCreatedPinIndex] = { ...createdPinCurrent, title: value }
+                      return state;
+                    });
+                  }
                 },
-                disabled:
-                  !createdPinCurrent.file || !createdPinCurrent.pinSrc
-                    ? true
-                    : false,
+                disabled: !createdPinCurrent.file ? true : false,
               })}
             />
             {errors.title && <ErrorMsg errorMsg={errors.title.message} />}
@@ -505,11 +534,7 @@ const NewPin = forwardRef(
           <div className="container-input">
             <label htmlFor="description">Descrição</label>
             <textarea
-              disabled={
-                !createdPinCurrent.file || !createdPinCurrent.pinSrc
-                  ? true
-                  : false
-              }
+              disabled={!createdPinCurrent.file ? true : false}
               id="description"
               value={createdPinCurrent.description}
               placeholder="Adicione uma descrição detalhada"
@@ -526,7 +551,7 @@ const NewPin = forwardRef(
             ></textarea>
           </div>
           <div className="container-input">
-            <label htmlFor="tags">Tags&nbsp;*</label>
+            <label htmlFor="tags">Tags</label>
             <div
               className="container-show-tags-and-input"
               tabIndex={1}
@@ -577,10 +602,7 @@ const NewPin = forwardRef(
                     value ? setShowTagsArr(true) : setShowTagsArr(false);
                     handleSearchTags(value);
                   },
-                  disabled:
-                    !createdPinCurrent.file || !createdPinCurrent.pinSrc
-                      ? true
-                      : false,
+                  disabled: !createdPinCurrent.file ? true : false,
                 })}
                 onFocus={() =>
                   tagValue ? setShowTagsArr(true) : setShowTagsArr(false)
@@ -611,7 +633,9 @@ const NewPin = forwardRef(
               ))}
             </ContainerSelectedTags>
           </div>
-          <input type="submit" style={{ visibility: 'hidden', opacity: 0 }} />
+          {createdPinCurrent.file && (
+            <input type="submit" style={{ visibility: 'hidden', opacity: 0 }} />
+          )}
         </ContainerFormNewPin>
       </ContainerNewPin>
     );
@@ -638,30 +662,26 @@ function PublishsCreated({
   handleResetFilds(): void;
 }) {
   const [btnDraftsActive, setbtnDraftsActive] = useState(false);
+  let refCreatedPinCurrent = useRef(createdPinCurrent);
+  let refCreatedPins = useRef(createdPins);
+
+  useEffect(() => {
+    refCreatedPins.current = createdPins;
+    refCreatedPinCurrent.current = createdPinCurrent;
+  }, [createdPinCurrent, createdPins]);
 
   const handleAddNewPublishPin = () => {
-    if (createdPins.length >= 5) {
+    if (!refCreatedPinCurrent.current.file) return;
+    if (refCreatedPins.current.length >= 5) {
       handleServerError('Número máximo de rascunhos atingido');
       return;
     }
     handleResetFilds();
-    const index = createdPins.findIndex(
-      val => val.pinSrc === createdPinCurrent.pinSrc
-    );
-    if (
-      (createdPinCurrent.file || createdPinCurrent.pinSrc) &&
-      !createdPins.some(val => val.pinSrc === createdPinCurrent.pinSrc)
-    )
-      setCreatedPins(state => [...state, createdPinCurrent]);
-
-    if (
-      createdPins.some(val => val.pinSrc === createdPinCurrent.pinSrc) &&
-      index !== -1
-    ) {
-      setCreatedPins(state => {
-        state[index] = createdPinCurrent;
-        return state;
-      });
+    if (typeof selectCreatedPinIndex === 'undefined') {
+      setSelectCreatedPinIndex(undefined);
+      setCreatedPinCurrent(defaultCreatedPinCurrent);
+      setCreatedPins(state => [...state, refCreatedPinCurrent.current]);
+      return
     }
     setSelectCreatedPinIndex(undefined);
     setCreatedPinCurrent(defaultCreatedPinCurrent);
@@ -707,12 +727,13 @@ function PublishsCreated({
               setbtnDraftsActive={setbtnDraftsActive}
               createdPins={createdPins}
               handleServerError={handleServerError}
+              selectCreatedPinIndex={selectCreatedPinIndex}
             />
           </div>
         )}
       </div>
-      {btnDraftsActive &&
-        createdPins.map((createdPin, index) => (
+      {btnDraftsActive && createdPins.length
+        ? createdPins.map((createdPin, index) => (
           <div
             key={`${createdPin.title}-${index}`}
             onClick={event => {
@@ -730,9 +751,11 @@ function PublishsCreated({
               createdPin={createdPin}
               setCreatedPins={setCreatedPins}
               setSelectCreatedPinIndex={setSelectCreatedPinIndex}
+              setCreatedPinCurrent={setCreatedPinCurrent}
             />
           </div>
-        ))}
+        ))
+        : null}
     </ContainerPublishsCreated>
   );
 }
@@ -742,10 +765,12 @@ function CreatedPinsList({
   selected,
   setCreatedPins,
   setSelectCreatedPinIndex,
+  setCreatedPinCurrent,
 }: {
   createdPin: CreatePinsType;
   selected: boolean;
   setCreatedPins: Dispatch<SetStateAction<CreatePinsType[]>>;
+  setCreatedPinCurrent: Dispatch<SetStateAction<CreatePinsType>>;
   setSelectCreatedPinIndex: Dispatch<SetStateAction<number | undefined>>;
 }) {
   const [activeDelete, setActiveDelete] = useState(false);
@@ -762,13 +787,13 @@ function CreatedPinsList({
     <ContainerCreatedPinsList className={`${selected ? 'selected' : ''}`}>
       <div className="container-img-preview-and-title">
         <div className="img-preview">
-          <Image
+          {createdPin.fileType === 'img' ? <Image
             src={createdPin.pinSrc}
             alt={createdPin.title}
             priority
             fill
             sizes="100"
-          />
+          /> : <video src={createdPin.pinSrc} controls={false}></video>}
         </div>
         <span className={`${selected ? 'selected' : ''}`}>
           {/* eslint-disable-next-line */}
@@ -814,6 +839,8 @@ function CreatedPinsList({
                 setCreatedPins(state =>
                   state.filter(val => val.pinSrc !== createdPin.pinSrc)
                 );
+                setCreatedPinCurrent(defaultCreatedPinCurrent);
+                setActiveDelete(false)
               }}
             >
               Excluir
@@ -857,10 +884,12 @@ function BtnAddNewPublishPin({
   setCreatedPins,
   setbtnDraftsActive,
   createdPins,
+  selectCreatedPinIndex,
   handleServerError,
   handleResetFilds,
 }: {
   setSelectCreatedPinIndex: Dispatch<SetStateAction<number | undefined>>;
+  selectCreatedPinIndex: number | undefined;
   setCreatedPinCurrent: Dispatch<SetStateAction<CreatePinsType>>;
   createdPinCurrent: CreatePinsType;
   setCreatedPins: Dispatch<SetStateAction<CreatePinsType[]>>;
@@ -869,30 +898,27 @@ function BtnAddNewPublishPin({
   handleServerError(msg: string): void;
   handleResetFilds(): void;
 }) {
+  let refCreatedPinCurrent = useRef(createdPinCurrent);
+  let refCreatedPins = useRef(createdPins);
+
+  useEffect(() => {
+    refCreatedPins.current = createdPins;
+    refCreatedPinCurrent.current = createdPinCurrent;
+  }, [createdPinCurrent, createdPins]);
+
   const handleAddNewPublishPin = () => {
+    if (!refCreatedPinCurrent.current.file) return;
     if (createdPins.length >= 5) {
       handleServerError('Número máximo de rascunhos atingido');
       return;
     }
     handleResetFilds();
-    const index = createdPins.findIndex(
-      val => val.pinSrc === createdPinCurrent.pinSrc
-    );
-    if (
-      (createdPinCurrent.file || createdPinCurrent.pinSrc) &&
-      !createdPins.some(val => val.pinSrc === createdPinCurrent.pinSrc)
-    ) {
-      setbtnDraftsActive(true);
-      setCreatedPins(state => [...state, createdPinCurrent]);
-    }
-    if (
-      createdPins.some(val => val.pinSrc === createdPinCurrent.pinSrc) &&
-      index !== -1
-    ) {
-      setCreatedPins(state => {
-        state[index] = createdPinCurrent;
-        return state;
-      });
+    setbtnDraftsActive(true);
+    if (typeof selectCreatedPinIndex === 'undefined') {
+      setSelectCreatedPinIndex(undefined);
+      setCreatedPinCurrent(defaultCreatedPinCurrent);
+      setCreatedPins(state => [...state, refCreatedPinCurrent.current]);
+      return
     }
     setSelectCreatedPinIndex(undefined);
     setCreatedPinCurrent(defaultCreatedPinCurrent);
