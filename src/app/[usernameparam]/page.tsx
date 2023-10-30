@@ -58,6 +58,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: `Pornonly - ${data ? data.username : 'Error 404'}`,
+    description: data ? `Veja todas as publicações de ${data.username}` : '',
   };
 }
 

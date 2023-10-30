@@ -117,12 +117,13 @@ export const ContainerArrowMore = styled.div<TypeTheme>`
       transform: rotate(0);
       transition: transform 200ms ease-in-out;
 
-      &[data-publish-active='true'] {
+      &[data-publish-active='true'],
+      &[data-category-active='true'] {
         transform: rotate(180deg);
       }
     }
 
-    & > .add-pin {
+    & > .container-more-links {
       visibility: hidden;
       opacity: 0;
       width: 180px;
@@ -140,7 +141,24 @@ export const ContainerArrowMore = styled.div<TypeTheme>`
       justify-content: space-between;
       cursor: default;
 
-      &[data-publish-active='true'] {
+      &.category {
+        width: 240px;
+        display: grid;
+        grid-template-columns: repeat(2, calc(100% / 2.05));
+        gap: 5px;
+        justify-content: left;
+
+        & > :first-child {
+          margin-bottom: 0;
+        }
+
+        a {
+          margin-right: 0 !important;
+        }
+      }
+
+      &[data-publish-active='true'],
+      &[data-category-active='true'] {
         visibility: visible;
         opacity: 1;
       }
@@ -159,7 +177,7 @@ export const ContainerArrowMore = styled.div<TypeTheme>`
         border-radius: 8px;
         transition: background 200ms ease-in-out;
 
-        &.link-active-publish {
+        &.link-active {
           background-color: ${theme.colors.g_colore9e9e9};
         }
 

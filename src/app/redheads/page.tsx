@@ -12,11 +12,14 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   const redheadsTags = ['ruivas', 'ruiva', 'redheads', 'redhead', 'red'];
+  const order = 'popular';
 
   const res = await fetch(
     // eslint-disable-next-line
     `${process.env.NEXT_PUBLIC_URL_API
-    }/midia/search-tags?search_tags=${redheadsTags.join(',')}&page=1`,
+    }/midia/search-tags?search_tags=${redheadsTags.join(
+      ','
+    )}&order=${order}&page=1`,
     {
       method: 'GET',
       next: { tags: ['pin'] },

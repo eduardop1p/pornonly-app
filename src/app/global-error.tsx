@@ -2,7 +2,8 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+
+import Header from '@/components/header';
 
 export default function GlobalError({
   error,
@@ -11,20 +12,31 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  const router = useRouter();
-
-  // useEffect(() => {
-  //   console.log(error);
-  // }, [error]);
-
   return (
     <html>
       <body style={{ textAlign: 'center' }}>
         <title>Pornonly</title>
-        <div style={{ marginTop: '10px', fontSize: '1rem' }}>
+        <div style={{ marginTop: '10px', fontSize: '1rem', color: '#111' }}>
           Houve um erro inesperado na aplicação {':('}
         </div>
-        <button onClick={() => router.refresh()}>Tentar novalmente</button>
+        <button
+          onClick={() => {
+            reset();
+          }}
+          style={{
+            border: '1px solid #ddd',
+            borderRadius: '10px',
+            color: '#111',
+            fontWeight: 400,
+            fontSize: '1rem',
+            padding: '8px 1rem',
+            cursor: 'pointer',
+            textAlign: 'center',
+            marginTop: '1rem',
+          }}
+        >
+          Tentar novalmente
+        </button>
       </body>
     </html>
   );

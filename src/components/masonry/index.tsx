@@ -154,7 +154,6 @@ export default function Masonry({
         return;
       }
       case 'video': {
-        if (typeof midiaType.current === 'undefined') return;
         midiaType.current = 'video';
         useFetchItemsMidiaType(
           setHasMore,
@@ -183,7 +182,13 @@ export default function Masonry({
       }
       case 'readHeads': {
         if (typeof tags === 'undefined') return;
-        useFetchItemsReadHeads(setHasMore, currentPage, setStResults, tags);
+        useFetchItemsReadHeads(
+          setHasMore,
+          currentPage,
+          order,
+          setStResults,
+          tags
+        );
         return;
       }
       case 'search': {
@@ -569,6 +574,7 @@ function useFetchItemsTags(
 function useFetchItemsReadHeads(
   setHasMore: Dispatch<SetStateAction<boolean>>,
   currentPage: MutableRefObject<number>,
+  order: MutableRefObject<string>,
   setStResults: Dispatch<SetStateAction<MidiaResultsType[]>>,
   tags: string[]
 ) {
@@ -578,7 +584,7 @@ function useFetchItemsReadHeads(
 
       const res = await fetch(
         // eslint-disable-next-line
-        `${process.env.NEXT_PUBLIC_URL_API}/midia/search-tags?search_tags=${tags.join(',')}&page=${currentPage.current}`,
+        `${process.env.NEXT_PUBLIC_URL_API}/midia/search-tags?search_tags=${tags.join(',')}&order=${order.current}&page=${currentPage.current}`,
         {
           method: 'GET',
           cache: 'no-cache',
