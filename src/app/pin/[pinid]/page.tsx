@@ -146,11 +146,15 @@ export default async function Page({ params }: Props) {
   }));
 
   let resultsMidiaSearchTag: MidiaResultsType[] = [];
-  if (dataPin.tags.join()) {
+  if (dataPin.tags.length) {
+    const order = 'popular';
+
     const resMidiaSearchTags = await fetch(
       // eslint-disable-next-line
       `${process.env.NEXT_PUBLIC_URL_API
-      }/midia/search-tags?search_tags=${dataPin.tags.join(',')}&page=1`,
+      }/midia/search-tags?search_tags=${dataPin.tags.join(
+        ','
+      )}&order=${order}&page=1`,
       {
         method: 'GET',
         next: { tags: ['pin'] },

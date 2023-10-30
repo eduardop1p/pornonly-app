@@ -57,7 +57,7 @@ export default function Masonry({
   const [stResults, setStResults] = useState(results);
   const [hasMore, setHasMore] = useState(true);
   let currentPage = useRef(1);
-  const midiaType = useRef<'img' | 'gif' | 'video' | ''>('');
+  const midiaType = useRef<'img' | 'gif' | 'video' | undefined>(undefined);
   const order = useRef<'popular' | 'desc' | 'asc'>('popular');
 
   useEffect(() => {
@@ -66,7 +66,7 @@ export default function Masonry({
       setStResults(results);
       setHasMore(true);
       currentPage.current = 1;
-      midiaType.current = '';
+      midiaType.current = undefined;
       order.current = 'popular';
     }
     // console.log('update results');
@@ -154,6 +154,7 @@ export default function Masonry({
         return;
       }
       case 'video': {
+        if (typeof midiaType.current === 'undefined') return;
         midiaType.current = 'video';
         useFetchItemsMidiaType(
           setHasMore,
@@ -177,7 +178,7 @@ export default function Masonry({
       }
       case 'tags': {
         if (typeof tags === 'undefined') return;
-        useFetchItemsTags(setHasMore, currentPage, setStResults, tags);
+        useFetchItemsTags(setHasMore, currentPage, order, setStResults, tags);
         return;
       }
       case 'readHeads': {
@@ -431,7 +432,7 @@ export default function Masonry({
 function useFetchItemsHome(
   setHasMore: Dispatch<SetStateAction<boolean>>,
   currentPage: MutableRefObject<number>,
-  midiaType: MutableRefObject<string>,
+  midiaType: MutableRefObject<'img' | 'video' | 'gif' | undefined>,
   order: MutableRefObject<string>,
   setStResults: Dispatch<SetStateAction<MidiaResultsType[]>>
 ) {
@@ -498,7 +499,7 @@ function useFetchItemsMidiaType(
   setHasMore: Dispatch<SetStateAction<boolean>>,
   currentPage: MutableRefObject<number>,
   order: MutableRefObject<string>,
-  midiaType: MutableRefObject<string>,
+  midiaType: MutableRefObject<'img' | 'video' | 'gif' | undefined>,
   setStResults: Dispatch<SetStateAction<MidiaResultsType[]>>
 ) {
   // console.log(currentPage.current);
@@ -533,6 +534,7 @@ function useFetchItemsMidiaType(
 function useFetchItemsTags(
   setHasMore: Dispatch<SetStateAction<boolean>>,
   currentPage: MutableRefObject<number>,
+  order: MutableRefObject<string>,
   setStResults: Dispatch<SetStateAction<MidiaResultsType[]>>,
   tags: string[]
 ) {
@@ -542,7 +544,7 @@ function useFetchItemsTags(
 
       const res = await fetch(
         // eslint-disable-next-line
-        `${process.env.NEXT_PUBLIC_URL_API}/midia/search-tags?search_tags=${tags.join(',')}&page=${currentPage.current}`,
+        `${process.env.NEXT_PUBLIC_URL_API}/midia/search-tags?search_tags=${tags.join(',')}&order=${order.current}&page=${currentPage.current}`,
         {
           method: 'GET',
           cache: 'no-cache',

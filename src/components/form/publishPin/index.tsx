@@ -12,13 +12,16 @@ import {
 } from 'react';
 import type { SetStateAction, Dispatch, MouseEvent, ChangeEvent } from 'react';
 import Image from 'next/image';
-import { UseFormResetField, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 // import { zodResolver } from '@hookform/resolvers/zod';
 // import { z } from 'zod';
 import axios from 'axios';
 import { get } from 'lodash';
-import CircularProgress from '@mui/material/CircularProgress';
 import VideoSnapshot from 'video-snapshot';
+import LinearProgress, {
+  LinearProgressProps,
+} from '@mui/material/LinearProgress';
+import { Typography, Box } from '@mui/material';
 
 import {
   Container,
@@ -118,7 +121,7 @@ export default function PublishPin({ token }: Props) {
       >
         {createdPinCurrent.pinSrc && (
           <Image
-            src={createdPinCurrent.pinSrc}
+            src={createdPinCurrent.fileType === 'img' ? createdPinCurrent.pinSrc : URL.createObjectURL(createdPinCurrent.videoThumb as Blob)}
             alt="preview"
             width={25}
             priority
@@ -153,7 +156,6 @@ export default function PublishPin({ token }: Props) {
             handleServerError={handleServerError}
             handleServerSuccess={handleServerSuccess}
             setCreatedPinCurrent={setCreatedPinCurrent}
-            setSelectCreatedPinIndex={setSelectCreatedPinIndex}
             selectCreatedPinIndex={selectCreatedPinIndex}
             setCreatedPins={setCreatedPins}
             isLoading={isLoading}
@@ -174,7 +176,6 @@ const NewPin = forwardRef(
       handleServerError(msg: string): void;
       handleServerSuccess(msg: string): void;
       setCreatedPinCurrent: Dispatch<SetStateAction<CreatePinsType>>;
-      setSelectCreatedPinIndex: Dispatch<SetStateAction<number | undefined>>;
       selectCreatedPinIndex: number | undefined;
       isLoading: boolean;
       setIsLoading: Dispatch<SetStateAction<boolean>>;
@@ -187,7 +188,6 @@ const NewPin = forwardRef(
       handleServerError,
       handleServerSuccess,
       setCreatedPinCurrent,
-      setSelectCreatedPinIndex,
       isLoading,
       setIsLoading,
       token,
@@ -227,7 +227,6 @@ const NewPin = forwardRef(
     const handleFormErrors = useCallback(
       (title: string, tags: string[]) => {
         let controller = true;
-        // console.log(title.trim().length);
         clearErrors('title');
         clearErrors('tags');
 
@@ -275,42 +274,40 @@ const NewPin = forwardRef(
         refCreatedPinCurrent.current;
       if (!handleFormErrors(title, tags)) return;
 
-      console.log(refCreatedPinCurrent.current);
+      const formData = new FormData();
+      formData.append('midia', file);
+      formData.append('thumb', videoThumb);
+      formData.append('title', title.trim());
+      formData.append('description', description.trim());
+      formData.append('tags', tags.join(',').trim());
 
-      // const formData = new FormData();
-      // formData.append('midia', file);
-      // formData.append('thumb', videoThumb);
-      // formData.append('title', title.trim());
-      // formData.append('description', description.trim());
-      // formData.append('tags', tags.join(',').trim());
-
-      // try {
-      //   setIsLoading(true);
-      //   await axios.post(`${process.env.NEXT_PUBLIC_URL_API}/midia`, formData, {
-      //     headers: {
-      //       Authorization: `Bearer ${token}`,
-      //       'Content-Type': 'multipart/form-data',
-      //     },
-      //     onUploadProgress(progressEvent) {
-      //       const loaded = progressEvent.loaded;
-      //       const total = progressEvent.total || 0;
-      //       const percentage = Math.round((loaded / total) * 100);
-      //       setUploadProgress(percentage);
-      //     },
-      //   });
-      //   await revalidatePin();
-      //   handleServerSuccess('Pin adcionado ao feed');
-      // } catch (err: any) {
-      //   // console.log(err);
-      //   if (get(err, 'response.data.error', false)) {
-      //     handleServerError(err.response.data.error);
-      //     return;
-      //   }
-      //   handleServerError('Erro interno no servidor');
-      // } finally {
-      //   setIsLoading(false);
-      //   setUploadProgress(0);
-      // }
+      try {
+        setIsLoading(true);
+        await axios.post(`${process.env.NEXT_PUBLIC_URL_API}/midia`, formData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+          onUploadProgress(progressEvent) {
+            const loaded = progressEvent.loaded;
+            const total = progressEvent.total || 0;
+            const percentage = Math.round((loaded / total) * 100);
+            setUploadProgress(percentage);
+          },
+        });
+        await revalidatePin();
+        handleServerSuccess('Pin adcionado ao feed');
+      } catch (err: any) {
+        // console.log(err);
+        if (get(err, 'response.data.error', false)) {
+          handleServerError(err.response.data.error);
+          return;
+        }
+        handleServerError('Erro interno no servidor');
+      } finally {
+        setIsLoading(false);
+        setUploadProgress(0);
+      }
     };
 
     const handleChangeFile = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -342,21 +339,25 @@ const NewPin = forwardRef(
           videoThumb: videoThumbBlob,
         }));
         setCreatedPins(state => {
-          state[selectCreatedPinIndex] = { ...createdPinCurrent, file, pinSrc, fileType, videoThumb: videoThumbBlob }
+          state[selectCreatedPinIndex] = {
+            ...createdPinCurrent,
+            file,
+            pinSrc,
+            fileType,
+            videoThumb: videoThumbBlob,
+          };
           return state;
         });
         return;
       }
 
-      setCreatedPinCurrent({
-        description: '',
-        tags: [],
-        title: '',
+      setCreatedPinCurrent(state => ({
+        ...state,
         fileType,
         pinSrc,
         file,
         videoThumb: videoThumbBlob,
-      });
+      }));
     };
 
     const handleGetThumbVideo = async (videoFile: Blob) => {
@@ -428,8 +429,9 @@ const NewPin = forwardRef(
 
     return (
       <ContainerNewPin>
+        {uploadProgress ? <UploadPinProgress progress={uploadProgress} /> : null}
         {createdPinCurrent.file ? (
-          <div className='container-img-100vh'>
+          <div className="container-img-100vh">
             <div className="container-file-img-current">
               <button
                 type="button"
@@ -464,7 +466,9 @@ const NewPin = forwardRef(
                     src={createdPinCurrent.pinSrc}
                     controls={true}
                     onWaiting={event => handleWaitingVideo(event.currentTarget)}
-                    onPlaying={event => handleNoWaitingVideo(event.currentTarget)}
+                    onPlaying={event =>
+                      handleNoWaitingVideo(event.currentTarget)
+                    }
                     onLoadedMetadata={event =>
                       handleVideoCompleteLoad(event.currentTarget)
                     }
@@ -519,11 +523,12 @@ const NewPin = forwardRef(
                     title: value,
                   }));
                   setManageTitleTag(true);
-                  if (
-                    typeof selectCreatedPinIndex !== 'undefined'
-                  ) {
+                  if (typeof selectCreatedPinIndex !== 'undefined') {
                     setCreatedPins(state => {
-                      state[selectCreatedPinIndex] = { ...createdPinCurrent, title: value }
+                      state[selectCreatedPinIndex] = {
+                        ...createdPinCurrent,
+                        title: value,
+                      };
                       return state;
                     });
                   }
@@ -683,7 +688,7 @@ function PublishsCreated({
       setSelectCreatedPinIndex(undefined);
       setCreatedPinCurrent(defaultCreatedPinCurrent);
       setCreatedPins(state => [...state, refCreatedPinCurrent.current]);
-      return
+      return;
     }
     setSelectCreatedPinIndex(undefined);
     setCreatedPinCurrent(defaultCreatedPinCurrent);
@@ -745,7 +750,6 @@ function PublishsCreated({
               }
               setSelectCreatedPinIndex(index);
             }}
-            // eslint-disable-next-line
             className="container-created-pins-list "
           >
             <CreatedPinsList
@@ -790,7 +794,11 @@ function CreatedPinsList({
       <div className="container-img-preview-and-title">
         <div className="img-preview">
           <Image
-            src={createdPin.fileType === 'img' ? createdPin.pinSrc : URL.createObjectURL(createdPin.videoThumb as Blob)}
+            src={
+              createdPin.fileType === 'img'
+                ? createdPin.pinSrc
+                : URL.createObjectURL(createdPin.videoThumb as Blob)
+            }
             alt={createdPin.title}
             priority
             fill
@@ -842,7 +850,7 @@ function CreatedPinsList({
                   state.filter(val => val.pinSrc !== createdPin.pinSrc)
                 );
                 setCreatedPinCurrent(defaultCreatedPinCurrent);
-                setActiveDelete(false)
+                setActiveDelete(false);
               }}
             >
               Excluir
@@ -920,7 +928,7 @@ function BtnAddNewPublishPin({
       setSelectCreatedPinIndex(undefined);
       setCreatedPinCurrent(defaultCreatedPinCurrent);
       setCreatedPins(state => [...state, refCreatedPinCurrent.current]);
-      return
+      return;
     }
     setSelectCreatedPinIndex(undefined);
     setCreatedPinCurrent(defaultCreatedPinCurrent);
@@ -940,5 +948,45 @@ function BntPublish({ handleSubmitPin }: { handleSubmitPin(): void }) {
     <ContainerBntPublish type="button" onClick={() => handleSubmitPin()}>
       Publicar
     </ContainerBntPublish>
+  );
+}
+
+function LinearProgressWithLabel(
+  props: LinearProgressProps & { value: number }
+) {
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        height: '4px',
+      }}
+    >
+      <Box sx={{ width: '100%' }}>
+        <LinearProgress variant="determinate" color="error" {...props} />
+      </Box>
+      <Box sx={{ minWidth: 35, marginTop: '5px' }}>
+        <Typography
+          style={{ color: '#000', fontSize: '0.9rem', fontWeight: '500' }}
+        >{`${Math.round(props.value)}%`}</Typography>
+      </Box>
+    </Box>
+  );
+}
+
+function UploadPinProgress({ progress }: { progress: number }) {
+  return (
+    <Box
+      sx={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        zIndex: 10,
+      }}
+    >
+      <LinearProgressWithLabel value={progress} />
+    </Box>
   );
 }
