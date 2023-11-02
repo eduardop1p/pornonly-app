@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { upperFirst } from 'lodash';
+import { upperFirst, deburr } from 'lodash';
 
 import styles from './page.module.css';
 
@@ -13,12 +13,11 @@ interface Props {
 
 const getData = async (categoryTag: string) => {
   const order = 'popular';
-  if (categoryTag === 'semi-nuds') categoryTag = 'semi nuds';
-  if (categoryTag === 'lesbicas') categoryTag = 'lésbicas';
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_URL_API}/midia/search-tags?search_tags=${categoryTag}&order=${order}&page=1`,
+      // eslint-disable-next-line
+      `${process.env.NEXT_PUBLIC_URL_API}/midia/search-tags?search_tags=${categoryTag.replaceAll('-', ' ')}&order=${order}&page=1`,
       {
         method: 'GET',
         next: { tags: ['pin'] },
@@ -41,7 +40,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     // eslint-disable-next-line
-    title: `Pornonly - ${categoryTag === 'lesbicas' ? 'Lésbicas' : upperFirst(categoryTag.replaceAll('-', ' '))}`,
+    title: `Pornonly - ${upperFirst(categoryTag.replaceAll('-', ' '))}`,
+    // title: `Pornonly - ${deburr(upperFirst(categoryTag.replaceAll('-', ' ')))}`,
   };
 }
 

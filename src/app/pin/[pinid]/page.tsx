@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { cookies } from 'next/headers';
+import { deburr } from 'lodash';
 
 import styles from './styles.module.css';
 
@@ -84,11 +85,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
 
   return {
-    title: `Pornonly - ${data.title}`,
+    title: `Pornonly - ${deburr(data.title)}`,
     description: data.description,
     openGraph: {
       type: 'website',
-      title: data.title,
+      title: deburr(data.title),
       siteName: 'Pornonly',
       url: process.env.URL_SITE,
       description: data.description,
@@ -145,26 +146,22 @@ export default async function Page({ params }: Props) {
     indexComm,
   }));
 
-  let resultsMidiaSearchTag: MidiaResultsType[] = [];
-  if (dataPin.tags.length) {
-    const order = 'popular';
-
-    const resMidiaSearchTags = await fetch(
-      // eslint-disable-next-line
-      `${process.env.NEXT_PUBLIC_URL_API
-      }/midia/search-tags?search_tags=${dataPin.tags.join(
-        ','
-      )}&order=${order}&page=1`,
-      {
-        method: 'GET',
-        next: { tags: ['pin'] },
-      }
-    );
-    const dataMidiaSearchTag = (await resMidiaSearchTags.json()) as MidiaType;
-    resultsMidiaSearchTag = dataMidiaSearchTag.midia.results.filter(
-      value => value._id !== pinid
-    );
-  }
+  const order = 'popular';
+  const resMidiaSearchTags = await fetch(
+    // eslint-disable-next-line
+    `${process.env.NEXT_PUBLIC_URL_API
+    }/midia/search-tags?search_tags=${dataPin.tags.join(
+      ','
+    )}&order=${order}&page=1`,
+    {
+      method: 'GET',
+      next: { tags: ['pin'] },
+    }
+  );
+  const dataMidiaSearchTag = (await resMidiaSearchTags.json()) as MidiaType;
+  const resultsMidiaSearchTag = dataMidiaSearchTag.midia.results.filter(
+    value => value._id !== pinid
+  );
 
   return (
     <main className={styles.main}>

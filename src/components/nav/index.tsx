@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { ReactNode, useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import { upperFirst, deburr } from 'lodash';
+import { deburr, upperFirst } from 'lodash';
 
 import { Container, ContainerArrowMore } from './styded';
 
@@ -182,15 +182,12 @@ function CategoryTags({ tags }: { tags: TagType[] }) {
           <Link
             key={val._id}
             className={
-              // eslint-disable-next-line
-              pathName === `/category/${deburr(val.tag.replaceAll(' ', '-').toLowerCase())}`
+              pathName === `/category/${clearPathName(val.tag)}`
                 ? 'link-active'
                 : ''
             }
             onClick={() => setCategoryActive(false)}
-            href={`/category/${deburr(
-              val.tag.replaceAll(' ', '-').toLowerCase()
-            )}`}
+            href={`/category/${clearPathName(val.tag)}`}
           >
             {upperFirst(val.tag)}
           </Link>
@@ -199,3 +196,7 @@ function CategoryTags({ tags }: { tags: TagType[] }) {
     </ContainerArrowMore>
   );
 }
+
+const clearPathName = (pathName: string) => {
+  return deburr(pathName.replaceAll(' ', '-').toLowerCase());
+};
