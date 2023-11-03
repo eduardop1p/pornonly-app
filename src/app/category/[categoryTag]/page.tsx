@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { upperFirst, deburr } from 'lodash';
+import { upperFirst } from 'lodash';
 
 import styles from './page.module.css';
 

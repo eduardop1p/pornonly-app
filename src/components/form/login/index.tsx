@@ -109,9 +109,9 @@ export default function Login() {
         <Input
           value={state.email}
           id="email"
-          label="E-mail"
+          label="Email"
           name="email"
-          placeholder="E-mail"
+          placeholder="Email"
           type="email"
           register={register}
           errors={{ message: errors.email?.message, classError: errors.email }}

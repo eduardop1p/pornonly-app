@@ -46,13 +46,14 @@ export const FormContainer = styled.div<TypeTheme>`
       }
 
       & > .login,
-      & > .create-account {
+      & > .create-account,
+      & > .password-reset {
         margin: 1rem auto 0;
         padding: 8px 12px;
         font-size: ${theme.font_size.font_size_1rem};
         font-weight: ${theme.font_weight.font_weight_600};
-        min-width: 150px;
-        width: calc(100% - 15rem);
+        width: 150px;
+        /* width: calc(100% - 15rem); */
         border-radius: 24px;
         display: flex;
         align-items: center;
@@ -60,11 +61,9 @@ export const FormContainer = styled.div<TypeTheme>`
         height: 40px;
         cursor: pointer;
         transition: background 100ms ease-in-out;
+        background-color: ${theme.colors.g_colorRed100};
+        color: ${theme.colors.g_colorGray0};
 
-        & {
-          background-color: ${theme.colors.g_colorRed100};
-          color: ${theme.colors.g_colorGray0};
-        }
         &:hover {
           background-color: ${theme.colors.g_colorRed100Hovered};
         }

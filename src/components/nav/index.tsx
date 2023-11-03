@@ -127,6 +127,13 @@ export default function Nav({ isAuth, tags, children }: Props) {
         )}
       </div>
       <Search />
+      <button
+        type="button"
+        style={{ marginRight: '10px' }}
+        className="elogios-melhorias-bugs"
+      >
+        CT
+      </button>
       {!isAuth ? (
         <div className="links-no-auth">
           <Link className="login" href="/login">
