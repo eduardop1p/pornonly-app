@@ -24,8 +24,8 @@ const ZodLoginSchema = z.object({
   email: z
     .string()
     .trim()
-    .nonempty('E-mail não pode está vazio.')
-    .email('E-mail inválido.'),
+    .nonempty('Email não pode está vazio.')
+    .email('Email inválido.'),
   password: z.string().trim().nonempty('Digite sua senha pra fazer login.'),
 });
 

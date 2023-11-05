@@ -3,8 +3,8 @@ export default function Logo() {
     <div
       style={{
         backgroundColor: '#111',
-        width: '24px',
-        height: '24px',
+        width: '23px',
+        height: '23px',
         borderRadius: '100%',
         display: 'flex',
         alignItems: 'center',

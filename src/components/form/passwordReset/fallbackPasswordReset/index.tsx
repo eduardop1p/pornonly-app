@@ -18,8 +18,9 @@ export default function FallbackPassworReset({
         className="container-info"
         onClick={event => event.stopPropagation()}
       >
+        <h2>Recuperação de senha</h2>
         <p>
-          Foi enviado um email para <span>{email}</span> com instruções pra você
+          Foi enviado um email para <span>{email}</span> com instruções pra
           acessar sua conta
         </p>
         <p>Deseja ir para tela inicial ou fazer login?</p>

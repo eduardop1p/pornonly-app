@@ -151,7 +151,7 @@ export default function UserProfile({ children, token, photo }: Props) {
         onClick={() => setShowAddPhotoProfile(false)}
       >
         <div className="profile" onClick={event => event.stopPropagation()}>
-          <h1>Perfil</h1>
+          <h1>Foto de perfil</h1>
           <div className="photo">
             <label htmlFor="add-photo">
               <input

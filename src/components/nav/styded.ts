@@ -142,9 +142,9 @@ export const ContainerArrowMore = styled.div<TypeTheme>`
       cursor: default;
 
       &.category {
-        width: 240px;
+        width: 350px;
         display: grid;
-        grid-template-columns: repeat(2, calc(100% / 2.05));
+        grid-template-columns: repeat(3, calc(100% / 3.1));
         gap: 5px;
         justify-content: left;
 

@@ -43,8 +43,8 @@ const ZodCreateAccountSchema = z
     email: z
       .string()
       .trim()
-      .nonempty('E-mail não pode está vazio.')
-      .email('E-mail inválido.'),
+      .nonempty('Email não pode está vazio.')
+      .email('Email inválido.'),
     password: z.string().superRefine((val, ctx) => {
       if (val.length < 5 || val.length > 20) {
         ctx.addIssue({

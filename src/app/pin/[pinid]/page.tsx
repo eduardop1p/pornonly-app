@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
 import { cookies } from 'next/headers';
-import { deburr } from 'lodash';
 
 import styles from './styles.module.css';
 
@@ -85,11 +84,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
 
   return {
-    title: `Pornonly - ${deburr(data.title)}`,
+    title: `Pornonly - ${data.title}`,
     description: data.description,
     openGraph: {
       type: 'website',
-      title: deburr(data.title),
+      title: data.title,
       siteName: 'Pornonly',
       url: process.env.URL_SITE,
       description: data.description,

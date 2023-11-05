@@ -37,6 +37,9 @@ const getData = async (categoryTag: string) => {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   let { categoryTag } = params;
+  if (categoryTag === 'lesbicas') categoryTag = 'Lésbicas';
+  if (categoryTag === 'asiaticas') categoryTag = 'Asiáticas';
+  if (categoryTag === 'masturbacao') categoryTag = 'Masturbação';
 
   return {
     // eslint-disable-next-line

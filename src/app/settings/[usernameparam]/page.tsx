@@ -2,11 +2,11 @@ import { cookies } from 'next/headers';
 import { Metadata } from 'next';
 // import { upperFirst } from 'lodash';
 
-import UserPublishsSaves from '@/components/userPublishsSaves';
-import NotFoundPage from '../not-found';
+import NotFoundPage from '../../not-found';
 import UserInfo from '@/components/userInfo';
 import getUser from '@/services/userPage/getUser';
 import userItems from '@/services/userPage/userItems';
+import UserUpdate from '@/components/userUpdate';
 
 import styles from './styles.module.css';
 
@@ -35,8 +35,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const data = await getUser(usernameparam);
 
   return {
-    title: `Pornonly - ${data ? data.username : 'Error 404'}`,
-    description: data ? `Veja todas as publicações de ${data.username}` : '',
+    // eslint-disable-next-line
+    title: `Pornonly - ${data ? 'Configurações' : 'Error 404'}`,
   };
 }
 
@@ -65,13 +65,11 @@ export default async function Page({ params }: Props) {
         userSavesResultsLength={userSavesResults.length}
         username={username}
       />
-      <UserPublishsSaves
-        publishsResults={userMidiaResults}
-        savesResults={userSavesResults}
-        token={token as string}
-        isUniqueUser={isUniqueUser}
-        userId={userData._id}
-        username={userData.username}
+
+      <UserUpdate
+        currentEmail={email}
+        currentUsername={username}
+        token={token}
       />
     </main>
   );

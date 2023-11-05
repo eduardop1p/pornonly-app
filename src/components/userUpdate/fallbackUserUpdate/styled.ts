@@ -66,16 +66,27 @@ export const Container = styled.div<TypeTheme>`
           height: 40px;
           cursor: pointer;
           transition: background 100ms ease-in-out;
-          background-color: ${theme.colors.g_colorRed100};
-          color: ${theme.colors.g_colorGray0};
-
-          &:hover {
-            background-color: ${theme.colors.g_colorRed100Hovered};
-          }
         }
 
         & > :first-child {
+          background-color: ${({ theme }) => theme.colors.g_colorRed100};
+          color: ${({ theme }) => theme.colors.g_colorGray0};
+          margin-right: 1rem;
+
+          &:hover {
+            background-color: ${({ theme }) =>
+              theme.colors.g_colorRed100Hovered};
+          }
+        }
+
+        & > :last-child {
           margin-right: 10px;
+          background-color: ${({ theme }) => theme.colors.g_colorGray100};
+
+          &:hover {
+            background-color: ${({ theme }) =>
+              theme.colors.g_colorGray100Hovered};
+          }
         }
       }
     }
