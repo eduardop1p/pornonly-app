@@ -92,17 +92,18 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
       & > .pin-title-and-user {
         padding: 8px 6px 0;
         display: block;
+        width: 100%;
 
         & > .pin-title {
           color: ${theme.colors.g_colorGray300};
           font-weight: ${theme.font_weight.font_weight_600};
           font-size: ${theme.font_size.font_size_0_90rem};
-          width: fit-content;
-          height: 1rem;
+          width: 100%;
+          line-height: 1.2;
           overflow: hidden;
           display: -webkit-box;
           -webkit-box-orient: vertical;
-          -webkit-line-clamp: 1; /* Define o número máximo de linhas exibidas */
+          -webkit-line-clamp: 2; /* Define o número máximo de linhas exibidas */
           text-overflow: ellipsis;
           cursor: pointer;
 
@@ -113,7 +114,7 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
 
         & > .pin-original-user {
           display: inline-block;
-          width: fit-content;
+          width: 100%;
           margin-top: 7px;
           margin-left: -2px;
 

@@ -6,6 +6,7 @@ export const Container = styled.div<TypeTheme>`
   ${({ theme }) => css`
     display: flex;
     align-items: center;
+    width: 100%;
 
 
     & > * {
@@ -42,6 +43,7 @@ export const Container = styled.div<TypeTheme>`
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      width: calc(100% - 32px);
   `}
 `;
 
