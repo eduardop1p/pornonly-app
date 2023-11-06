@@ -34,7 +34,7 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
 
     .no-more-results {
       position: absolute;
-      margin-top: 5px;
+      margin-top: 10px;
       left: 50%;
       transform: translateX(-50%);
       text-align: center;

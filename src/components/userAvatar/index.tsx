@@ -7,7 +7,7 @@ import Link from 'next/link';
 
 import styles from './styles.module.css';
 
-import { UserType } from '@/app/[usernameparam]/page';
+import type { UserIdResultsType } from '../masonry/userPin';
 
 interface Props {
   noLink?: boolean;
@@ -32,7 +32,7 @@ export default async function UserAvatar({
   if (!response.ok) {
     return;
   }
-  const user = (await response.json()) as UserType;
+  const user = (await response.json()) as UserIdResultsType;
   const { profilePhoto } = user;
 
   return (

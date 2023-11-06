@@ -2,30 +2,18 @@ import { cookies } from 'next/headers';
 import { Metadata } from 'next';
 // import { upperFirst } from 'lodash';
 
-import UserPublishsSaves from '@/components/userPublishsSaves';
+import UserPublishs from '@/components/userPublishs';
 import NotFoundPage from '../not-found';
 import UserInfo from '@/components/userInfo';
 import getUser from '@/services/userPage/getUser';
-import userItems from '@/services/userPage/userItems';
+import getUserCreated from '@/services/userPage/getUserCreated';
+import getUserTotalSaves from '@/services/userPage/getUserTotalSaves';
+import uniqueUser from '@/services/userPage/uniqueUser';
 
 import styles from './styles.module.css';
 
 interface Props {
   params: { usernameparam: string };
-}
-
-export interface UserType {
-  _id: string;
-  username: string;
-  email: string;
-  profilePhoto: ProfilePhotoType[];
-  saves?: string[];
-  createIn?: string;
-}
-export interface ProfilePhotoType {
-  _id: string;
-  userId: unknown[];
-  url: string;
 }
 
 // pato borrachudo admin
@@ -46,13 +34,14 @@ export default async function Page({ params }: Props) {
 
   const userData = await getUser(usernameparam);
   if (!userData || userData.username !== usernameparam) return <NotFoundPage />;
+  const userId = userData._id;
 
   const { profilePhoto, username, email } = userData;
 
-  const { isUniqueUser, userMidiaResults, userSavesResults } = await userItems(
-    token,
-    userData._id
-  );
+  const { userMidiaResults, userMidiaTotal } = await getUserCreated(userId);
+  const { userSavesTotal } = await getUserTotalSaves(userId);
+
+  const isUniqueUser = uniqueUser(token, userId);
 
   return (
     <main className={styles.main}>
@@ -61,14 +50,13 @@ export default async function Page({ params }: Props) {
         isUniqueUser={isUniqueUser}
         profilePhoto={profilePhoto}
         token={token}
-        userMidiaResultsLength={userMidiaResults.length}
-        userSavesResultsLength={userSavesResults.length}
+        userMidiaResultsLength={userMidiaTotal}
+        userSavesResultsLength={userSavesTotal}
         username={username}
       />
-      <UserPublishsSaves
+      <UserPublishs
         publishsResults={userMidiaResults}
-        savesResults={userSavesResults}
-        token={token as string}
+        token={token}
         isUniqueUser={isUniqueUser}
         userId={userData._id}
         username={userData.username}

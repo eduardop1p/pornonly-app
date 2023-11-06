@@ -33,7 +33,7 @@ export default function Comments({
   token: string;
   isAuth: boolean;
   resultsComments: ResultsCommentsType[];
-  userId: string | null;
+  userId?: string;
   children: ReactNode;
   dataPin: MidiaResultsType;
   totalComments: number;

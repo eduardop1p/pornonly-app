@@ -12,7 +12,6 @@ import Comments from '@/components/pin/comments';
 import { UserIdResultsType } from '@/components/masonry/userPin';
 import UserAvatar from '@/components/userAvatar';
 import UserPin from '@/components/masonry/userPin';
-import { UserType } from '@/app/[usernameparam]/page';
 import Masonry from '@/components/masonry';
 import NotFoundPage from '@/app/not-found';
 
@@ -107,7 +106,7 @@ export default async function Page({ params }: Props) {
   if (!dataPin) return <NotFoundPage />;
 
   let isSave = false;
-  let userId = null;
+  let userId = undefined;
 
   if (isAuth) {
     const res = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/users`, {
@@ -120,7 +119,7 @@ export default async function Page({ params }: Props) {
     if (!res.ok) {
       return;
     }
-    const user = (await res.json()) as UserType;
+    const user = (await res.json()) as UserIdResultsType;
     userId = user._id;
     isSave = user.saves?.includes(pinid) as boolean;
   }

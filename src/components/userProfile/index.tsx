@@ -6,12 +6,12 @@ import { useRouter } from 'next/navigation';
 import { get } from 'lodash';
 
 import { Container } from './styled';
-import { ProfilePhotoType } from '@/app/[usernameparam]/page';
 import Loading from '../form/loading';
 import { GlobalError } from '../form/globalError';
 import { GlobalSuccess } from '../form/globalSuccess';
 import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
 import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
+import { ProfilePhotoType } from '../masonry/userPin';
 
 interface Props {
   children: ReactNode;

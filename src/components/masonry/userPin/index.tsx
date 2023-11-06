@@ -8,12 +8,14 @@ import { Container, ContainerLink } from './styled';
 export interface UserIdResultsType {
   _id?: string;
   username: string;
-  profilePhoto: {
-    _id: string;
-    url: string;
-  }[];
+  profilePhoto: ProfilePhotoType[];
   midia?: string[];
   saves?: string[];
+}
+
+export interface ProfilePhotoType {
+  _id: string;
+  url: string;
 }
 
 export default function UserPin({
@@ -32,7 +34,9 @@ export default function UserPin({
           height={32}
         />
       ) : (
-        <span>{username?.at(0)?.toUpperCase()}</span>
+        <span style={{ width: '32px', height: '32px' }}>
+          {username?.at(0)?.toUpperCase()}
+        </span>
       )}
       <h4>{username}</h4>
     </Container>
@@ -51,7 +55,9 @@ export default function UserPin({
             height={48}
           />
         ) : (
-          <span>{username?.at(0)?.toUpperCase()}</span>
+          <span style={{ width: '48px', height: '48px' }}>
+            {username?.at(0)?.toUpperCase()}
+          </span>
         )}
         <div>
           <h4>{username}</h4>

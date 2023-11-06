@@ -17,12 +17,6 @@
 .publishs-or-saves{
   margin-top: 1.5rem;
 }
-.publishs-or-saves > [data-active='true']{
-  display: block;
-}
-.publishs-or-saves > [data-active='false']{
-  display: none;
-}
 
 .none-results{
   color: var(--g-colorGray300);
@@ -80,6 +74,7 @@
   background-color: transparent;
   font-size: var(--font-size-1rem);
   font-weight: var(--font-weight-500);
+  color: var(--g-colorGray300);
   cursor: pointer;
   transition: background 150ms ease-in-out;
   border-radius: 10px;

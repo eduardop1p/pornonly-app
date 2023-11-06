@@ -6,7 +6,7 @@ import Link from 'next/link';
 import styles from './styles.module.css';
 
 import UserProfile from '../userProfile';
-import { ProfilePhotoType } from '@/app/[usernameparam]/page';
+import { ProfilePhotoType } from '../masonry/userPin';
 
 export default function UserInfo({
   isUniqueUser,
@@ -73,15 +73,17 @@ export default function UserInfo({
     Conta ativa desde: {createIn}
   </div> */}
       <div className={styles['user-total-publishs-and-saves']}>
-        <span>
-          {userMidiaResultsLength == 1
-            ? `${userMidiaResultsLength} publicação`
-            : `${userMidiaResultsLength} publicações`}
+        <span id="publishs">
+          {!userMidiaResultsLength && `Sem publicações`}
+          {userMidiaResultsLength == 1 &&
+            `${userMidiaResultsLength} publicação`}
+          {userMidiaResultsLength > 1 &&
+            `${userMidiaResultsLength} publicações`}
         </span>
-        <span>
-          {userSavesResultsLength == 1
-            ? `${userSavesResultsLength} Salvo`
-            : `${userSavesResultsLength} Salvos`}
+        <span id="saves">
+          {!userSavesResultsLength && `Sem salvos`}
+          {userSavesResultsLength == 1 && `${userSavesResultsLength} Salvo`}
+          {userSavesResultsLength > 1 && `${userSavesResultsLength} Salvos`}
         </span>
       </div>
       {isUniqueUser && (
