@@ -25,6 +25,7 @@ import WaitingPin from './waitingPin';
 import UserPin from './userPin';
 import ScrollTop from './scrollTop';
 import Category from './category';
+import { MidiaTypeFilterType } from '../userPublishs';
 
 interface Props {
   results: MidiaResultsType[];
@@ -36,6 +37,7 @@ interface Props {
   search_query?: string;
   userId?: string;
   username?: string;
+  midiaTypeFilter?: 'img' | 'gif' | 'video';
 }
 
 export default function Masonry({
@@ -47,6 +49,7 @@ export default function Masonry({
   search_query,
   userId,
   username,
+  midiaTypeFilter,
 }: Props) {
   const pathName = usePathname();
 
@@ -57,12 +60,17 @@ export default function Masonry({
   const [stResults, setStResults] = useState(results);
   const [hasMore, setHasMore] = useState(true);
   let currentPage = useRef(1);
-  const midiaType = useRef<'img' | 'gif' | 'video' | undefined>(undefined);
+  const midiaType = useRef<MidiaTypeFilterType>(midiaTypeFilter);
   const order = useRef<'popular' | 'desc' | 'asc'>('popular');
 
   useEffect(() => {
     // esse effect só vai execultar quando o results do back-end mudar
-    if (pathName == '/search' || pathName == `/${username}`) {
+    if (
+      pathName == '/search' ||
+      pathName == `/${username}` ||
+      pathName == `/created/${username}` ||
+      pathName == `/saves/${username}`
+    ) {
       setStResults(results);
       setHasMore(true);
       currentPage.current = 1;
@@ -203,12 +211,24 @@ export default function Masonry({
       }
       case 'user-midia': {
         if (typeof userId === 'undefined') return;
-        useFetchItemsUserMidia(setHasMore, currentPage, setStResults, userId);
+        useFetchItemsUserMidia(
+          setHasMore,
+          currentPage,
+          setStResults,
+          userId,
+          midiaType
+        );
         return;
       }
       case 'user-saves': {
         if (typeof userId === 'undefined') return;
-        useFetchItemsUserSaves(setHasMore, currentPage, setStResults, userId);
+        useFetchItemsUserSaves(
+          setHasMore,
+          currentPage,
+          setStResults,
+          userId,
+          midiaType
+        );
         return;
       }
       default:
@@ -644,7 +664,8 @@ function useFetchItemsUserMidia(
   setHasMore: Dispatch<SetStateAction<boolean>>,
   currentPage: MutableRefObject<number>,
   setStResults: Dispatch<SetStateAction<MidiaResultsType[]>>,
-  userId: string
+  userId: string,
+  midiaType: MutableRefObject<MidiaTypeFilterType>
 ) {
   const fetchItems = async () => {
     try {
@@ -652,7 +673,7 @@ function useFetchItemsUserMidia(
 
       const res = await fetch(
         // eslint-disable-next-line
-        `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all-midia-userid/${userId}?page=${currentPage.current}`,
+        `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all-midia-userid/${userId}?midiaType=${midiaType}&page=${currentPage.current}`,
         {
           method: 'GET',
           cache: 'no-cache',
@@ -678,7 +699,8 @@ function useFetchItemsUserSaves(
   setHasMore: Dispatch<SetStateAction<boolean>>,
   currentPage: MutableRefObject<number>,
   setStResults: Dispatch<SetStateAction<MidiaResultsType[]>>,
-  userId: string
+  userId: string,
+  midiaType: MutableRefObject<MidiaTypeFilterType>
 ) {
   const fetchItems = async () => {
     try {
@@ -686,7 +708,7 @@ function useFetchItemsUserSaves(
 
       const res = await fetch(
         // eslint-disable-next-line
-        `${process.env.NEXT_PUBLIC_URL_API}/saves/get-all-saves-userid/${userId}?page=${currentPage.current}`,
+        `${process.env.NEXT_PUBLIC_URL_API}/saves/get-all-saves-userid/${userId}?midiaType=${midiaType}&page=${currentPage.current}`,
         {
           method: 'GET',
           cache: 'no-cache',

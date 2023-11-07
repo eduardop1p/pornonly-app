@@ -12,6 +12,7 @@ import {
 } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { upperFirst } from 'lodash';
 
 import styles from './styles.module.css';
 
@@ -23,6 +24,9 @@ import { GlobalError } from '../form/globalError';
 import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
 import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
 import revalidatePin from '@/services/revalidatePin';
+import { MidiaType } from '@/app/page';
+
+export type MidiaTypeFilterType = 'img' | 'gif' | 'video' | undefined;
 
 export default function UserPublishs({
   publishsResults,
@@ -42,13 +46,13 @@ export default function UserPublishs({
   const [stPublishsResults, setStPublishsResults] = useState(publishsResults);
   const [pinSelectMode, setPinSelectMode] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [midiaTypeFilter, setMidiaTypeFilter] =
+    useState<MidiaTypeFilterType>(undefined);
   const { handleServerSuccess, msgGlobalSuccess, showGlobalSuccess } =
     useGlobalSuccessTime();
   const { handleServerError, msgGlobalError, showGlobalError } =
     useGlobalErrorTime();
 
-  const refContainerManageMoreOptions = useRef<HTMLDivElement | null>(null);
-  const refBtnManageMoreOptions = useRef<HTMLButtonElement | null>(null);
   const pinsIdsRemoveArray = useRef<{ id?: string; key: string }[]>([]);
   const refPinSelectMode = useRef<boolean | null>(null);
   refPinSelectMode.current = pinSelectMode;
@@ -145,21 +149,32 @@ export default function UserPublishs({
       />
       <GlobalError showError={showGlobalError} errorMsg={msgGlobalError} />
       <div className={styles['btns-publishs-or-saves']}>
-        {isUniqueUser && stPublishsResults.length ? (
-          <MoreOptions
-            pinSelectMode={pinSelectMode}
-            refBtnManageMoreOptions={refBtnManageMoreOptions}
-            refContainerManageMoreOptions={refContainerManageMoreOptions}
-            setPinSelectMode={setPinSelectMode}
-            handleServerError={handleServerError}
-            handleServerSuccess={handleServerSuccess}
-            isLoading={isLoading}
-            pinsIdsRemoveArray={pinsIdsRemoveArray}
-            refPinSelectMode={refPinSelectMode}
-            setIsLoading={setIsLoading}
-            setStPublishsResults={setStPublishsResults}
-            token={token}
-          />
+        {publishsResults.length ? (
+          <div className={styles['container-options']}>
+            {isUniqueUser ? (
+              <MoreOptions
+                pinSelectMode={pinSelectMode}
+                setPinSelectMode={setPinSelectMode}
+                handleServerError={handleServerError}
+                handleServerSuccess={handleServerSuccess}
+                isLoading={isLoading}
+                pinsIdsRemoveArray={pinsIdsRemoveArray}
+                refPinSelectMode={refPinSelectMode}
+                setIsLoading={setIsLoading}
+                setStPublishsResults={setStPublishsResults}
+                token={token}
+              />
+            ) : null}
+            <MidiaTypeOption
+              userId={userId}
+              handleServerError={handleServerError}
+              isLoading={isLoading}
+              setIsLoading={setIsLoading}
+              setStPublishsResults={setStPublishsResults}
+              setMidiaTypeFilter={setMidiaTypeFilter}
+              midiaTypeFilter={midiaTypeFilter}
+            />
+          </div>
         ) : null}
 
         <Link
@@ -192,10 +207,21 @@ export default function UserPublishs({
             userId={userId}
             masonryPublishs
             username={username}
+            midiaTypeFilter={midiaTypeFilter}
           />
         ) : (
           <div className={styles['none-results']}>
-            Nenhuma publicação criada
+            Nenhuma publicação criada{' '}
+            {midiaTypeFilter && (
+              <>
+                do tipo{' '}
+                <span style={{ fontWeight: 500 }}>
+                  {upperFirst(
+                    midiaTypeFilter == 'img' ? 'imagem' : midiaTypeFilter
+                  )}
+                </span>
+              </>
+            )}
           </div>
         )}
       </div>
@@ -204,8 +230,6 @@ export default function UserPublishs({
 }
 
 function MoreOptions({
-  refContainerManageMoreOptions,
-  refBtnManageMoreOptions,
   setPinSelectMode,
   pinSelectMode,
   refPinSelectMode,
@@ -217,8 +241,6 @@ function MoreOptions({
   handleServerSuccess,
   token,
 }: {
-  refContainerManageMoreOptions: MutableRefObject<HTMLDivElement | null>;
-  refBtnManageMoreOptions: MutableRefObject<HTMLButtonElement | null>;
   setPinSelectMode: Dispatch<SetStateAction<boolean>>;
   pinSelectMode: boolean;
   refPinSelectMode: MutableRefObject<boolean | null>;
@@ -231,6 +253,9 @@ function MoreOptions({
   token: string;
 }) {
   const [showContainerSelectMode, setShowContainerSelectMode] = useState(false);
+
+  const refContainerManageMoreOptions = useRef<HTMLDivElement | null>(null);
+  const refBtnManageMoreOptions = useRef<HTMLButtonElement | null>(null);
 
   const handlePublishsCount = () => {
     const publishsCount = document.querySelector(
@@ -335,9 +360,6 @@ function MoreOptions({
           height="20"
           width="20"
           viewBox="0 0 24 24"
-          aria-hidden="true"
-          aria-label=""
-          role="img"
           data-user-options-active={showContainerSelectMode}
         >
           <path d="M12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3M3 9c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm18 0c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3z"></path>
@@ -364,6 +386,141 @@ function MoreOptions({
             Excluir
           </button>
         )}
+      </div>
+    </div>
+  );
+}
+
+function MidiaTypeOption({
+  userId,
+  handleServerError,
+  setStPublishsResults,
+  isLoading,
+  setIsLoading,
+  setMidiaTypeFilter,
+  midiaTypeFilter,
+}: {
+  userId: string;
+  isLoading: boolean;
+  setIsLoading: Dispatch<SetStateAction<boolean>>;
+  setStPublishsResults: Dispatch<SetStateAction<MidiaResultsType[]>>;
+  handleServerError(msg: string): void;
+  setMidiaTypeFilter: Dispatch<SetStateAction<MidiaTypeFilterType>>;
+  midiaTypeFilter: MidiaTypeFilterType;
+}) {
+  const [showContainerMidiaTypeOptions, setShowContainerMidiaTypeOptions] =
+    useState(false);
+
+  const refBtnManageMoreOptions = useRef<HTMLButtonElement | null>(null);
+
+  const handleAddAnimationClick = () => {
+    refBtnManageMoreOptions.current?.setAttribute('data-click', 'true');
+    setTimeout(() => {
+      refBtnManageMoreOptions.current?.removeAttribute('data-click');
+    }, 300);
+  };
+
+  const handleGetPinsToMidiaType = async (midiaType: MidiaTypeFilterType) => {
+    if (isLoading) return;
+
+    try {
+      setIsLoading(true);
+      const resUserMidia = await fetch(
+        `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all-midia-userid/${userId}?midiaType=${midiaType}&page=1`,
+        {
+          method: 'GET',
+          cache: 'no-cache',
+        }
+      );
+      const dataUserMidia = await resUserMidia.json();
+      if (!resUserMidia.ok) {
+        handleServerError(dataUserMidia.error as string);
+        return;
+      }
+      const data = dataUserMidia as MidiaType;
+      const results = data.midia.results;
+      setStPublishsResults(results);
+      setMidiaTypeFilter(midiaType);
+    } catch (err) {
+      console.log(err);
+      handleServerError('Erro interno no servidor');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div
+      className={styles['container-midiatype-options']}
+      data-user-midiatype-options-active={showContainerMidiaTypeOptions}
+      tabIndex={0}
+      onBlur={event => {
+        if (!event.currentTarget.contains(event.relatedTarget)) {
+          setShowContainerMidiaTypeOptions(false);
+          if (showContainerMidiaTypeOptions) {
+            handleAddAnimationClick();
+          }
+        }
+      }}
+    >
+      <button
+        type="button"
+        data-user-midiatype-options-active={showContainerMidiaTypeOptions}
+        ref={refBtnManageMoreOptions}
+        className={styles['btn-manage-midiatype-options']}
+        onClick={() => {
+          setShowContainerMidiaTypeOptions(state => !state);
+          handleAddAnimationClick();
+        }}
+      >
+        <svg
+          height="20"
+          width="20"
+          viewBox="0 0 24 24"
+          data-user-midiatype-options-active={showContainerMidiaTypeOptions}
+        >
+          <path d="M9 19.5a1.75 1.75 0 1 1 .001-3.501A1.75 1.75 0 0 1 9 19.5M22.25 16h-8.321c-.724-2.034-2.646-3.5-4.929-3.5S4.795 13.966 4.071 16H1.75a1.75 1.75 0 0 0 0 3.5h2.321C4.795 21.534 6.717 23 9 23s4.205-1.466 4.929-3.5h8.321a1.75 1.75 0 0 0 0-3.5M15 4.5a1.75 1.75 0 1 1-.001 3.501A1.75 1.75 0 0 1 15 4.5M1.75 8h8.321c.724 2.034 2.646 3.5 4.929 3.5s4.205-1.466 4.929-3.5h2.321a1.75 1.75 0 0 0 0-3.5h-2.321C19.205 2.466 17.283 1 15 1s-4.205 1.466-4.929 3.5H1.75a1.75 1.75 0 0 0 0 3.5"></path>
+        </svg>
+      </button>
+
+      <div
+        onClick={event => event.stopPropagation()}
+        data-user-midiatype-options-active={showContainerMidiaTypeOptions}
+        className={styles['user-midiatype-options']}
+      >
+        <button
+          type="button"
+          className={styles['btn-midiatype-option']}
+          data-btn-midiatype-active={midiaTypeFilter == 'img' ? true : false}
+          onClick={() => {
+            handleGetPinsToMidiaType('img');
+            setShowContainerMidiaTypeOptions(false);
+          }}
+        >
+          Imagens
+        </button>
+        <button
+          type="button"
+          className={styles['btn-midiatype-option']}
+          data-btn-midiatype-active={midiaTypeFilter == 'video' ? true : false}
+          onClick={() => {
+            handleGetPinsToMidiaType('video');
+            setShowContainerMidiaTypeOptions(false);
+          }}
+        >
+          Videos
+        </button>
+        <button
+          type="button"
+          className={styles['btn-midiatype-option']}
+          data-btn-midiatype-active={midiaTypeFilter == 'gif' ? true : false}
+          onClick={() => {
+            handleGetPinsToMidiaType('gif');
+            setShowContainerMidiaTypeOptions(false);
+          }}
+        >
+          Gifs
+        </button>
       </div>
     </div>
   );

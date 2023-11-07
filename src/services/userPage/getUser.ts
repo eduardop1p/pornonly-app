@@ -1,4 +1,4 @@
-import { UserType } from '@/app/[usernameparam]/page';
+import type { UserIdResultsType } from '@/components/masonry/userPin';
 
 const getUser = async (usernameparam: string) => {
   try {
@@ -9,7 +9,7 @@ const getUser = async (usernameparam: string) => {
         cache: 'no-cache',
       }
     );
-    const data = (await response.json()) as UserType;
+    const data = (await response.json()) as UserIdResultsType;
     if (!response.ok) return null;
     return data;
   } catch {

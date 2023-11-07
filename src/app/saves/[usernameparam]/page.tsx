@@ -36,7 +36,7 @@ export default async function Page({ params }: Props) {
   if (!userData || userData.username !== usernameparam) return <NotFoundPage />;
 
   const { profilePhoto, username, email } = userData;
-  const userId = userData._id;
+  const userId = userData._id as string;
 
   const { userSavesResults, userSavesTotal } = await getUserSaves(userId);
   const { userMidiaTotal } = await getUserTotalMidia(userId);
@@ -55,7 +55,7 @@ export default async function Page({ params }: Props) {
       />
       <UserSaves
         savesResults={userSavesResults}
-        userId={userData._id}
+        userId={userId}
         username={userData.username}
       />
     </main>

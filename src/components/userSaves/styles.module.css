@@ -1,9 +1,28 @@
+@keyframes animationCategory {
+  0% {
+    scale: 0.95;
+  }
+  50% {
+    scale: 0.9;
+  }
+  100% {
+    scale: 1;
+  }
+}
+
 .container{
   margin-top: 2rem;
 }
 
 .publishs-or-saves{
   margin-top: 1.5rem;
+}
+
+.container-options{
+  position: absolute;
+  left: 1rem;
+  display: flex;
+  align-items: center;
 }
 
 .none-results{
@@ -48,5 +67,95 @@
 .btns-publishs-or-saves > .btn-manage[data-active-btn='false']:hover{
   background-color: var(--g-colore9e9e9);
 }
+
+.btn-manage-midiatype-options{
+  position: absolute;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 150ms ease-in-out;
+  width: 45px;
+  height: 45px;
+  border-radius: 100%;
+}
+
+.btn-manage-midiatype-options[data-click='true']{
+  animation-name: animationCategory;
+  animation-duration: 300ms;
+  animation-timing-function: ease-in-out;
+}
+
+.container-midiatype-options{
+  z-index: 4;
+  width: 45px;
+  height: 45px;
+  border-radius: 100%;
+}
+
+.btn-manage-midiatype-options[data-user-midiatype-options-active='false']:hover{
+  background-color: var(--g-colore9e9e9);
+}
+
+.btn-manage-midiatype-options[data-user-midiatype-options-active='true']{
+  background-color: var(--g-colorGray400);
+}
+
+.btn-manage-midiatype-options svg{
+  flex: none;
+  transition: fill 150ms ease-in-out;
+}
+
+.btn-manage-midiatype-options svg[data-user-midiatype-options-active='true']{
+  fill: var(--g-colorGray0);
+}
+
+.user-midiatype-options{
+  visibility: hidden;
+  opacity: 0;
+  width: 180px;
+  background-color: var(--g-colorGray0);
+  border-radius: 1rem;
+  position: absolute;
+  top: 3.2rem;
+  padding: 8px 10px;
+  left: 0;
+  box-shadow: var(--box-shadow_04);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: default;
+}
+
+.user-midiatype-options[data-user-midiatype-options-active='true'] {
+  visibility: visible;
+  opacity: 1;
+}
+
+.user-midiatype-options > button {
+  font-size: var(--font-size-1rem);
+  font-weight: var(--font-weight-500);
+  padding: 8px;
+  width: 100%;
+  text-align: left;
+  border-radius: 8px;
+  transition: background 200ms ease-in-out;
+}
+
+.user-midiatype-options > button:hover{
+  background-color: var(--g-colore9e9e9);
+  cursor: pointer;
+}
+
+.user-midiatype-options :not(:last-child){
+  margin-bottom: 5px;
+}
+
+.btn-midiatype-option[data-btn-midiatype-active='true']{
+  background-color: var(--g-colore9e9e9);
+}
+
+
+
 
 
