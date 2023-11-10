@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
 import Link from 'next/link';
@@ -80,7 +81,14 @@ export default function Nav({ isAuth, tags, children }: Props) {
         >
           Gifs
         </Link>
-        <CategoryTags tags={tags} />
+        {/* <CategoryTags tags={tags} /> */}
+        <Link
+          href="/categories"
+          className={pathName.includes('/categories') ? 'link-active' : ''}
+          scroll={false}
+        >
+          Categorias
+        </Link>
         {isAuth && (
           <ContainerArrowMore
             onClick={() => setPublishActive(!publishActive)}
@@ -153,57 +161,57 @@ export default function Nav({ isAuth, tags, children }: Props) {
   );
 }
 
-function CategoryTags({ tags }: { tags: TagType[] }) {
-  const pathName = usePathname();
+// function CategoryTags({ tags }: { tags: TagType[] }) {
+//   const pathName = usePathname();
 
-  const [categoryActive, setCategoryActive] = useState(false);
+//   const [categoryActive, setCategoryActive] = useState(false);
 
-  return (
-    <ContainerArrowMore
-      onClick={() => setCategoryActive(!categoryActive)}
-      data-category-active={categoryActive}
-      onBlur={event => {
-        if (!event.currentTarget.contains(event.relatedTarget))
-          setCategoryActive(false);
-      }}
-      tabIndex={1}
-    >
-      <span>Categorias</span>
-      <svg
-        data-category-active={categoryActive}
-        height="12"
-        width="12"
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-        aria-label=""
-        role="img"
-      >
-        <path d="M12 19.5.66 8.29c-.88-.86-.88-2.27 0-3.14.88-.87 2.3-.87 3.18 0L12 13.21l8.16-8.06c.88-.87 2.3-.87 3.18 0 .88.87.88 2.28 0 3.14L12 19.5z"></path>
-      </svg>
-      <div
-        className="container-more-links category"
-        data-category-active={categoryActive}
-        onClick={event => event.stopPropagation()}
-      >
-        {tags.map(val => (
-          <Link
-            key={val._id}
-            className={
-              pathName === `/category/${clearPathName(val.tag)}`
-                ? 'link-active'
-                : ''
-            }
-            onClick={() => setCategoryActive(false)}
-            href={`/category/${clearPathName(val.tag)}`}
-          >
-            {upperFirst(val.tag)}
-          </Link>
-        ))}
-      </div>
-    </ContainerArrowMore>
-  );
-}
+//   return (
+//     <ContainerArrowMore
+//       onClick={() => setCategoryActive(!categoryActive)}
+//       data-category-active={categoryActive}
+//       onBlur={event => {
+//         if (!event.currentTarget.contains(event.relatedTarget))
+//           setCategoryActive(false);
+//       }}
+//       tabIndex={1}
+//     >
+//       <span>Categorias</span>
+//       <svg
+//         data-category-active={categoryActive}
+//         height="12"
+//         width="12"
+//         viewBox="0 0 24 24"
+//         aria-hidden="true"
+//         aria-label=""
+//         role="img"
+//       >
+//         <path d="M12 19.5.66 8.29c-.88-.86-.88-2.27 0-3.14.88-.87 2.3-.87 3.18 0L12 13.21l8.16-8.06c.88-.87 2.3-.87 3.18 0 .88.87.88 2.28 0 3.14L12 19.5z"></path>
+//       </svg>
+//       <div
+//         className="container-more-links category"
+//         data-category-active={categoryActive}
+//         onClick={event => event.stopPropagation()}
+//       >
+//         {tags.map(val => (
+//           <Link
+//             key={val._id}
+//             className={
+//               pathName === `/category/${clearPathName(val.tag)}`
+//                 ? 'link-active'
+//                 : ''
+//             }
+//             onClick={() => setCategoryActive(false)}
+//             href={`/category/${clearPathName(val.tag)}`}
+//           >
+//             {upperFirst(val.tag)}
+//           </Link>
+//         ))}
+//       </div>
+//     </ContainerArrowMore>
+//   );
+// }
 
-const clearPathName = (pathName: string) => {
-  return deburr(pathName.replaceAll(' ', '-').toLowerCase());
-};
+// const clearPathName = (pathName: string) => {
+//   return deburr(pathName.replaceAll(' ', '-').toLowerCase());
+// };

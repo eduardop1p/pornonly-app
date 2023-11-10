@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const redheadsTags = ['ruivas', 'ruiva', 'redheads', 'redhead', 'red'];
+  const redheadsTags = ['Ruivas'];
   const order = 'popular';
 
   const res = await fetch(

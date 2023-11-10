@@ -185,7 +185,14 @@ export default function Masonry({
       }
       case 'tags': {
         if (typeof tags === 'undefined') return;
-        useFetchItemsTags(setHasMore, currentPage, order, setStResults, tags);
+        useFetchItemsTags(
+          setHasMore,
+          currentPage,
+          order,
+          setStResults,
+          tags,
+          midiaType
+        );
         return;
       }
       case 'readHeads': {
@@ -279,7 +286,7 @@ export default function Masonry({
           endMessage={<span className="no-more-results">{`Isso é tudo`}</span>}
           style={{ overflow: 'hidden' }}
         >
-          <MasonryUi columnsCount={6} gutter="0">
+          <MasonryUi columnsCount={columnCount} gutter="0">
             {stResults.map(
               (midiaValue: MidiaResultsType, midiaIndex: number) =>
                 midiaValue.midiaType === 'video' ? (
@@ -561,7 +568,8 @@ function useFetchItemsTags(
   currentPage: MutableRefObject<number>,
   order: MutableRefObject<string>,
   setStResults: Dispatch<SetStateAction<MidiaResultsType[]>>,
-  tags: string[]
+  tags: string[],
+  midiaType: MutableRefObject<MidiaTypeFilterType>
 ) {
   const fetchItems = async () => {
     try {
@@ -569,7 +577,7 @@ function useFetchItemsTags(
 
       const res = await fetch(
         // eslint-disable-next-line
-        `${process.env.NEXT_PUBLIC_URL_API}/midia/search-tags?search_tags=${tags.join(',')}&order=${order.current}&page=${currentPage.current}`,
+        `${process.env.NEXT_PUBLIC_URL_API}/midia/search-tags?search_tags=${tags.join(',')}&midiaType=${midiaType.current}&order=${order.current}&page=${currentPage.current}`,
         {
           method: 'GET',
           cache: 'no-cache',

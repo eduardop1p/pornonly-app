@@ -11,7 +11,7 @@ export interface UserIdResultsType {
   profilePhoto: ProfilePhotoType[];
   midia?: string[];
   saves?: string[];
-  email: string;
+  email?: string;
 }
 
 export interface ProfilePhotoType {

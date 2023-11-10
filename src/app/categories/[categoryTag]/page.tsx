@@ -9,15 +9,17 @@ import NotFoundPage from '../../not-found';
 
 interface Props {
   params: { categoryTag: string };
+  searchParams: { midiaType: 'img' | 'video' | 'gif' };
 }
 
-const getData = async (categoryTag: string) => {
+const getData = async (categoryTag: string, midiaType: string) => {
   const order = 'popular';
+  categoryTag = categoryTag.replaceAll('-', ' ');
 
   try {
     const res = await fetch(
       // eslint-disable-next-line
-      `${process.env.NEXT_PUBLIC_URL_API}/midia/search-tags?search_tags=${categoryTag.replaceAll('-', ' ')}&order=${order}&page=1`,
+      `${process.env.NEXT_PUBLIC_URL_API}/midia/search-tags?search_tags=${categoryTag}${midiaType ? `&midiaType=${midiaType}` : ''}&order=${order}&page=1`,
       {
         method: 'GET',
         next: { tags: ['pin'] },
@@ -48,15 +50,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function Page({ params }: Props) {
+export default async function Page({ params, searchParams }: Props) {
   const { categoryTag } = params;
+  const { midiaType } = searchParams;
 
-  const results = await getData(categoryTag);
+  const results = await getData(categoryTag, midiaType);
   if (!results) return <NotFoundPage />;
 
   return (
     <main className={styles.main}>
-      <Masonry masonryPage="tags" results={results} visibleUserInfo={true} />
+      <Masonry
+        masonryPage="tags"
+        results={results}
+        midiaTypeFilter={midiaType}
+        visibleUserInfo={true}
+      />
     </main>
   );
 }

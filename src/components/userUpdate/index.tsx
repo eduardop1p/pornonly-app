@@ -252,6 +252,12 @@ export default function UserUpdate({
           Página inicial
         </Link>
         <Link
+          href="/categories"
+          className={pathName === '/' ? 'link-active' : ''}
+        >
+          Categorias
+        </Link>
+        <Link
           href="/publish-pin"
           className={pathName === '/publish-pin' ? 'link-active' : ''}
         >
