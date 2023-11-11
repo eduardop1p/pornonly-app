@@ -62,7 +62,9 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
         font-weight: ${theme.font_weight.font_weight_500};
         font-size: ${theme.font_size.font_size_1rem};
         text-align: center;
-        margin: 10px 0 8px;
+        width: fit-content;
+        display: inline-block;
+        margin: 10px auto 8px;
 
         &:hover {
           text-decoration: underline;

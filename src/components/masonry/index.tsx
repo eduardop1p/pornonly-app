@@ -26,18 +26,26 @@ import UserPin from './userPin';
 import ScrollTop from './scrollTop';
 import Category from './category';
 import { MidiaTypeFilterType } from '../userPublishs';
+import AcceptPin from './acceptPin';
+import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
+import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
+import { GlobalError } from '../form/globalError';
+import { GlobalSuccess } from '../form/globalSuccess';
+import Loading from '../form/loading';
 
 interface Props {
   results: MidiaResultsType[];
   visibleUserInfo?: boolean;
   masonryPublishs?: boolean;
   // eslint-disable-next-line
-  masonryPage: 'home' | 'new' | 'readHeads' | 'img' | 'video' | 'gif' | 'search' | 'user-midia' | 'user-saves' | 'tags';
+  masonryPage: 'home' | 'new' | 'readHeads' | 'img' | 'video' | 'gif' | 'search' | 'user-midia' | 'user-saves' | 'tags' | 'pending';
   tags?: string[];
   search_query?: string;
   userId?: string;
   username?: string;
   midiaTypeFilter?: 'img' | 'gif' | 'video';
+  token?: string;
+  pending?: boolean;
 }
 
 export default function Masonry({
@@ -50,6 +58,8 @@ export default function Masonry({
   userId,
   username,
   midiaTypeFilter,
+  token,
+  pending,
 }: Props) {
   const pathName = usePathname();
 
@@ -59,9 +69,17 @@ export default function Masonry({
   );
   const [stResults, setStResults] = useState(results);
   const [hasMore, setHasMore] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { handleServerError, msgGlobalError, showGlobalError } =
+    useGlobalErrorTime();
+  const { handleServerSuccess, msgGlobalSuccess, showGlobalSuccess } =
+    useGlobalSuccessTime();
+
   let currentPage = useRef(1);
   const midiaType = useRef<MidiaTypeFilterType>(midiaTypeFilter);
   const order = useRef<'popular' | 'desc' | 'asc'>('popular');
+  let playPromise = useRef<Promise<void> | undefined>(undefined);
 
   useEffect(() => {
     // esse effect só vai execultar quando o results do back-end mudar
@@ -238,6 +256,15 @@ export default function Masonry({
         );
         return;
       }
+      case 'pending': {
+        useFetchItemsPending(
+          setHasMore,
+          currentPage,
+          setStResults,
+          token as string
+        );
+        return;
+      }
       default:
         return;
     }
@@ -252,7 +279,7 @@ export default function Masonry({
     pinThumb.style.zIndex = '1';
     pinPLay.style.zIndex = '2';
     pinVideo.currentTime = 0;
-    if (pinVideo.readyState >= 1) pinVideo.play();
+    if (pinVideo.readyState >= 1) playPromise.current = pinVideo.play();
   };
 
   const handlePauseVideo = (event: MouseEvent<HTMLAnchorElement>) => {
@@ -262,15 +289,19 @@ export default function Masonry({
     const pinVideo = currentTarget.querySelector('video') as HTMLVideoElement;
     pinPLay.style.zIndex = '1';
     pinThumb.style.zIndex = '2';
-    if (pinVideo.readyState >= 1) pinVideo.pause();
+    if (pinVideo.readyState >= 1 && typeof playPromise.current !== 'undefined')
+      playPromise.current.then(_ => pinVideo.pause());
   };
 
   return (
     <Container>
       {currentPage.current > 2 && <ScrollTop />}
-      {/* <div className="category-and-order">
-        <Category setStResults={setStResults} midiaType={midiaType} />
-      </div> */}
+      {isLoading && <Loading />}
+      <GlobalError errorMsg={msgGlobalError} showError={showGlobalError} />
+      <GlobalSuccess
+        successMsg={msgGlobalSuccess}
+        showSuccess={showGlobalSuccess}
+      />
       <MasonryContainer
         $columnWidth={columnWidth}
         $columnCount={columnCount}
@@ -389,6 +420,23 @@ export default function Masonry({
                         </Link>
                       </div>
                     )}
+                    {pending && (
+                      <AcceptPin
+                        token={token as string}
+                        midiaId={midiaValue._id}
+                        keyUrl={new URL(midiaValue.url).pathname.slice(1)}
+                        thumgUrl={
+                          midiaValue.thumb
+                            ? new URL(midiaValue.thumb).pathname.slice(1)
+                            : undefined
+                        }
+                        setStResults={setStResults}
+                        handleServerError={handleServerError}
+                        handleServerSuccess={handleServerSuccess}
+                        isLoading={isLoading}
+                        setIsLoading={setIsLoading}
+                      />
+                    )}
                   </div>
                 ) : (
                   <div
@@ -450,6 +498,18 @@ export default function Masonry({
                         </Link>
                       </div>
                     )}
+                    {pending && (
+                      <AcceptPin
+                        token={token as string}
+                        midiaId={midiaValue._id}
+                        keyUrl={new URL(midiaValue.url).pathname.slice(1)}
+                        setStResults={setStResults}
+                        handleServerError={handleServerError}
+                        handleServerSuccess={handleServerSuccess}
+                        isLoading={isLoading}
+                        setIsLoading={setIsLoading}
+                      />
+                    )}
                   </div>
                 )
             )}
@@ -464,7 +524,7 @@ export default function Masonry({
 function useFetchItemsHome(
   setHasMore: Dispatch<SetStateAction<boolean>>,
   currentPage: MutableRefObject<number>,
-  midiaType: MutableRefObject<'img' | 'video' | 'gif' | undefined>,
+  midiaType: MutableRefObject<MidiaTypeFilterType>,
   order: MutableRefObject<string>,
   setStResults: Dispatch<SetStateAction<MidiaResultsType[]>>
 ) {
@@ -473,7 +533,7 @@ function useFetchItemsHome(
       currentPage.current += 1;
 
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all?midiaType=${midiaType.current}&order=${order.current}&page=${currentPage.current}`,
+        `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all?order=${order.current}&page=${currentPage.current}`,
         {
           method: 'GET',
           cache: 'no-cache',
@@ -720,6 +780,42 @@ function useFetchItemsUserSaves(
         {
           method: 'GET',
           cache: 'no-cache',
+        }
+      );
+
+      const data = await res.json();
+      const results = data.midia.results as MidiaResultsType[];
+      if (!results.length) {
+        setHasMore(false);
+        return;
+      }
+      setStResults(state => [...state, ...results]);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  return fetchItems();
+}
+
+function useFetchItemsPending(
+  setHasMore: Dispatch<SetStateAction<boolean>>,
+  currentPage: MutableRefObject<number>,
+  setStResults: Dispatch<SetStateAction<MidiaResultsType[]>>,
+  token: string
+) {
+  const fetchItems = async () => {
+    try {
+      currentPage.current += 1;
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all-midia-pending?page=${currentPage.current}`,
+        {
+          method: 'GET',
+          cache: 'no-cache',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 

@@ -22,6 +22,7 @@ import LinearProgress, {
   LinearProgressProps,
 } from '@mui/material/LinearProgress';
 import { Typography, Box } from '@mui/material';
+import { decode } from 'jsonwebtoken';
 
 import {
   Container,
@@ -121,7 +122,11 @@ export default function PublishPin({ token }: Props) {
       >
         {createdPinCurrent.pinSrc && (
           <Image
-            src={createdPinCurrent.fileType === 'img' ? createdPinCurrent.pinSrc : URL.createObjectURL(createdPinCurrent.videoThumb as Blob)}
+            src={
+              createdPinCurrent.fileType === 'img'
+                ? createdPinCurrent.pinSrc
+                : URL.createObjectURL(createdPinCurrent.videoThumb as Blob)
+            }
             alt="preview"
             width={25}
             priority
@@ -295,10 +300,15 @@ const NewPin = forwardRef(
             setUploadProgress(percentage);
           },
         });
-        await revalidatePin();
-        handleServerSuccess('Pin adcionado ao feed');
+        const bson = decode(token) as any;
+        if (bson.isAdmin) {
+          await revalidatePin();
+          handleServerSuccess('Pin adicionado ao feed');
+          return;
+        }
+        handleServerSuccess('Pin enviado para análise aguarde');
       } catch (err: any) {
-        // console.log(err);
+        console.log(err);
         if (get(err, 'response.data.error', false)) {
           handleServerError(err.response.data.error);
           return;
@@ -429,7 +439,9 @@ const NewPin = forwardRef(
 
     return (
       <ContainerNewPin>
-        {uploadProgress ? <UploadPinProgress progress={uploadProgress} /> : null}
+        {uploadProgress ? (
+          <UploadPinProgress progress={uploadProgress} />
+        ) : null}
         {createdPinCurrent.file ? (
           <div className="container-img-100vh">
             <div className="container-file-img-current">

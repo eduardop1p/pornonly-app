@@ -32,11 +32,11 @@ export interface MidiaResultsType {
 }
 
 export default async function Page() {
-  const midiaType = '';
+  // const midiaType = undefined;
   const order = 'popular';
 
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all?midiaType=${midiaType}&order=${order}&page=1`,
+    `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all?order=${order}&page=1`,
     {
       method: 'GET',
       next: { tags: ['pin'] },
