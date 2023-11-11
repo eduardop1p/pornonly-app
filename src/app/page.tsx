@@ -28,6 +28,7 @@ export interface MidiaResultsType {
   url: string;
   thumb?: string;
   duration?: string;
+  status: 'pending' | 'published';
   createIn: string;
 }
 
