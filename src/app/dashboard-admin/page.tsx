@@ -39,7 +39,7 @@ export default async function Page() {
           results={results}
           visibleUserInfo={true}
           token={token}
-          pending
+          isAdmin
         />
       ) : (
         <p style={{ textAlign: 'center', width: '100%', marginTop: '2rem' }}>

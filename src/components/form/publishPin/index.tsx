@@ -510,7 +510,7 @@ const NewPin = forwardRef(
             </div>
             <span className="warning-file">
               Recomendamos o uso de arquivos de alta qualidade com menos de
-              200MB
+              500MB
             </span>
           </div>
         )}
