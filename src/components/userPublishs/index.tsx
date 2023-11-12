@@ -208,6 +208,7 @@ export default function UserPublishs({
             masonryPublishs
             username={username}
             midiaTypeFilter={midiaTypeFilter}
+            isUniqueUser={isUniqueUser}
           />
         ) : (
           <div className={styles['none-results']}>

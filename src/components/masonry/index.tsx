@@ -36,6 +36,7 @@ interface Props {
   midiaTypeFilter?: 'img' | 'gif' | 'video';
   token?: string;
   isAdmin?: boolean;
+  isUniqueUser?: boolean;
 }
 
 export default function Masonry({
@@ -50,6 +51,7 @@ export default function Masonry({
   midiaTypeFilter,
   token,
   isAdmin,
+  isUniqueUser,
 }: Props) {
   const pathName = usePathname();
 
@@ -326,6 +328,7 @@ export default function Masonry({
                   handleVideoCompleteLoad={handleVideoCompleteLoad}
                   handleWaitingVideo={handleWaitingVideo}
                   masonryPublishs={masonryPublishs}
+                  isUniqueUser={isUniqueUser}
                   visibleUserInfo={visibleUserInfo}
                   setStResults={setStResults}
                   token={token as string}
