@@ -38,5 +38,7 @@ export function GlobalSuccessToastify({
     handleToast();
   }, [handleToast]);
 
-  return <ToastContainer className="container-toast-custom-success" />;
+  return (
+    successMsg && <ToastContainer className="container-toast-custom-success" />
+  );
 }

@@ -1,15 +1,20 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 export default function useGlobalSuccess() {
   const [msgSuccess, setMsgSuccess] = useState<string | undefined>(undefined);
 
+  let timeId = useRef<NodeJS.Timeout>();
+
   const handleSuccess = (msg: string) => {
+    if (typeof timeId.current === 'number') return;
     setMsgSuccess(msg);
-    setTimeout(() => {
+    timeId.current = setTimeout(() => {
       setMsgSuccess(undefined);
-    }, 10);
+      clearTimeout(timeId.current);
+      timeId.current = undefined;
+    }, 5000);
   };
 
   return { msgSuccess, handleSuccess };

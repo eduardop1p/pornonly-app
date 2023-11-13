@@ -31,5 +31,7 @@ export function GlobalErrorToastify({ errorMsg }: { errorMsg?: string }) {
     handleToast();
   }, [handleToast]);
 
-  return <ToastContainer className="container-toast-custom-error" />;
+  return (
+    errorMsg && <ToastContainer className="container-toast-custom-error" />
+  );
 }

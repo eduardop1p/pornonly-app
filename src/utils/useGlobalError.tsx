@@ -1,15 +1,20 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 export default function useGlobalError() {
   const [msgError, setMsgError] = useState<string | undefined>(undefined);
 
+  let timeId = useRef<NodeJS.Timeout>();
+
   const handleError = (msg: string) => {
+    if (typeof timeId.current === 'number') return;
     setMsgError(msg);
-    setTimeout(() => {
+    timeId.current = setTimeout(() => {
       setMsgError(undefined);
-    }, 10);
+      clearTimeout(timeId.current);
+      timeId.current = undefined;
+    }, 5000);
   };
 
   return { msgError, handleError };

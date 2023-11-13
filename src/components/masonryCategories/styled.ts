@@ -79,7 +79,7 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
         justify-content: center;
 
         & > :not(:last-child) {
-          margin-right: 5px;
+          margin-right: 8px;
         }
 
         & > a {
