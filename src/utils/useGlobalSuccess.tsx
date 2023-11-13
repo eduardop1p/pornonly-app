@@ -14,7 +14,7 @@ export default function useGlobalSuccess() {
       setMsgSuccess(undefined);
       clearTimeout(timeId.current);
       timeId.current = undefined;
-    }, 5000);
+    }, 6000);
   };
 
   return { msgSuccess, handleSuccess };

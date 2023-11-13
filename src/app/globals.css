@@ -172,7 +172,7 @@ button{
   margin: 0 auto 0 !important;
 }
 
-.toast-custom-success-text > :first-child{
+.toast-custom-success-text > .Toastify__toast-icon{
   flex: none !important;
   width: fit-content !important;
   margin-inline-end: 7px !important;

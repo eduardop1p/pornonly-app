@@ -29,7 +29,10 @@ export function GlobalSuccessToastify({
         toastId,
         className: 'toast-custom-success',
         bodyClassName: 'toast-custom-success-text',
-        icon: children,
+        // eslint-disable-next-line
+        icon(props) {
+          return children;
+        },
       });
     }
   }, [successMsg, children]);
