@@ -6,9 +6,9 @@ import type { ReactNode, FormEvent, Dispatch, SetStateAction } from 'react';
 
 import { Container } from './styled';
 import Loading from '@/components/form/loading';
-import { GlobalError } from '@/components/form/globalError';
+import { GlobalErrorToastify } from '@/components/form/globalErrorToastify';
+import useGlobalError from '@/utils/useGlobalError';
 import { GlobalSuccess } from '@/components/form/globalSuccess';
-import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
 import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
 import { ResultsCommentsType } from '@/app/pin/[pinid]/page';
 
@@ -34,8 +34,7 @@ export default function AddComments({
   const [commentValue, setCommentValue] = useState('');
   const { handleServerSuccess, msgGlobalSuccess, showGlobalSuccess } =
     useGlobalSuccessTime();
-  const { handleServerError, msgGlobalError, showGlobalError } =
-    useGlobalErrorTime();
+  const { handleError, msgError } = useGlobalError();
 
   const handleAddCommentInPin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -48,7 +47,7 @@ export default function AddComments({
       return;
     }
     if (commentValue.length > 100) {
-      handleServerError('Comentário muito grande');
+      handleError('Comentário muito grande');
       return;
     }
 
@@ -67,7 +66,7 @@ export default function AddComments({
       );
       const jsonData = await res.json();
       if (!res.ok) {
-        handleServerError(jsonData.error as string);
+        handleError(jsonData.error as string);
         return;
       }
       handleServerSuccess('Comentário foi adcionado');
@@ -78,7 +77,7 @@ export default function AddComments({
       // router.refresh();
     } catch (err) {
       // console.log(err);
-      handleServerError('Erro interno no servidor');
+      handleError('Erro interno no servidor');
     } finally {
       setIsLoading(false);
     }
@@ -91,7 +90,7 @@ export default function AddComments({
         successMsg={msgGlobalSuccess}
         showSuccess={showGlobalSuccess}
       />
-      <GlobalError errorMsg={msgGlobalError} showError={showGlobalError} />
+      <GlobalErrorToastify errorMsg={msgError} />
       {children}
       <input
         name="comment"

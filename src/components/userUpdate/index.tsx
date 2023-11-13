@@ -10,8 +10,8 @@ import { usePathname, useRouter } from 'next/navigation';
 import Loading from '../form/loading';
 import Input from './input';
 import ShowPassword from '../form/showPassword';
-import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
-import { GlobalError } from '../form/globalError';
+import { GlobalErrorToastify } from '../form/globalErrorToastify';
+import useGlobalError from '@/utils/useGlobalError';
 import FallbackUserUpdate from './fallbackUserUpdate';
 import revalidatePin from '@/services/revalidatePin';
 import {
@@ -93,8 +93,7 @@ export default function UserUpdate({
   const [successUserUdate, setSuccessUserUpdate] = useState(false);
   const [passwordType, setPasswordType] = useState('password');
   const [isLoading, setIsLoading] = useState(false);
-  const { handleServerError, showGlobalError, msgGlobalError } =
-    useGlobalErrorTime();
+  const { handleError, msgError } = useGlobalError();
 
   const originalUserData = useRef({
     currentEmail,
@@ -166,7 +165,7 @@ export default function UserUpdate({
         const data = await resCreateUser.json();
         if (!resCreateUser.ok) {
           if (data.type === 'server') {
-            handleServerError(data.error as string);
+            handleError(data.error as string);
             return;
           }
           setError(data.type, { message: data.error });
@@ -179,7 +178,7 @@ export default function UserUpdate({
         });
         if (!res.ok) {
           const dataJson = await res.json();
-          handleServerError(dataJson.error);
+          handleError(dataJson.error);
           setSuccessUserUpdate(false);
           return;
         }
@@ -187,13 +186,13 @@ export default function UserUpdate({
         router.refresh();
         router.push('/login');
       } catch (err) {
-        handleServerError('Erro interno no servidor.');
+        handleError('Erro interno no servidor');
       } finally {
         setIsLoading(false);
         setSuccessUserUpdate(false);
       }
     },
-    [isLoading, handleServerError, router, setError, token]
+    [isLoading, handleError, router, setError, token]
   );
 
   useEffect(() => {
@@ -232,7 +231,7 @@ export default function UserUpdate({
   return (
     <Container>
       {isLoading && <Loading />}
-      <GlobalError errorMsg={msgGlobalError} showError={showGlobalError} />
+      <GlobalErrorToastify errorMsg={msgError} />
       {sendUserUpdate && (
         <FallbackUserUpdate
           setSendUserUpdate={setSendUserUpdate}

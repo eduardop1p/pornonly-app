@@ -9,10 +9,10 @@ import { FormContainer } from '../formContainer/styles';
 import Input from './input';
 import Loading from '../loading';
 import Logo from '../../logo';
-import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
 import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
 import { GlobalSuccess } from '../globalSuccess';
-import { GlobalError } from '../globalError';
+import { GlobalErrorToastify } from '../globalErrorToastify';
+import useGlobalError from '@/utils/useGlobalError';
 import FallbackPassworReset from './fallbackPasswordReset';
 
 const ZodLoginSchema = z.object({
@@ -28,8 +28,7 @@ export type BodyPasswordReset = z.infer<typeof ZodLoginSchema>;
 export default function PasswordReset() {
   const [successSendEmail, setSuccessSendEmail] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { handleServerError, showGlobalError, msgGlobalError } =
-    useGlobalErrorTime();
+  const { handleError, msgError } = useGlobalError();
   const { handleServerSuccess, showGlobalSuccess, msgGlobalSuccess } =
     useGlobalSuccessTime();
 
@@ -65,13 +64,13 @@ export default function PasswordReset() {
       );
       const jsonResponse = await response.json();
       if (!response.ok) {
-        handleServerError(jsonResponse.error as string);
+        handleError(jsonResponse.error as string);
         return;
       }
       handleServerSuccess(jsonResponse.success as string);
       setSuccessSendEmail(true);
     } catch (err) {
-      handleServerError('Erro interno no servidor.');
+      handleError('Erro interno no servidor');
     } finally {
       setIsLoading(false);
     }
@@ -87,7 +86,7 @@ export default function PasswordReset() {
         />
       )}
       {isLoading && <Loading />}
-      <GlobalError errorMsg={msgGlobalError} showError={showGlobalError} />
+      <GlobalErrorToastify errorMsg={msgError} />
       <GlobalSuccess
         successMsg={msgGlobalSuccess}
         showSuccess={showGlobalSuccess}

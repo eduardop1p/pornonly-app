@@ -27,7 +27,7 @@ interface Props {
   isAdmin?: boolean;
   isUniqueUser?: boolean;
   setStResults: Dispatch<SetStateAction<MidiaResultsType[]>>;
-  handleServerError(msg: string): void;
+  handleError(msg: string): void;
   handleServerSuccess(msg: string): void;
   token: string;
   isLoading: boolean;
@@ -48,7 +48,7 @@ export default function Pin({
   visibleUserInfo,
   isAdmin,
   setStResults,
-  handleServerError,
+  handleError,
   handleServerSuccess,
   isLoading,
   setIsLoading,
@@ -122,7 +122,7 @@ export default function Pin({
                     : undefined
                 }
                 setStResults={setStResults}
-                handleServerError={handleServerError}
+                handleError={handleError}
                 handleServerSuccess={handleServerSuccess}
                 isLoading={isLoading}
                 setIsLoading={setIsLoading}
@@ -160,7 +160,7 @@ export default function Pin({
                   midiaId={midiaValue._id}
                   keyUrl={new URL(midiaValue.url).pathname.slice(1)}
                   setStResults={setStResults}
-                  handleServerError={handleServerError}
+                  handleError={handleError}
                   handleServerSuccess={handleServerSuccess}
                   isLoading={isLoading}
                   setIsLoading={setIsLoading}

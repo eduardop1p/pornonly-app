@@ -14,9 +14,9 @@ import VideoSnapshot from 'video-snapshot';
 import { Container } from './styled';
 
 import ErrorMsg from '../errorMsg';
-import { GlobalError } from '../globalError';
+import { GlobalErrorToastify } from '../globalErrorToastify';
+import useGlobalError from '@/utils/useGlobalError';
 import { GlobalSuccess } from '../globalSuccess';
-import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
 import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
 import Loading from '../loading';
 import WaitingPin from '@/components/masonry/waitingPin';
@@ -97,8 +97,7 @@ export default function PublishPin({
   const [descriptionValue, setDescriptionValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [widthInputNameTags, setWidthInputNameTags] = useState(0);
-  const { handleServerError, msgGlobalError, showGlobalError } =
-    useGlobalErrorTime();
+  const { handleError, msgError } = useGlobalError();
   const { handleServerSuccess, msgGlobalSuccess, showGlobalSuccess } =
     useGlobalSuccessTime();
   const fileScrRef = useRef(fileContent.src);
@@ -156,10 +155,10 @@ export default function PublishPin({
     } catch (err: any) {
       // console.log(err);
       if (get(err, 'response.data.error', false)) {
-        handleServerError(err.response.data.error);
+        handleError(err.response.data.error);
         return;
       }
-      handleServerError('Parece que você está offline');
+      handleError('Parece que você está offline');
     } finally {
       setIsLoading(false);
       setUploadProgress(0);
@@ -173,7 +172,7 @@ export default function PublishPin({
     const maxFileSize = 500 * 1024 * 1024;
     // console.log(`${size}MB`);
     if (file.size > maxFileSize) {
-      handleServerError('Arquivo muito grande');
+      handleError('Arquivo muito grande');
       return;
     }
 
@@ -251,7 +250,7 @@ export default function PublishPin({
   return (
     <Container>
       {isLoading && <Loading />}
-      <GlobalError errorMsg={msgGlobalError} showError={showGlobalError} />
+      <GlobalErrorToastify errorMsg={msgError} />
       <GlobalSuccess
         successMsg={msgGlobalSuccess}
         showSuccess={showGlobalSuccess}

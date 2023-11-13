@@ -37,9 +37,9 @@ import {
 } from './styled';
 
 import ErrorMsg from '../errorMsg';
-import { GlobalError } from '../globalError';
+import { GlobalErrorToastify } from '../globalErrorToastify';
+import useGlobalError from '@/utils/useGlobalError';
 import { GlobalSuccess } from '../globalSuccess';
-import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
 import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
 import Loading from '../loading';
 import revalidatePin from '@/services/revalidatePin';
@@ -100,8 +100,8 @@ export default function PublishPin({ token }: Props) {
     defaultCreatedPinCurrent
   );
 
-  const { handleServerError, msgGlobalError, showGlobalError } =
-    useGlobalErrorTime();
+  const { handleError, msgError } =
+    useGlobalError();
   const { handleServerSuccess, msgGlobalSuccess, showGlobalSuccess } =
     useGlobalSuccessTime();
 
@@ -115,7 +115,7 @@ export default function PublishPin({ token }: Props) {
   return (
     <Container>
       {isLoading && <Loading />}
-      <GlobalError errorMsg={msgGlobalError} showError={showGlobalError} />
+      <GlobalErrorToastify errorMsg={msgError} />
       <GlobalSuccess
         successMsg={msgGlobalSuccess}
         showSuccess={showGlobalSuccess}
@@ -144,7 +144,7 @@ export default function PublishPin({ token }: Props) {
           setCreatedPinCurrent={setCreatedPinCurrent}
           createdPinCurrent={createdPinCurrent}
           handleResetFilds={childNewPinRef.current?.handleResetFilds}
-          handleServerError={handleServerError}
+          handleError={handleError}
         />
         <div className="container-new-pin-and-title">
           <div className="container-pin-title">
@@ -158,7 +158,7 @@ export default function PublishPin({ token }: Props) {
           <NewPin
             ref={childNewPinRef}
             createdPinCurrent={createdPinCurrent}
-            handleServerError={handleServerError}
+            handleError={handleError}
             handleServerSuccess={handleServerSuccess}
             setCreatedPinCurrent={setCreatedPinCurrent}
             selectCreatedPinIndex={selectCreatedPinIndex}
@@ -178,7 +178,7 @@ const NewPin = forwardRef(
     props: {
       createdPinCurrent: CreatePinsType;
       setCreatedPins: Dispatch<SetStateAction<CreatePinsType[]>>;
-      handleServerError(msg: string): void;
+      handleError(msg: string): void;
       handleServerSuccess(msg: string): void;
       setCreatedPinCurrent: Dispatch<SetStateAction<CreatePinsType>>;
       selectCreatedPinIndex: number | undefined;
@@ -190,7 +190,7 @@ const NewPin = forwardRef(
   ) => {
     const {
       createdPinCurrent,
-      handleServerError,
+      handleError,
       handleServerSuccess,
       setCreatedPinCurrent,
       isLoading,
@@ -310,10 +310,10 @@ const NewPin = forwardRef(
       } catch (err: any) {
         console.log(err);
         if (get(err, 'response.data.error', false)) {
-          handleServerError(err.response.data.error);
+          handleError(err.response.data.error);
           return;
         }
-        handleServerError('Erro interno no servidor');
+        handleError('Erro interno no servidor');
       } finally {
         setIsLoading(false);
         setUploadProgress(0);
@@ -327,7 +327,7 @@ const NewPin = forwardRef(
       const maxFileSize = 500 * 1024 * 1024;
       // console.log(`${size}MB`);
       if (file.size > maxFileSize) {
-        handleServerError('Arquivo muito grande');
+        handleError('Arquivo muito grande');
         return;
       }
 
@@ -423,17 +423,17 @@ const NewPin = forwardRef(
         );
         const data = await res.json();
         if (!res.ok) {
-          handleServerError(data.error);
+          handleError(data.error);
           return;
         }
         setSearchTagsArr(data.midiaTags);
       } catch (err: any) {
         // console.log(err);
         // if (get(err, 'response.data.error', false)) {
-        //   handleServerError(err.response.data.eraror);
+        //   handleError(err.response.data.eraror);
         //   return;
         // }
-        // handleServerError('Erro interno no servidor');
+        // handleError('Erro interno no servidor');
       }
     };
 
@@ -590,7 +590,7 @@ const NewPin = forwardRef(
                       tabIndex={1}
                       onClick={() => {
                         if (createdPinCurrent.tags.length >= 5) {
-                          handleServerError('Número máximo de tags excedido');
+                          handleError('Número máximo de tags excedido');
                           return;
                         }
                         setCreatedPinCurrent(state => ({
@@ -668,7 +668,7 @@ function PublishsCreated({
   selectCreatedPinIndex,
   setCreatedPinCurrent,
   createdPinCurrent,
-  handleServerError,
+  handleError,
   handleResetFilds,
 }: {
   createdPins: CreatePinsType[];
@@ -677,7 +677,7 @@ function PublishsCreated({
   setSelectCreatedPinIndex: Dispatch<SetStateAction<number | undefined>>;
   setCreatedPinCurrent: Dispatch<SetStateAction<CreatePinsType>>;
   createdPinCurrent: CreatePinsType;
-  handleServerError(msg: string): void;
+  handleError(msg: string): void;
   handleResetFilds(): void;
 }) {
   const [btnDraftsActive, setbtnDraftsActive] = useState(false);
@@ -692,7 +692,7 @@ function PublishsCreated({
   const handleAddNewPublishPin = () => {
     if (!refCreatedPinCurrent.current.file) return;
     if (refCreatedPins.current.length >= 5) {
-      handleServerError('Número máximo de rascunhos atingido');
+      handleError('Número máximo de rascunhos atingido');
       return;
     }
     handleResetFilds();
@@ -745,7 +745,7 @@ function PublishsCreated({
               handleResetFilds={handleResetFilds}
               setbtnDraftsActive={setbtnDraftsActive}
               createdPins={createdPins}
-              handleServerError={handleServerError}
+              handleError={handleError}
               selectCreatedPinIndex={selectCreatedPinIndex}
             />
           </div>
@@ -907,7 +907,7 @@ function BtnAddNewPublishPin({
   setbtnDraftsActive,
   createdPins,
   selectCreatedPinIndex,
-  handleServerError,
+  handleError,
   handleResetFilds,
 }: {
   setSelectCreatedPinIndex: Dispatch<SetStateAction<number | undefined>>;
@@ -917,7 +917,7 @@ function BtnAddNewPublishPin({
   setCreatedPins: Dispatch<SetStateAction<CreatePinsType[]>>;
   setbtnDraftsActive: Dispatch<SetStateAction<boolean>>;
   createdPins: CreatePinsType[];
-  handleServerError(msg: string): void;
+  handleError(msg: string): void;
   handleResetFilds(): void;
 }) {
   let refCreatedPinCurrent = useRef(createdPinCurrent);
@@ -931,7 +931,7 @@ function BtnAddNewPublishPin({
   const handleAddNewPublishPin = () => {
     if (!refCreatedPinCurrent.current.file) return;
     if (createdPins.length >= 5) {
-      handleServerError('Número máximo de rascunhos atingido');
+      handleError('Número máximo de rascunhos atingido');
       return;
     }
     handleResetFilds();

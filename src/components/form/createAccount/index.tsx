@@ -12,11 +12,11 @@ import styles from './styles.module.css';
 
 import { FormContainer } from '../formContainer/styles';
 import Loading from '../loading';
-import { GlobalError } from '../globalError';
+import { GlobalErrorToastify } from '../globalErrorToastify';
 import Logo from '../../logo';
 import Input from './input';
 import ShowPassword from '../showPassword';
-import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
+import useGlobalError from '@/utils/useGlobalError';
 import useGlobalContext from '@/utils/useGlobalContext';
 import { dataSuccess } from '@/utils/appContextUser/actions';
 
@@ -77,8 +77,7 @@ export default function CreateAccount() {
 
   const [passwordType, setPasswordType] = useState('password');
   const [isLoading, setIsLoading] = useState(false);
-  const { handleServerError, showGlobalError, msgGlobalError } =
-    useGlobalErrorTime();
+  const { handleError, msgError } = useGlobalError();
 
   const {
     register,
@@ -114,7 +113,7 @@ export default function CreateAccount() {
       const jsonResCreateUser = await resCreateUser.json();
       if (!resCreateUser.ok) {
         if (jsonResCreateUser.type === 'server') {
-          handleServerError(jsonResCreateUser.error as string);
+          handleError(jsonResCreateUser.error as string);
           return;
         }
         setError(jsonResCreateUser.type, { message: jsonResCreateUser.error });
@@ -138,7 +137,7 @@ export default function CreateAccount() {
       router.refresh();
       router.push('/');
     } catch (err) {
-      handleServerError('Erro interno no servidor.');
+      handleError('Erro interno no servidor');
     } finally {
       setIsLoading(false);
     }
@@ -152,7 +151,7 @@ export default function CreateAccount() {
     <FormContainer>
       <Logo />
       {isLoading && <Loading />}
-      <GlobalError errorMsg={msgGlobalError} showError={showGlobalError} />
+      <GlobalErrorToastify errorMsg={msgError} />
       <h1 className="title-login">Bem vind@ a Pornonly</h1>
       <p className={styles.param}>
         Crie uma conta grátes e aproveite o máximo do nosso site

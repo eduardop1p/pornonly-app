@@ -16,9 +16,9 @@ import { Container, MasonryContainer } from './styled';
 import { MidiaResultsType } from '@/app/page';
 import ScrollTop from './scrollTop';
 import { MidiaTypeFilterType } from '../userPublishs';
-import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
 import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
-import { GlobalError } from '../form/globalError';
+import { GlobalErrorToastify } from '../form/globalErrorToastify';
+import useGlobalError from '@/utils/useGlobalError';
 import { GlobalSuccess } from '../form/globalSuccess';
 import Loading from '../form/loading';
 import Pin from './pin';
@@ -63,8 +63,7 @@ export default function Masonry({
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { handleServerError, msgGlobalError, showGlobalError } =
-    useGlobalErrorTime();
+  const { handleError, msgError } = useGlobalError();
   const { handleServerSuccess, msgGlobalSuccess, showGlobalSuccess } =
     useGlobalSuccessTime();
 
@@ -293,7 +292,7 @@ export default function Masonry({
     <Container>
       {currentPage.current > 2 && <ScrollTop />}
       {isLoading && <Loading />}
-      <GlobalError errorMsg={msgGlobalError} showError={showGlobalError} />
+      <GlobalErrorToastify errorMsg={msgError} />
       <GlobalSuccess
         successMsg={msgGlobalSuccess}
         showSuccess={showGlobalSuccess}
@@ -335,7 +334,7 @@ export default function Masonry({
                   isAdmin={isAdmin}
                   setIsLoading={setIsLoading}
                   isLoading={isLoading}
-                  handleServerError={handleServerError}
+                  handleError={handleError}
                   handleServerSuccess={handleServerSuccess}
                 />
               )

@@ -7,9 +7,9 @@ import { get } from 'lodash';
 
 import { Container } from './styled';
 import Loading from '../form/loading';
-import { GlobalError } from '../form/globalError';
+import useGlobalError from '@/utils/useGlobalError';
+import { GlobalErrorToastify } from '../form/globalErrorToastify';
 import { GlobalSuccess } from '../form/globalSuccess';
-import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
 import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
 import { ProfilePhotoType } from '../masonry/userPin';
 
@@ -34,14 +34,16 @@ export default function UserProfile({ children, token, photo }: Props) {
     file: profilePhoto.length ? profilePhoto[0] : null,
     src: profilePhoto.length ? profilePhoto[0].url : '',
   });
-  const { handleServerError, msgGlobalError, showGlobalError } =
-    useGlobalErrorTime();
+  const { handleError, msgError } = useGlobalError();
   const { handleServerSuccess, msgGlobalSuccess, showGlobalSuccess } =
     useGlobalSuccessTime();
 
   const hableUploadUserPhoto = async () => {
     if (!filePhoto.file) return;
-    if (get(filePhoto.file, '_id', false)) return;
+    if (get(filePhoto.file, '_id', false)) {
+      handleError('Altere a foto primeiro');
+      return;
+    }
 
     const formData = new FormData();
     formData.append('photo', filePhoto.file);
@@ -61,7 +63,7 @@ export default function UserProfile({ children, token, photo }: Props) {
       );
       const jsonRes = await res.json();
       if (!res.ok) {
-        handleServerError(jsonRes.error as string);
+        handleError(jsonRes.error as string);
         return;
       }
       handleServerSuccess('Foto de perfil atualizada');
@@ -71,7 +73,7 @@ export default function UserProfile({ children, token, photo }: Props) {
       });
       router.refresh();
     } catch (err) {
-      handleServerError('Erro interno no servidor.');
+      handleError('Erro interno no servidor.');
     } finally {
       setIsLoading(false);
     }
@@ -94,7 +96,7 @@ export default function UserProfile({ children, token, photo }: Props) {
       );
       const jsonRes = await res.json();
       if (!res.ok) {
-        handleServerError(jsonRes.error as string);
+        handleError(jsonRes.error as string);
         return;
       }
       handleServerSuccess('Foto de perfil excluida');
@@ -104,7 +106,7 @@ export default function UserProfile({ children, token, photo }: Props) {
       });
       router.refresh();
     } catch (err) {
-      handleServerError('Erro interno no servidor.');
+      handleError('Erro interno no servidor.');
     } finally {
       setIsLoading(false);
     }
@@ -132,7 +134,7 @@ export default function UserProfile({ children, token, photo }: Props) {
     <Container>
       {isLoading && <Loading />}
       <div className="errors-success">
-        <GlobalError errorMsg={msgGlobalError} showError={showGlobalError} />
+        <GlobalErrorToastify errorMsg={msgError} />
         <GlobalSuccess
           successMsg={msgGlobalSuccess}
           showSuccess={showGlobalSuccess}

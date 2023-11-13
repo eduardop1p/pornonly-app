@@ -10,11 +10,11 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 import { FormContainer } from '../formContainer/styles';
 import Loading from '../loading';
-import { GlobalError } from '../globalError';
+import { GlobalErrorToastify } from '../globalErrorToastify';
 import Logo from '../../logo';
 import Input from './input';
 import ShowPassword from '../showPassword';
-import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
+import useGlobalError from '@/utils/useGlobalError';
 import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
 import useGlobalContext from '@/utils/useGlobalContext';
 import { dataFailure } from '@/utils/appContextUser/actions';
@@ -37,8 +37,7 @@ export default function Login() {
   const searchParams = useSearchParams();
   const [passwordType, setPasswordType] = useState('password');
   const [isLoading, setIsLoading] = useState(false);
-  const { handleServerError, showGlobalError, msgGlobalError } =
-    useGlobalErrorTime();
+  const { handleError, msgError } = useGlobalError();
   const { handleServerSuccess, showGlobalSuccess, msgGlobalSuccess } =
     useGlobalSuccessTime();
   const { state, dispatch } = useGlobalContext();
@@ -75,7 +74,7 @@ export default function Login() {
       const jsonResponse = await response.json();
       if (!response.ok) {
         if (jsonResponse.type === 'server') {
-          handleServerError(jsonResponse.error as string);
+          handleError(jsonResponse.error as string);
           return;
         }
         setError(jsonResponse.type, { message: jsonResponse.error });
@@ -85,7 +84,7 @@ export default function Login() {
       const from = searchParams.get('from');
       from ? router.push(from as string) : router.push('/');
     } catch (err) {
-      handleServerError('Erro interno no servidor.');
+      handleError('Erro interno no servidor');
     } finally {
       setIsLoading(false);
     }
@@ -99,7 +98,7 @@ export default function Login() {
     <FormContainer>
       <Logo />
       {isLoading && <Loading />}
-      <GlobalError errorMsg={msgGlobalError} showError={showGlobalError} />
+      <GlobalErrorToastify errorMsg={msgError} />
       <GlobalSuccess
         successMsg={msgGlobalSuccess}
         showSuccess={showGlobalSuccess}

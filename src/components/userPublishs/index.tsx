@@ -20,9 +20,9 @@ import Masonry from '../masonry';
 import { MidiaResultsType } from '@/app/page';
 import Loading from '../form/loading';
 import { GlobalSuccess } from '../form/globalSuccess';
-import { GlobalError } from '../form/globalError';
+import { GlobalErrorToastify } from '../form/globalErrorToastify';
+import useGlobalError from '@/utils/useGlobalError';
 import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
-import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
 import revalidatePin from '@/services/revalidatePin';
 import { MidiaType } from '@/app/page';
 
@@ -50,8 +50,7 @@ export default function UserPublishs({
     useState<MidiaTypeFilterType>(undefined);
   const { handleServerSuccess, msgGlobalSuccess, showGlobalSuccess } =
     useGlobalSuccessTime();
-  const { handleServerError, msgGlobalError, showGlobalError } =
-    useGlobalErrorTime();
+  const { handleError, msgError } = useGlobalError();
 
   const pinsIdsRemoveArray = useRef<{ id?: string; key: string }[]>([]);
   const refPinSelectMode = useRef<boolean | null>(null);
@@ -147,7 +146,7 @@ export default function UserPublishs({
         showSuccess={showGlobalSuccess}
         successMsg={msgGlobalSuccess}
       />
-      <GlobalError showError={showGlobalError} errorMsg={msgGlobalError} />
+      <GlobalErrorToastify errorMsg={msgError} />
       <div className={styles['btns-publishs-or-saves']}>
         {publishsResults.length ? (
           <div className={styles['container-options']}>
@@ -155,7 +154,7 @@ export default function UserPublishs({
               <MoreOptions
                 pinSelectMode={pinSelectMode}
                 setPinSelectMode={setPinSelectMode}
-                handleServerError={handleServerError}
+                handleError={handleError}
                 handleServerSuccess={handleServerSuccess}
                 isLoading={isLoading}
                 pinsIdsRemoveArray={pinsIdsRemoveArray}
@@ -167,7 +166,7 @@ export default function UserPublishs({
             ) : null}
             <MidiaTypeOption
               userId={userId}
-              handleServerError={handleServerError}
+              handleError={handleError}
               isLoading={isLoading}
               setIsLoading={setIsLoading}
               setStPublishsResults={setStPublishsResults}
@@ -238,7 +237,7 @@ function MoreOptions({
   isLoading,
   setIsLoading,
   pinsIdsRemoveArray,
-  handleServerError,
+  handleError,
   handleServerSuccess,
   token,
 }: {
@@ -249,7 +248,7 @@ function MoreOptions({
   isLoading: boolean;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   pinsIdsRemoveArray: MutableRefObject<{ id?: string; key: string }[]>;
-  handleServerError(msg: string): void;
+  handleError(msg: string): void;
   handleServerSuccess(msg: string): void;
   token: string;
 }) {
@@ -282,7 +281,7 @@ function MoreOptions({
   const handleUserDeletePin = async () => {
     if (isLoading) return;
     if (!pinsIdsRemoveArray.current.length) {
-      handleServerError('Nada foi selecionado');
+      handleError('Nada foi selecionado');
       return;
     }
 
@@ -300,7 +299,7 @@ function MoreOptions({
       );
       const jsonRes = await res.json();
       if (!res.ok) {
-        handleServerError(jsonRes.error as string);
+        handleError(jsonRes.error as string);
         return;
       }
       await revalidatePin();
@@ -314,7 +313,7 @@ function MoreOptions({
       handlePublishsCount();
       handleServerSuccess('Selecionados excluidos');
     } catch (err) {
-      handleServerError('Erro interno no servidor.');
+      handleError('Erro interno no servidor');
     } finally {
       setIsLoading(false);
     }
@@ -394,7 +393,7 @@ function MoreOptions({
 
 function MidiaTypeOption({
   userId,
-  handleServerError,
+  handleError,
   setStPublishsResults,
   isLoading,
   setIsLoading,
@@ -405,7 +404,7 @@ function MidiaTypeOption({
   isLoading: boolean;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   setStPublishsResults: Dispatch<SetStateAction<MidiaResultsType[]>>;
-  handleServerError(msg: string): void;
+  handleError(msg: string): void;
   setMidiaTypeFilter: Dispatch<SetStateAction<MidiaTypeFilterType>>;
   midiaTypeFilter: MidiaTypeFilterType;
 }) {
@@ -435,7 +434,7 @@ function MidiaTypeOption({
       );
       const dataUserMidia = await resUserMidia.json();
       if (!resUserMidia.ok) {
-        handleServerError(dataUserMidia.error as string);
+        handleError(dataUserMidia.error as string);
         return;
       }
       const data = dataUserMidia as MidiaType;
@@ -444,7 +443,7 @@ function MidiaTypeOption({
       setMidiaTypeFilter(midiaType);
     } catch (err) {
       console.log(err);
-      handleServerError('Erro interno no servidor');
+      handleError('Erro interno no servidor');
     } finally {
       setIsLoading(false);
     }

@@ -6,15 +6,14 @@ import { useRouter } from 'next/navigation';
 import styles from './styles.module.css';
 
 import Loading from '../loading';
-import { GlobalError } from '../globalError';
-import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
+import { GlobalErrorToastify } from '../globalErrorToastify';
+import useGlobalErro from '@/utils/useGlobalError';
 
 export default function Logout() {
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
-  const { handleServerError, showGlobalError, msgGlobalError } =
-    useGlobalErrorTime();
+  const { handleError, msgError } = useGlobalErro();
 
   const handleLogout = async () => {
     if (isLoading) return;
@@ -27,13 +26,13 @@ export default function Logout() {
       });
       if (!res.ok) {
         const dataJson = await res.json();
-        handleServerError(dataJson.error);
+        handleError(dataJson.error);
         return;
       }
       router.refresh();
       router.push('/login');
     } catch {
-      handleServerError('O logout falhou. Tente novalmente.');
+      handleError('O logout falhou. Tente novalmente');
     } finally {
       setIsLoading(false);
     }
@@ -41,7 +40,7 @@ export default function Logout() {
   return (
     <>
       {isLoading && <Loading />}
-      <GlobalError errorMsg={msgGlobalError} showError={showGlobalError} />
+      <GlobalErrorToastify errorMsg={msgError} />
       <button type="button" className={styles.logout} onClick={handleLogout}>
         Sair
       </button>

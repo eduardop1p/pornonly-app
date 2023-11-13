@@ -32,7 +32,7 @@ interface Props {
   comment: ResultsCommentsType;
   userId: any;
   setStResultsComments: Dispatch<SetStateAction<ResultsCommentsType[]>>;
-  handleServerError(msg: string): void;
+  handleError(msg: string): void;
   handleServerSuccess(msg: string): void;
   isLoading: boolean;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
@@ -47,7 +47,7 @@ export default function UserPinAndComments({
   comment,
   userId,
   setStResultsComments,
-  handleServerError,
+  handleError,
   handleServerSuccess,
   isLoading,
   setIsLoading,
@@ -69,7 +69,7 @@ export default function UserPinAndComments({
       router.push(`/login?from=${pathName}`);
       return;
     }
-    if (commentValue.length > 100) handleServerError('Comentário muito longo');
+    if (commentValue.length > 100) handleError('Comentário muito longo');
 
     try {
       setIsLoading(true);
@@ -86,7 +86,7 @@ export default function UserPinAndComments({
       );
       const jsonData = await res.json();
       if (!res.ok) {
-        handleServerError(jsonData.error as string);
+        handleError(jsonData.error as string);
         return;
       }
       handleServerSuccess('Resposta foi adicionada');
@@ -98,7 +98,7 @@ export default function UserPinAndComments({
       // router.refresh();
     } catch (err) {
       // console.log(err);
-      handleServerError('Erro interno no servidor');
+      handleError('Erro interno no servidor');
     } finally {
       setIsLoading(false);
     }
@@ -112,7 +112,7 @@ export default function UserPinAndComments({
           isAuth={isAuth}
           token={token}
           userId={userId}
-          handleServerError={handleServerError}
+          handleError={handleError}
           handleServerSuccess={handleServerSuccess}
           isLoading={isLoading}
           setIsLoading={setIsLoading}
@@ -153,7 +153,7 @@ export default function UserPinAndComments({
                 isAuth={isAuth}
                 token={token}
                 userId={userId}
-                handleServerError={handleServerError}
+                handleError={handleError}
                 handleServerSuccess={handleServerSuccess}
                 isLoading={isLoading}
                 setIsLoading={setIsLoading}
@@ -203,7 +203,7 @@ interface UserCommentType {
   userId: any;
   isAuth: boolean;
   token: string;
-  handleServerError(msg: string): void;
+  handleError(msg: string): void;
   handleServerSuccess(msg: string): void;
   isLoading: boolean;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
@@ -222,7 +222,7 @@ function UserComment({
   userId,
   isAuth,
   token,
-  handleServerError,
+  handleError,
   handleServerSuccess,
   isLoading,
   setIsLoading,
@@ -266,7 +266,7 @@ function UserComment({
       );
       if (!res.ok) {
         const jsonData = await res.json();
-        handleServerError(jsonData.error as string);
+        handleError(jsonData.error as string);
         return;
       }
       handleServerSuccess('Comentário foi excluido');
@@ -285,7 +285,7 @@ function UserComment({
       // router.refresh();
     } catch (err) {
       // console.log(err);
-      handleServerError('Erro interno no servidor');
+      handleError('Erro interno no servidor');
     } finally {
       setIsLoading(false);
     }
@@ -354,7 +354,7 @@ function UserComment({
     } catch (err) {
       setIsLikeComment(false);
       handleSetUnClick();
-      handleServerError('Erro interno no servidor.');
+      handleError('Erro interno no servidor');
     }
   };
 
@@ -383,7 +383,7 @@ function UserComment({
     } catch (err) {
       setIsLikeComment(true);
       handleSetLike();
-      handleServerError('Erro interno no servidor.');
+      handleError('Erro interno no servidor');
     }
   };
 

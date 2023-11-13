@@ -14,7 +14,7 @@ interface Props {
   setStResults: Dispatch<SetStateAction<MidiaResultsType[]>>;
   isLoading: boolean;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
-  handleServerError(msg: string): void;
+  handleError(msg: string): void;
   handleServerSuccess(msg: string): void;
 }
 
@@ -24,7 +24,7 @@ export default function AcceptPin({
   keyUrl,
   thumgUrl,
   setStResults,
-  handleServerError,
+  handleError,
   handleServerSuccess,
   isLoading,
   setIsLoading,
@@ -52,7 +52,7 @@ export default function AcceptPin({
       );
       if (!res.ok) {
         const data = await res.json();
-        handleServerError(data.error);
+        handleError(data.error);
         return;
       }
 
@@ -61,7 +61,7 @@ export default function AcceptPin({
       setStResults(state => state.filter(val => val._id !== midiaId));
     } catch (err) {
       // console.log(err);
-      handleServerError('Erro interno no servidor');
+      handleError('Erro interno no servidor');
     } finally {
       setIsLoading(false);
     }
@@ -87,14 +87,14 @@ export default function AcceptPin({
       );
       const data = await res.json();
       if (!res.ok) {
-        handleServerError(data.error);
+        handleError(data.error);
         return;
       }
       // await revalidatePin();
       handleServerSuccess('Publicação rejeitada');
       setStResults(state => state.filter(val => val._id !== midiaId));
     } catch (err) {
-      handleServerError('Erro interno no servidor');
+      handleError('Erro interno no servidor');
     } finally {
       setIsLoading(false);
     }

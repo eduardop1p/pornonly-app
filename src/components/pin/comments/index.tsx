@@ -10,9 +10,9 @@ import { ResultsCommentsType, CommentsType } from '@/app/pin/[pinid]/page';
 import UserPinAndComments from './userPinAndComments';
 import AddComments from '@/components/pin/comments/addComments';
 import Loading from '@/components/form/loading';
-import { GlobalError } from '@/components/form/globalError';
+import { GlobalErrorToastify } from '@/components/form/globalErrorToastify';
+import useGlobalError from '@/utils/useGlobalError';
 import { GlobalSuccess } from '@/components/form/globalSuccess';
-import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
 import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
 import { MidiaResultsType } from '@/app/page';
 import { useRouter, usePathname } from 'next/navigation';
@@ -52,8 +52,7 @@ export default function Comments({
   const [hasMore, setHasMore] = useState(true);
   const { handleServerSuccess, msgGlobalSuccess, showGlobalSuccess } =
     useGlobalSuccessTime();
-  const { handleServerError, msgGlobalError, showGlobalError } =
-    useGlobalErrorTime();
+  const { handleError, msgError } = useGlobalError();
   let currentPage = useRef(1);
   const refCommentsAndUsers = useRef<HTMLDivElement | null>(null);
 
@@ -104,7 +103,7 @@ export default function Comments({
         state.likes.users = state.likes.users.filter(value => value != userId);
         return state;
       });
-      handleServerError('Erro interno no servidor.');
+      handleError('Erro interno no servidor');
     }
   };
 
@@ -141,7 +140,7 @@ export default function Comments({
         state.likes.users.push(userId as string);
         return state;
       });
-      handleServerError('Erro interno no servidor.');
+      handleError('Erro interno no servidor');
     }
   };
 
@@ -152,7 +151,7 @@ export default function Comments({
         successMsg={msgGlobalSuccess}
         showSuccess={showGlobalSuccess}
       />
-      <GlobalError errorMsg={msgGlobalError} showError={showGlobalError} />
+      <GlobalErrorToastify errorMsg={msgError} />
       <div className="container-comments-scrollab">
         <div className="title-and-icon">
           <h2>Comentários</h2>
@@ -217,7 +216,7 @@ export default function Comments({
                     isAuth={isAuth}
                     userId={userId}
                     setStResultsComments={setStResultsComments}
-                    handleServerError={handleServerError}
+                    handleError={handleError}
                     handleServerSuccess={handleServerSuccess}
                     isLoading={isLoading}
                     setIsLoading={setIsLoading}

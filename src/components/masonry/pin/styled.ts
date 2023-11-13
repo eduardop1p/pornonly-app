@@ -115,7 +115,7 @@ export const Container = styled.div<TypeTheme>`
           align-items: center;
           justify-content: center;
           padding: 0 12px;
-          height: 35px;
+          height: 40px;
           border-radius: 1.5rem;
           background-color: ${theme.colors.g_colorRed100};
           font-weight: ${theme.font_weight.font_weight_500};

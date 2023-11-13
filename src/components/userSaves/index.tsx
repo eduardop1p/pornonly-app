@@ -12,8 +12,8 @@ import Masonry from '../masonry';
 import { MidiaResultsType } from '@/app/page';
 import { MidiaType } from '@/app/page';
 import type { MidiaTypeFilterType } from '../userPublishs';
-import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
-import { GlobalError } from '../form/globalError';
+import { GlobalErrorToastify } from '../form/globalErrorToastify';
+import useGlobalError from '@/utils/useGlobalError';
 
 export default function UserSaves({
   savesResults,
@@ -29,8 +29,7 @@ export default function UserSaves({
     useState<MidiaTypeFilterType>(undefined);
   const [isLoading, setIsLoading] = useState(false);
   const [stSavesResults, setStSavesResults] = useState(savesResults);
-  const { handleServerError, msgGlobalError, showGlobalError } =
-    useGlobalErrorTime();
+  const { handleError, msgError } = useGlobalError();
 
   const handlePathName = (pathName: string) => {
     return `/${pathName}/${username}`;
@@ -39,14 +38,14 @@ export default function UserSaves({
   return (
     <div className={styles['container']}>
       {isLoading && <Loading />}
-      <GlobalError showError={showGlobalError} errorMsg={msgGlobalError} />
+      <GlobalErrorToastify errorMsg={msgError} />
 
       <div className={styles['btns-publishs-or-saves']}>
         {savesResults.length ? (
           <div className={styles['container-options']}>
             <MidiaTypeOption
               userId={userId}
-              handleServerError={handleServerError}
+              handleError={handleError}
               isLoading={isLoading}
               setIsLoading={setIsLoading}
               setStSavesResults={setStSavesResults}
@@ -109,7 +108,7 @@ export default function UserSaves({
 
 function MidiaTypeOption({
   userId,
-  handleServerError,
+  handleError,
   setStSavesResults,
   isLoading,
   setIsLoading,
@@ -120,7 +119,7 @@ function MidiaTypeOption({
   isLoading: boolean;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   setStSavesResults: Dispatch<SetStateAction<MidiaResultsType[]>>;
-  handleServerError(msg: string): void;
+  handleError(msg: string): void;
   setMidiaTypeFilter: Dispatch<SetStateAction<MidiaTypeFilterType>>;
   midiaTypeFilter: MidiaTypeFilterType;
 }) {
@@ -150,7 +149,7 @@ function MidiaTypeOption({
       );
       const dataUserMidia = await resUserMidia.json();
       if (!resUserMidia.ok) {
-        handleServerError(dataUserMidia.error as string);
+        handleError(dataUserMidia.error as string);
         return;
       }
       const data = dataUserMidia as MidiaType;
@@ -159,7 +158,7 @@ function MidiaTypeOption({
       setMidiaTypeFilter(midiaType);
     } catch (err) {
       console.log(err);
-      handleServerError('Erro interno no servidor');
+      handleError('Erro interno no servidor');
     } finally {
       setIsLoading(false);
     }

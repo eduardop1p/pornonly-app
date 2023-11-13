@@ -8,9 +8,9 @@ import Image from 'next/image';
 import { Container, ContainerFullScreen } from './styled';
 import Loading from '../../form/loading';
 import { default as LoadingFullScreen } from '../loading';
-import { GlobalError } from '@/components/form/globalError';
+import { GlobalErrorToastify } from '@/components/form/globalErrorToastify';
+import useGlobalError from '@/utils/useGlobalError';
 import { GlobalSuccess } from '@/components/form/globalSuccess';
-import useGlobalErrorTime from '@/utils/useGlobalErrorTime';
 import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
 import revalidatePin from '@/services/revalidatePin';
 
@@ -39,8 +39,7 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
   const [showMoreOptions, setShowMoreOptions] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [pinIsSave, setPinIsSave] = useState(isSave);
-  const { handleServerError, msgGlobalError, showGlobalError } =
-    useGlobalErrorTime();
+  const { handleError, msgError } = useGlobalError();
   const { handleServerSuccess, msgGlobalSuccess, showGlobalSuccess } =
     useGlobalSuccessTime();
 
@@ -93,13 +92,13 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
       await revalidatePin();
       // const jsonRes = await res.json();
       // if (!res.ok) {
-      //   handleServerError(jsonRes.error as string);
+      //   handleError(jsonRes.error as string);
       //   return;
       // }
       handleServerSuccess('Pin foi salvo');
     } catch (err) {
       setPinIsSave(false);
-      handleServerError('Erro interno no servidor.');
+      handleError('Erro interno no servidor');
     } finally {
       // setIsLoading(false);
     }
@@ -126,13 +125,13 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
       await revalidatePin();
       // const jsonRes = await res.json();
       // if (!res.ok) {
-      //   handleServerError(jsonRes.error as string);
+      //   handleError(jsonRes.error as string);
       //   return;
       // }
       handleServerSuccess('Pin removido dos salvos');
     } catch (err) {
       setPinIsSave(true);
-      handleServerError('Erro interno no servidor.');
+      handleError('Erro interno no servidor');
     } finally {
       // setIsLoading(false);
     }
@@ -146,7 +145,7 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
         url: location.href,
       });
     } catch {
-      handleServerError('Seu navegador não suporta está função');
+      handleError('Seu navegador não suporta está função');
     }
   };
 
@@ -194,7 +193,7 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
         </ContainerFullScreen>
       )}
       {isLoading && <Loading />}
-      <GlobalError showError={showGlobalError} errorMsg={msgGlobalError} />
+      <GlobalErrorToastify errorMsg={msgError} />
       <GlobalSuccess
         showSuccess={showGlobalSuccess}
         successMsg={msgGlobalSuccess}
