@@ -33,7 +33,7 @@ interface Props {
   userId: any;
   setStResultsComments: Dispatch<SetStateAction<ResultsCommentsType[]>>;
   handleError(msg: string): void;
-  handleServerSuccess(msg: string): void;
+  handleSuccess(msg: string): void;
   isLoading: boolean;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   parentCommentIndex: number;
@@ -48,7 +48,7 @@ export default function UserPinAndComments({
   userId,
   setStResultsComments,
   handleError,
-  handleServerSuccess,
+  handleSuccess,
   isLoading,
   setIsLoading,
   parentCommentIndex,
@@ -89,7 +89,7 @@ export default function UserPinAndComments({
         handleError(jsonData.error as string);
         return;
       }
-      handleServerSuccess('Resposta foi adicionada');
+      handleSuccess('Resposta foi adicionada');
       setAllCommentsInPin(state => (state += 1));
       setStResultsComments(state => {
         state[parentCommentIndex].responses.push(jsonData);
@@ -113,7 +113,7 @@ export default function UserPinAndComments({
           token={token}
           userId={userId}
           handleError={handleError}
-          handleServerSuccess={handleServerSuccess}
+          handleSuccess={handleSuccess}
           isLoading={isLoading}
           setIsLoading={setIsLoading}
           setStResultsComments={setStResultsComments}
@@ -154,7 +154,7 @@ export default function UserPinAndComments({
                 token={token}
                 userId={userId}
                 handleError={handleError}
-                handleServerSuccess={handleServerSuccess}
+                handleSuccess={handleSuccess}
                 isLoading={isLoading}
                 setIsLoading={setIsLoading}
                 parentCommentId={comment._id}
@@ -204,7 +204,7 @@ interface UserCommentType {
   isAuth: boolean;
   token: string;
   handleError(msg: string): void;
-  handleServerSuccess(msg: string): void;
+  handleSuccess(msg: string): void;
   isLoading: boolean;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   parentCommentId: string;
@@ -223,7 +223,7 @@ function UserComment({
   isAuth,
   token,
   handleError,
-  handleServerSuccess,
+  handleSuccess,
   isLoading,
   setIsLoading,
   parentCommentId,
@@ -269,7 +269,7 @@ function UserComment({
         handleError(jsonData.error as string);
         return;
       }
-      handleServerSuccess('Comentário foi excluido');
+      handleSuccess('Comentário foi excluido');
       setAllCommentsInPin(state => (state -= 1));
       if (typeof responseIndex !== 'undefined') {
         setStResultsComments(state => {

@@ -39,8 +39,8 @@ import {
 import ErrorMsg from '../errorMsg';
 import { GlobalErrorToastify } from '../globalErrorToastify';
 import useGlobalError from '@/utils/useGlobalError';
-import { GlobalSuccess } from '../globalSuccess';
-import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
+import { GlobalSuccessToastify } from '../globalSuccessToastify';
+import useGlobalSuccess from '@/utils/useGlobalSuccess';
 import Loading from '../loading';
 import revalidatePin from '@/services/revalidatePin';
 import WaitingPin from '@/components/masonry/waitingPin';
@@ -100,10 +100,8 @@ export default function PublishPin({ token }: Props) {
     defaultCreatedPinCurrent
   );
 
-  const { handleError, msgError } =
-    useGlobalError();
-  const { handleServerSuccess, msgGlobalSuccess, showGlobalSuccess } =
-    useGlobalSuccessTime();
+  const { handleError, msgError } = useGlobalError();
+  const { handleSuccess, msgSuccess } = useGlobalSuccess();
 
   const childNewPinRef = useRef<any>();
 
@@ -116,9 +114,8 @@ export default function PublishPin({ token }: Props) {
     <Container>
       {isLoading && <Loading />}
       <GlobalErrorToastify errorMsg={msgError} />
-      <GlobalSuccess
-        successMsg={msgGlobalSuccess}
-        showSuccess={showGlobalSuccess}
+      <GlobalSuccessToastify
+        successMsg={msgSuccess}
       >
         {createdPinCurrent.pinSrc && (
           <Image
@@ -133,7 +130,7 @@ export default function PublishPin({ token }: Props) {
             height={25}
           />
         )}
-      </GlobalSuccess>
+      </GlobalSuccessToastify>
 
       <div className="container-created-title">
         <PublishsCreated
@@ -159,7 +156,7 @@ export default function PublishPin({ token }: Props) {
             ref={childNewPinRef}
             createdPinCurrent={createdPinCurrent}
             handleError={handleError}
-            handleServerSuccess={handleServerSuccess}
+            handleSuccess={handleSuccess}
             setCreatedPinCurrent={setCreatedPinCurrent}
             selectCreatedPinIndex={selectCreatedPinIndex}
             setCreatedPins={setCreatedPins}
@@ -179,7 +176,7 @@ const NewPin = forwardRef(
       createdPinCurrent: CreatePinsType;
       setCreatedPins: Dispatch<SetStateAction<CreatePinsType[]>>;
       handleError(msg: string): void;
-      handleServerSuccess(msg: string): void;
+      handleSuccess(msg: string): void;
       setCreatedPinCurrent: Dispatch<SetStateAction<CreatePinsType>>;
       selectCreatedPinIndex: number | undefined;
       isLoading: boolean;
@@ -191,7 +188,7 @@ const NewPin = forwardRef(
     const {
       createdPinCurrent,
       handleError,
-      handleServerSuccess,
+      handleSuccess,
       setCreatedPinCurrent,
       isLoading,
       setIsLoading,
@@ -303,10 +300,10 @@ const NewPin = forwardRef(
         const bson = decode(token) as any;
         if (bson.isAdmin) {
           await revalidatePin();
-          handleServerSuccess('Pin adicionado ao feed');
+          handleSuccess('Pin adicionado ao feed');
           return;
         }
-        handleServerSuccess('Pin enviado para análise aguarde');
+        handleSuccess('Pin enviado para análise aguarde');
       } catch (err: any) {
         console.log(err);
         if (get(err, 'response.data.error', false)) {

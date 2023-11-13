@@ -12,8 +12,8 @@ import AddComments from '@/components/pin/comments/addComments';
 import Loading from '@/components/form/loading';
 import { GlobalErrorToastify } from '@/components/form/globalErrorToastify';
 import useGlobalError from '@/utils/useGlobalError';
-import { GlobalSuccess } from '@/components/form/globalSuccess';
-import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
+import { GlobalSuccessToastify } from '@/components/form/globalSuccessToastify';
+import useGlobalSuccess from '@/utils/useGlobalSuccess';
 import { MidiaResultsType } from '@/app/page';
 import { useRouter, usePathname } from 'next/navigation';
 import revalidatePin from '@/services/revalidatePin';
@@ -50,8 +50,7 @@ export default function Comments({
   );
   const [allCommentsInPin, setAllCommentsInPin] = useState(totalComments);
   const [hasMore, setHasMore] = useState(true);
-  const { handleServerSuccess, msgGlobalSuccess, showGlobalSuccess } =
-    useGlobalSuccessTime();
+  const { handleSuccess, msgSuccess } = useGlobalSuccess();
   const { handleError, msgError } = useGlobalError();
   let currentPage = useRef(1);
   const refCommentsAndUsers = useRef<HTMLDivElement | null>(null);
@@ -147,10 +146,7 @@ export default function Comments({
   return (
     <Container $showComments={showComments}>
       {isLoading && <Loading />}
-      <GlobalSuccess
-        successMsg={msgGlobalSuccess}
-        showSuccess={showGlobalSuccess}
-      />
+      <GlobalSuccessToastify successMsg={msgSuccess} />
       <GlobalErrorToastify errorMsg={msgError} />
       <div className="container-comments-scrollab">
         <div className="title-and-icon">
@@ -217,7 +213,7 @@ export default function Comments({
                     userId={userId}
                     setStResultsComments={setStResultsComments}
                     handleError={handleError}
-                    handleServerSuccess={handleServerSuccess}
+                    handleSuccess={handleSuccess}
                     isLoading={isLoading}
                     setIsLoading={setIsLoading}
                     parentCommentIndex={index}

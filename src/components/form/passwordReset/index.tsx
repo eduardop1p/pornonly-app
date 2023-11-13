@@ -9,8 +9,8 @@ import { FormContainer } from '../formContainer/styles';
 import Input from './input';
 import Loading from '../loading';
 import Logo from '../../logo';
-import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
-import { GlobalSuccess } from '../globalSuccess';
+import { GlobalSuccessToastify } from '../globalSuccessToastify';
+import useGlobalSuccess from '@/utils/useGlobalSuccess';
 import { GlobalErrorToastify } from '../globalErrorToastify';
 import useGlobalError from '@/utils/useGlobalError';
 import FallbackPassworReset from './fallbackPasswordReset';
@@ -29,8 +29,7 @@ export default function PasswordReset() {
   const [successSendEmail, setSuccessSendEmail] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { handleError, msgError } = useGlobalError();
-  const { handleServerSuccess, showGlobalSuccess, msgGlobalSuccess } =
-    useGlobalSuccessTime();
+  const { handleSuccess, msgSuccess } = useGlobalSuccess();
 
   const {
     register,
@@ -67,7 +66,7 @@ export default function PasswordReset() {
         handleError(jsonResponse.error as string);
         return;
       }
-      handleServerSuccess(jsonResponse.success as string);
+      handleSuccess(jsonResponse.success as string);
       setSuccessSendEmail(true);
     } catch (err) {
       handleError('Erro interno no servidor');
@@ -87,10 +86,7 @@ export default function PasswordReset() {
       )}
       {isLoading && <Loading />}
       <GlobalErrorToastify errorMsg={msgError} />
-      <GlobalSuccess
-        successMsg={msgGlobalSuccess}
-        showSuccess={showGlobalSuccess}
-      />
+      <GlobalSuccessToastify successMsg={msgSuccess} />
       <h1 className="title-password-reset">Vamos encontrar sua conta</h1>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <Input

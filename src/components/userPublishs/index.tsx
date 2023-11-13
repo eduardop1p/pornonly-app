@@ -19,10 +19,10 @@ import styles from './styles.module.css';
 import Masonry from '../masonry';
 import { MidiaResultsType } from '@/app/page';
 import Loading from '../form/loading';
-import { GlobalSuccess } from '../form/globalSuccess';
 import { GlobalErrorToastify } from '../form/globalErrorToastify';
 import useGlobalError from '@/utils/useGlobalError';
-import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
+import { GlobalSuccessToastify } from '../form/globalSuccessToastify';
+import useGlobalSuccess from '@/utils/useGlobalSuccess';
 import revalidatePin from '@/services/revalidatePin';
 import { MidiaType } from '@/app/page';
 
@@ -48,8 +48,7 @@ export default function UserPublishs({
   const [isLoading, setIsLoading] = useState(false);
   const [midiaTypeFilter, setMidiaTypeFilter] =
     useState<MidiaTypeFilterType>(undefined);
-  const { handleServerSuccess, msgGlobalSuccess, showGlobalSuccess } =
-    useGlobalSuccessTime();
+  const { handleSuccess, msgSuccess } = useGlobalSuccess();
   const { handleError, msgError } = useGlobalError();
 
   const pinsIdsRemoveArray = useRef<{ id?: string; key: string }[]>([]);
@@ -142,10 +141,7 @@ export default function UserPublishs({
   return (
     <div className={styles['container']}>
       {isLoading && <Loading />}
-      <GlobalSuccess
-        showSuccess={showGlobalSuccess}
-        successMsg={msgGlobalSuccess}
-      />
+      <GlobalSuccessToastify successMsg={msgSuccess} />
       <GlobalErrorToastify errorMsg={msgError} />
       <div className={styles['btns-publishs-or-saves']}>
         {publishsResults.length ? (
@@ -155,7 +151,7 @@ export default function UserPublishs({
                 pinSelectMode={pinSelectMode}
                 setPinSelectMode={setPinSelectMode}
                 handleError={handleError}
-                handleServerSuccess={handleServerSuccess}
+                handleSuccess={handleSuccess}
                 isLoading={isLoading}
                 pinsIdsRemoveArray={pinsIdsRemoveArray}
                 refPinSelectMode={refPinSelectMode}
@@ -238,7 +234,7 @@ function MoreOptions({
   setIsLoading,
   pinsIdsRemoveArray,
   handleError,
-  handleServerSuccess,
+  handleSuccess,
   token,
 }: {
   setPinSelectMode: Dispatch<SetStateAction<boolean>>;
@@ -249,7 +245,7 @@ function MoreOptions({
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   pinsIdsRemoveArray: MutableRefObject<{ id?: string; key: string }[]>;
   handleError(msg: string): void;
-  handleServerSuccess(msg: string): void;
+  handleSuccess(msg: string): void;
   token: string;
 }) {
   const [showContainerSelectMode, setShowContainerSelectMode] = useState(false);
@@ -311,7 +307,7 @@ function MoreOptions({
         )
       );
       handlePublishsCount();
-      handleServerSuccess('Selecionados excluidos');
+      handleSuccess('Selecionados excluidos');
     } catch (err) {
       handleError('Erro interno no servidor');
     } finally {

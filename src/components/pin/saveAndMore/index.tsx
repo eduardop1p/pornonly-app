@@ -10,8 +10,8 @@ import Loading from '../../form/loading';
 import { default as LoadingFullScreen } from '../loading';
 import { GlobalErrorToastify } from '@/components/form/globalErrorToastify';
 import useGlobalError from '@/utils/useGlobalError';
-import { GlobalSuccess } from '@/components/form/globalSuccess';
-import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
+import { GlobalSuccessToastify } from '@/components/form/globalSuccessToastify';
+import useGlobalSuccess from '@/utils/useGlobalSuccess';
 import revalidatePin from '@/services/revalidatePin';
 
 interface Props {
@@ -40,8 +40,7 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [pinIsSave, setPinIsSave] = useState(isSave);
   const { handleError, msgError } = useGlobalError();
-  const { handleServerSuccess, msgGlobalSuccess, showGlobalSuccess } =
-    useGlobalSuccessTime();
+  const { handleSuccess, msgSuccess } = useGlobalSuccess();
 
   const refMoreOptions = useRef<HTMLDivElement | null>(null);
   const refBtnMoreOptions = useRef<HTMLButtonElement | null>(null);
@@ -95,7 +94,7 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
       //   handleError(jsonRes.error as string);
       //   return;
       // }
-      handleServerSuccess('Pin foi salvo');
+      handleSuccess('Pin foi salvo');
     } catch (err) {
       setPinIsSave(false);
       handleError('Erro interno no servidor');
@@ -128,7 +127,7 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
       //   handleError(jsonRes.error as string);
       //   return;
       // }
-      handleServerSuccess('Pin removido dos salvos');
+      handleSuccess('Pin removido dos salvos');
     } catch (err) {
       setPinIsSave(true);
       handleError('Erro interno no servidor');
@@ -194,11 +193,7 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
       )}
       {isLoading && <Loading />}
       <GlobalErrorToastify errorMsg={msgError} />
-      <GlobalSuccess
-        showSuccess={showGlobalSuccess}
-        successMsg={msgGlobalSuccess}
-        midiaType={data.midiaType}
-      >
+      <GlobalSuccessToastify successMsg={msgSuccess}>
         {data.midiaType === 'video' ? (
           <video src={data.url} controls={false} preload="auto"></video>
         ) : (
@@ -210,7 +205,7 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
             height={25}
           />
         )}
-      </GlobalSuccess>
+      </GlobalSuccessToastify>
       <div className="container-more-aptions-and-compress">
         <div
           className="more-options"

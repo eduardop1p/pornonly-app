@@ -12,12 +12,12 @@ import styles from './styles.module.css';
 
 import { FormContainer } from '../formContainer/styles';
 import Loading from '../loading';
-import { GlobalErrorToastify } from '../globalErrorToastify';
 import Logo from '../../logo';
 import Input from './input';
 import ShowPassword from '../showPassword';
 import useGlobalError from '@/utils/useGlobalError';
 import useGlobalContext from '@/utils/useGlobalContext';
+import { GlobalErrorToastify } from '../globalErrorToastify';
 import { dataSuccess } from '@/utils/appContextUser/actions';
 
 const ZodCreateAccountSchema = z

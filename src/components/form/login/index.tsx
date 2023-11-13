@@ -15,10 +15,10 @@ import Logo from '../../logo';
 import Input from './input';
 import ShowPassword from '../showPassword';
 import useGlobalError from '@/utils/useGlobalError';
-import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
+import { GlobalSuccessToastify } from '../globalSuccessToastify';
+import useGlobalSuccess from '@/utils/useGlobalSuccess';
 import useGlobalContext from '@/utils/useGlobalContext';
 import { dataFailure } from '@/utils/appContextUser/actions';
-import { GlobalSuccess } from '../globalSuccess';
 
 const ZodLoginSchema = z.object({
   email: z
@@ -38,8 +38,7 @@ export default function Login() {
   const [passwordType, setPasswordType] = useState('password');
   const [isLoading, setIsLoading] = useState(false);
   const { handleError, msgError } = useGlobalError();
-  const { handleServerSuccess, showGlobalSuccess, msgGlobalSuccess } =
-    useGlobalSuccessTime();
+  const { handleSuccess, msgSuccess } = useGlobalSuccess();
   const { state, dispatch } = useGlobalContext();
 
   const {
@@ -50,9 +49,9 @@ export default function Login() {
   } = useForm<BodyLogin>({ resolver: zodResolver(ZodLoginSchema) });
 
   useEffect(() => {
-    state.email && handleServerSuccess('Faça o login pra poder continuar');
+    state.email && handleSuccess('Faça o login pra poder continuar');
     return () => dispatch(dataFailure());
-  }, [state, handleServerSuccess, dispatch, searchParams]);
+  }, [state, handleSuccess, dispatch, searchParams]);
 
   const handleFormSubmit: SubmitHandler<BodyLogin> = async (body, event) => {
     event?.preventDefault();
@@ -99,10 +98,7 @@ export default function Login() {
       <Logo />
       {isLoading && <Loading />}
       <GlobalErrorToastify errorMsg={msgError} />
-      <GlobalSuccess
-        successMsg={msgGlobalSuccess}
-        showSuccess={showGlobalSuccess}
-      />
+      <GlobalSuccessToastify successMsg={msgSuccess} />
       <h1 className="title-login">Bem vind@ a Pornonly</h1>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <Input

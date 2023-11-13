@@ -16,10 +16,10 @@ import { Container, MasonryContainer } from './styled';
 import { MidiaResultsType } from '@/app/page';
 import ScrollTop from './scrollTop';
 import { MidiaTypeFilterType } from '../userPublishs';
-import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
+import { GlobalSuccessToastify } from '../form/globalSuccessToastify';
+import useGlobalSuccess from '@/utils/useGlobalSuccess';
 import { GlobalErrorToastify } from '../form/globalErrorToastify';
 import useGlobalError from '@/utils/useGlobalError';
-import { GlobalSuccess } from '../form/globalSuccess';
 import Loading from '../form/loading';
 import Pin from './pin';
 
@@ -64,8 +64,7 @@ export default function Masonry({
   const [isLoading, setIsLoading] = useState(false);
 
   const { handleError, msgError } = useGlobalError();
-  const { handleServerSuccess, msgGlobalSuccess, showGlobalSuccess } =
-    useGlobalSuccessTime();
+  const { handleSuccess, msgSuccess } = useGlobalSuccess();
 
   let currentPage = useRef(1);
   const midiaType = useRef<MidiaTypeFilterType>(midiaTypeFilter);
@@ -293,10 +292,7 @@ export default function Masonry({
       {currentPage.current > 2 && <ScrollTop />}
       {isLoading && <Loading />}
       <GlobalErrorToastify errorMsg={msgError} />
-      <GlobalSuccess
-        successMsg={msgGlobalSuccess}
-        showSuccess={showGlobalSuccess}
-      />
+      <GlobalSuccessToastify successMsg={msgSuccess} />
       <MasonryContainer
         $columnWidth={columnWidth}
         $columnCount={columnCount}
@@ -335,7 +331,7 @@ export default function Masonry({
                   setIsLoading={setIsLoading}
                   isLoading={isLoading}
                   handleError={handleError}
-                  handleServerSuccess={handleServerSuccess}
+                  handleSuccess={handleSuccess}
                 />
               )
             )}

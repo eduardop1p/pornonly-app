@@ -16,8 +16,8 @@ import { Container } from './styled';
 import ErrorMsg from '../errorMsg';
 import { GlobalErrorToastify } from '../globalErrorToastify';
 import useGlobalError from '@/utils/useGlobalError';
-import { GlobalSuccess } from '../globalSuccess';
-import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
+import { GlobalSuccessToastify } from '../globalSuccessToastify';
+import useGlobalSuccess from '@/utils/useGlobalSuccess';
 import Loading from '../loading';
 import WaitingPin from '@/components/masonry/waitingPin';
 import revalidatePin from '@/services/revalidatePin';
@@ -98,8 +98,7 @@ export default function PublishPin({
   const [isLoading, setIsLoading] = useState(false);
   const [widthInputNameTags, setWidthInputNameTags] = useState(0);
   const { handleError, msgError } = useGlobalError();
-  const { handleServerSuccess, msgGlobalSuccess, showGlobalSuccess } =
-    useGlobalSuccessTime();
+  const { handleSuccess, msgSuccess } = useGlobalSuccess();
   const fileScrRef = useRef(fileContent.src);
   const thumbBlobVideoRef = useRef<Blob | string>('');
 
@@ -151,7 +150,7 @@ export default function PublishPin({
         },
       });
       await revalidatePin();
-      handleServerSuccess('Pin adcionado ao feed');
+      handleSuccess('Pin adcionado ao feed');
     } catch (err: any) {
       // console.log(err);
       if (get(err, 'response.data.error', false)) {
@@ -251,10 +250,7 @@ export default function PublishPin({
     <Container>
       {isLoading && <Loading />}
       <GlobalErrorToastify errorMsg={msgError} />
-      <GlobalSuccess
-        successMsg={msgGlobalSuccess}
-        showSuccess={showGlobalSuccess}
-      >
+      <GlobalSuccessToastify successMsg={msgSuccess}>
         {fileType.includes('video') && (
           <video src={fileScrRef.current} controls={false}></video>
         )}
@@ -267,7 +263,7 @@ export default function PublishPin({
             height={25}
           />
         )}
-      </GlobalSuccess>
+      </GlobalSuccessToastify>
 
       <form onSubmit={handleSubmit(handleSubmitFile)}>
         <div className="publish-and-btn">

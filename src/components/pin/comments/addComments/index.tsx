@@ -8,8 +8,8 @@ import { Container } from './styled';
 import Loading from '@/components/form/loading';
 import { GlobalErrorToastify } from '@/components/form/globalErrorToastify';
 import useGlobalError from '@/utils/useGlobalError';
-import { GlobalSuccess } from '@/components/form/globalSuccess';
-import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
+import { GlobalSuccessToastify } from '@/components/form/globalSuccessToastify';
+import useGlobalSuccess from '@/utils/useGlobalSuccess';
 import { ResultsCommentsType } from '@/app/pin/[pinid]/page';
 
 export default function AddComments({
@@ -32,8 +32,7 @@ export default function AddComments({
 
   const [isLoading, setIsLoading] = useState(false);
   const [commentValue, setCommentValue] = useState('');
-  const { handleServerSuccess, msgGlobalSuccess, showGlobalSuccess } =
-    useGlobalSuccessTime();
+  const { handleSuccess, msgSuccess } = useGlobalSuccess();
   const { handleError, msgError } = useGlobalError();
 
   const handleAddCommentInPin = async (event: FormEvent<HTMLFormElement>) => {
@@ -69,7 +68,7 @@ export default function AddComments({
         handleError(jsonData.error as string);
         return;
       }
-      handleServerSuccess('Comentário foi adcionado');
+      handleSuccess('Comentário foi adcionado');
       setAllCommentsInPin(state => (state += 1));
       setStResultsComments(state => [jsonData, ...state]);
       setCommentValue('');
@@ -86,10 +85,7 @@ export default function AddComments({
   return (
     <Container onSubmit={handleAddCommentInPin}>
       {isLoading && <Loading />}
-      <GlobalSuccess
-        successMsg={msgGlobalSuccess}
-        showSuccess={showGlobalSuccess}
-      />
+      <GlobalSuccessToastify successMsg={msgSuccess} />
       <GlobalErrorToastify errorMsg={msgError} />
       {children}
       <input

@@ -9,8 +9,8 @@ import { Container } from './styled';
 import Loading from '../form/loading';
 import useGlobalError from '@/utils/useGlobalError';
 import { GlobalErrorToastify } from '../form/globalErrorToastify';
-import { GlobalSuccess } from '../form/globalSuccess';
-import useGlobalSuccessTime from '@/utils/useGlobalSuccessTime';
+import { GlobalSuccessToastify } from '../form/globalSuccessToastify';
+import useGlobalSuccess from '@/utils/useGlobalSuccess';
 import { ProfilePhotoType } from '../masonry/userPin';
 
 interface Props {
@@ -35,8 +35,7 @@ export default function UserProfile({ children, token, photo }: Props) {
     src: profilePhoto.length ? profilePhoto[0].url : '',
   });
   const { handleError, msgError } = useGlobalError();
-  const { handleServerSuccess, msgGlobalSuccess, showGlobalSuccess } =
-    useGlobalSuccessTime();
+  const { handleSuccess, msgSuccess } = useGlobalSuccess();
 
   const hableUploadUserPhoto = async () => {
     if (!filePhoto.file) return;
@@ -66,7 +65,7 @@ export default function UserProfile({ children, token, photo }: Props) {
         handleError(jsonRes.error as string);
         return;
       }
-      handleServerSuccess('Foto de perfil atualizada');
+      handleSuccess('Foto de perfil atualizada');
       setFilePhoto({
         file: jsonRes.profilePhoto,
         src: jsonRes.profilePhoto.url,
@@ -99,7 +98,7 @@ export default function UserProfile({ children, token, photo }: Props) {
         handleError(jsonRes.error as string);
         return;
       }
-      handleServerSuccess('Foto de perfil excluida');
+      handleSuccess('Foto de perfil excluida');
       setFilePhoto({
         file: null,
         src: '',
@@ -135,10 +134,7 @@ export default function UserProfile({ children, token, photo }: Props) {
       {isLoading && <Loading />}
       <div className="errors-success">
         <GlobalErrorToastify errorMsg={msgError} />
-        <GlobalSuccess
-          successMsg={msgGlobalSuccess}
-          showSuccess={showGlobalSuccess}
-        />
+        <GlobalSuccessToastify successMsg={msgSuccess} />
       </div>
 
       <div

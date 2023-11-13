@@ -15,7 +15,7 @@ interface Props {
   isLoading: boolean;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   handleError(msg: string): void;
-  handleServerSuccess(msg: string): void;
+  handleSuccess(msg: string): void;
 }
 
 export default function AcceptPin({
@@ -25,7 +25,7 @@ export default function AcceptPin({
   thumgUrl,
   setStResults,
   handleError,
-  handleServerSuccess,
+  handleSuccess,
   isLoading,
   setIsLoading,
 }: Props) {
@@ -57,7 +57,7 @@ export default function AcceptPin({
       }
 
       await revalidatePin();
-      handleServerSuccess('Publicação aceita');
+      handleSuccess('Publicação aceita');
       setStResults(state => state.filter(val => val._id !== midiaId));
     } catch (err) {
       // console.log(err);
@@ -91,7 +91,7 @@ export default function AcceptPin({
         return;
       }
       // await revalidatePin();
-      handleServerSuccess('Publicação rejeitada');
+      handleSuccess('Publicação rejeitada');
       setStResults(state => state.filter(val => val._id !== midiaId));
     } catch (err) {
       handleError('Erro interno no servidor');

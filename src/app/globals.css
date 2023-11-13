@@ -128,7 +128,7 @@ button{
   box-shadow: var(--box-shadow_03);
 }
 
-.container-toast-custom-error{
+.container-toast-custom-error, .container-toast-custom-success{
   height: fit-content !important;
   width: fit-content !important;
   bottom: 1rem !important;
@@ -138,14 +138,14 @@ button{
 .toast-custom-error{
   background-color: var(--g-colorRed100) !important;
   min-height: 50px !important;
-  padding: 8px 1rem !important;
+  padding: 10px !important;
   width: fit-content !important;
   border-radius: 10px !important;
   box-shadow: none !important;
   margin: 0 auto 0 !important;
 }
 
-.toast-custom-error-text{
+.toast-custom-error-text, .toast-custom-success-text{
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -155,9 +155,35 @@ button{
 .toast-custom-error-text > :first-child{
   display: none;
 }
-.toast-custom-error-text > :last-child{
+.toast-custom-error-text > :last-child, .toast-custom-success-text > :last-child{
   color: var(--g-colorGray0) !important;
   text-align: center !important;
   font-size: var(--font-size-1rem);
   font-weight: var(--font-weight-500);
+}
+
+.toast-custom-success{
+  background-color: var(--g-colorGray300) !important;
+  min-height: 50px !important;
+  padding: 10px !important;
+  width: fit-content !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+  margin: 0 auto 0 !important;
+}
+
+.toast-custom-success-text > :first-child{
+  flex: none !important;
+  width: fit-content !important;
+  margin-inline-end: 7px !important;
+}
+.toast-custom-success-text svg{
+  display: none !important;
+}
+.toast-custom-success-text img, .toast-custom-success-text video{
+  flex: none;
+  position: relative;
+  border-radius: 5px;
+  width: auto;
+  height: 30px !important;
 }
