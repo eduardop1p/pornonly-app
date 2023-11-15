@@ -71,7 +71,7 @@ const ZodCreateAccountSchema = z
 
 export type BodyCreateAccount = z.infer<typeof ZodCreateAccountSchema>;
 
-export default function CreateAccount() {
+export default function CreateAccount({ isAuth }: { isAuth: boolean }) {
   const router = useRouter();
   const { dispatch } = useGlobalContext();
 
@@ -213,10 +213,12 @@ export default function CreateAccount() {
           Criar
         </button>
       </form>
-      <span className="login-title">
-        Já tem tem uma conta?
-        <Link href="/login">Login</Link>
-      </span>
+      {!isAuth && (
+        <span className="login-title">
+          Já tem tem uma conta?
+          <Link href="/login">Login</Link>
+        </span>
+      )}
     </FormContainer>
   );
 }

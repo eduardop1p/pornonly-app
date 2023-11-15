@@ -14,6 +14,8 @@ import { GlobalErrorToastify } from '../form/globalErrorToastify';
 import useGlobalError from '@/utils/useGlobalError';
 import FallbackUserUpdate from './fallbackUserUpdate';
 import revalidatePin from '@/services/revalidatePin';
+import Logout from '../form/logout';
+
 import {
   Container,
   FormContainer,
@@ -247,27 +249,49 @@ export default function UserUpdate({
         >
           Configurações
         </Link>
-        <Link href="/" className={pathName === '/' ? 'link-active' : ''}>
-          Página inicial
-        </Link>
-        <Link
-          href="/categories"
-          className={pathName === '/' ? 'link-active' : ''}
-        >
-          Categorias
-        </Link>
-        <Link
-          href="/publish-pin"
-          className={pathName === '/publish-pin' ? 'link-active' : ''}
-        >
-          Criar pin
-        </Link>
         <Link
           href={`/${currentUsername}`}
           className={pathName === `/${currentUsername}` ? 'link-active' : ''}
         >
           {currentUsername}
         </Link>
+        <Link href="/privacy-policy" target="_blank">
+          Política de privacidade
+          <svg height="12" width="12" viewBox="0 0 24 24">
+            <path d="M20.97 12a2 2 0 0 1-1.99-2V7.81l-7.07 7.1a2 2 0 1 1-2.83-2.83L16.16 5h-2.17a2 2 0 0 1 0-4H23l-.03 9a2 2 0 0 1-2 2zM6.75 4a1.25 1.25 0 1 1 0 2.5H3.5v14h14v-3.26a1.25 1.25 0 1 1 2.5 0v4.51c0 .69-.56 1.25-1.25 1.25H2.25C1.56 23 1 22.44 1 21.75V5.25C1 4.56 1.56 4 2.25 4z"></path>
+          </svg>
+        </Link>
+        <Link href="/cookies-policy" target="_blank">
+          Política de Cookies
+          <svg height="12" width="12" viewBox="0 0 24 24">
+            <path d="M20.97 12a2 2 0 0 1-1.99-2V7.81l-7.07 7.1a2 2 0 1 1-2.83-2.83L16.16 5h-2.17a2 2 0 0 1 0-4H23l-.03 9a2 2 0 0 1-2 2zM6.75 4a1.25 1.25 0 1 1 0 2.5H3.5v14h14v-3.26a1.25 1.25 0 1 1 2.5 0v4.51c0 .69-.56 1.25-1.25 1.25H2.25C1.56 23 1 22.44 1 21.75V5.25C1 4.56 1.56 4 2.25 4z"></path>
+          </svg>
+        </Link>
+        <Link href="/terms-use" target="_blank">
+          Termos de Uso
+          <svg height="12" width="12" viewBox="0 0 24 24">
+            <path d="M20.97 12a2 2 0 0 1-1.99-2V7.81l-7.07 7.1a2 2 0 1 1-2.83-2.83L16.16 5h-2.17a2 2 0 0 1 0-4H23l-.03 9a2 2 0 0 1-2 2zM6.75 4a1.25 1.25 0 1 1 0 2.5H3.5v14h14v-3.26a1.25 1.25 0 1 1 2.5 0v4.51c0 .69-.56 1.25-1.25 1.25H2.25C1.56 23 1 22.44 1 21.75V5.25C1 4.56 1.56 4 2.25 4z"></path>
+          </svg>
+        </Link>
+        <Link href="/report-bugs" target="_blank">
+          Reportar bugs
+          <svg height="12" width="12" viewBox="0 0 24 24">
+            <path d="M20.97 12a2 2 0 0 1-1.99-2V7.81l-7.07 7.1a2 2 0 1 1-2.83-2.83L16.16 5h-2.17a2 2 0 0 1 0-4H23l-.03 9a2 2 0 0 1-2 2zM6.75 4a1.25 1.25 0 1 1 0 2.5H3.5v14h14v-3.26a1.25 1.25 0 1 1 2.5 0v4.51c0 .69-.56 1.25-1.25 1.25H2.25C1.56 23 1 22.44 1 21.75V5.25C1 4.56 1.56 4 2.25 4z"></path>
+          </svg>
+        </Link>
+        <Link href="/compliments-improvements" target="_blank">
+          Elogios e sugestões de melhorias
+          <svg height="12" width="12" viewBox="0 0 24 24">
+            <path d="M20.97 12a2 2 0 0 1-1.99-2V7.81l-7.07 7.1a2 2 0 1 1-2.83-2.83L16.16 5h-2.17a2 2 0 0 1 0-4H23l-.03 9a2 2 0 0 1-2 2zM6.75 4a1.25 1.25 0 1 1 0 2.5H3.5v14h14v-3.26a1.25 1.25 0 1 1 2.5 0v4.51c0 .69-.56 1.25-1.25 1.25H2.25C1.56 23 1 22.44 1 21.75V5.25C1 4.56 1.56 4 2.25 4z"></path>
+          </svg>
+        </Link>
+        <Link href="/request-content-pack" target="_blank">
+          Pedir pack de conteúdos
+          <svg height="12" width="12" viewBox="0 0 24 24">
+            <path d="M20.97 12a2 2 0 0 1-1.99-2V7.81l-7.07 7.1a2 2 0 1 1-2.83-2.83L16.16 5h-2.17a2 2 0 0 1 0-4H23l-.03 9a2 2 0 0 1-2 2zM6.75 4a1.25 1.25 0 1 1 0 2.5H3.5v14h14v-3.26a1.25 1.25 0 1 1 2.5 0v4.51c0 .69-.56 1.25-1.25 1.25H2.25C1.56 23 1 22.44 1 21.75V5.25C1 4.56 1.56 4 2.25 4z"></path>
+          </svg>
+        </Link>
+        <Logout />
       </ContainerLinks>
       <FormContainer
         onSubmit={handleSubmit(handleFormSubmit)}

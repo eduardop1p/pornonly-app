@@ -8,21 +8,23 @@ import { deburr, upperFirst } from 'lodash';
 
 import { Container, ContainerArrowMore } from './styded';
 import MoreMenus from './moreMenus';
+import { UserAuthType } from '../header';
 
 import Search from '../search';
 import Logout from '../form/logout';
 import { TagType } from '../header';
 
 interface Props {
-  isAuth: boolean;
+  user: UserAuthType;
   children?: ReactNode;
   tags: TagType[];
-  token?: string;
+  userAvatar: ReactNode;
 }
 
-export default function Nav({ isAuth, tags, children, token }: Props) {
+export default function Nav({ user, tags, children, userAvatar }: Props) {
   const [publishActive, setPublishActive] = useState(false);
   const pathName = usePathname();
+  const { isAuth } = user;
 
   useEffect(() => {
     const header = document.querySelector('header');
@@ -152,7 +154,7 @@ export default function Nav({ isAuth, tags, children, token }: Props) {
           {/* <Logout /> */}
         </div>
       )}
-      <MoreMenus isAuth={isAuth} token={token} />
+      <MoreMenus user={user} userAvatar={userAvatar} />
     </Container>
   );
 }

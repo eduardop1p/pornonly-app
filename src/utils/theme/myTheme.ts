@@ -66,6 +66,7 @@ const myTheme = {
     font_size_0_90rem: '0.90rem',
     font_size_0_75rem: '0.75rem',
     font_size_0_7rem: '0.7rem',
+    font_size_0_8rem: '0.8rem',
     font_size_2_5rem: '2.5rem',
   },
   box_shadow: {

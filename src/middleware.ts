@@ -6,10 +6,7 @@ export function middleware(req: NextRequest, res: NextResponse) {
   const response = NextResponse.next();
   const isAuth = req.cookies.has('token');
   const { pathname } = req.nextUrl;
-  if (
-    isAuth &&
-    (pathname.startsWith('/login') || pathname.startsWith('/create-account'))
-  ) {
+  if (isAuth && pathname.startsWith('/login')) {
     return NextResponse.redirect(new URL('/', req.url));
   }
   if (

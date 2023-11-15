@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { cookies } from 'next/headers';
 
 import styles from './styles.module.css';
 
@@ -10,9 +11,11 @@ export const metadata: Metadata = {
 import CreateAccount from '@/components/form/createAccount';
 
 export default function Page() {
+  const isAuth = cookies().has('token');
+
   return (
     <main className={styles.main}>
-      <CreateAccount />
+      <CreateAccount isAuth={isAuth} />
     </main>
   );
 }

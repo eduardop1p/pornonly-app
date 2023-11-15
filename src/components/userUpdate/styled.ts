@@ -108,6 +108,10 @@ export const ContainerLinks = styled.div<TypeTheme>`
       &:not(&.link-active):hover {
         background-color: ${theme.colors.g_colore9e9e9};
       }
+
+      & > svg {
+        margin-left: 1rem;
+      }
     }
   `}
 `;
