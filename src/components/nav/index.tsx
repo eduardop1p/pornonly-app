@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import { deburr, upperFirst } from 'lodash';
 
 import { Container, ContainerArrowMore } from './styded';
+import MoreMenus from './moreMenus';
 
 import Search from '../search';
 import Logout from '../form/logout';
@@ -16,9 +17,10 @@ interface Props {
   isAuth: boolean;
   children?: ReactNode;
   tags: TagType[];
+  token?: string;
 }
 
-export default function Nav({ isAuth, tags, children }: Props) {
+export default function Nav({ isAuth, tags, children, token }: Props) {
   const [publishActive, setPublishActive] = useState(false);
   const pathName = usePathname();
 
@@ -135,13 +137,6 @@ export default function Nav({ isAuth, tags, children }: Props) {
         )}
       </div>
       <Search />
-      <button
-        type="button"
-        style={{ marginRight: '10px' }}
-        className="elogios-melhorias-bugs"
-      >
-        CT
-      </button>
       {!isAuth ? (
         <div className="links-no-auth">
           <Link className="login" href="/login">
@@ -154,9 +149,10 @@ export default function Nav({ isAuth, tags, children }: Props) {
       ) : (
         <div className="links-auth">
           {children}
-          <Logout />
+          {/* <Logout /> */}
         </div>
       )}
+      <MoreMenus isAuth={isAuth} token={token} />
     </Container>
   );
 }

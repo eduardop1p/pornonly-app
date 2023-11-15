@@ -20,6 +20,7 @@ export interface TagType {
 
 export default async function Header() {
   const isAuth = cookies().has('token');
+  const token = cookies().get('token')?.value;
 
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all-midia-tags-category`,
@@ -36,7 +37,7 @@ export default async function Header() {
         <Logo />
         <h2>Pornonly</h2>
       </Link>
-      <Nav isAuth={isAuth} tags={results}>
+      <Nav isAuth={isAuth} tags={results} token={token}>
         <UserAvatar containerWidth={25} containerHeight={25} />
       </Nav>
     </header>

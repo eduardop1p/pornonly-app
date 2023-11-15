@@ -22,7 +22,6 @@ import LinearProgress, {
   LinearProgressProps,
 } from '@mui/material/LinearProgress';
 import { Typography, Box } from '@mui/material';
-import { decode } from 'jsonwebtoken';
 
 import {
   Container,
@@ -47,6 +46,7 @@ import WaitingPin from '@/components/masonry/waitingPin';
 
 interface Props {
   token: string;
+  isAdmin: boolean;
 }
 
 interface CreatePinsType {
@@ -55,6 +55,7 @@ interface CreatePinsType {
   file: Blob | string;
   videoThumb: Blob | string;
   title: string;
+  author: string;
   description: string;
   tags: string[];
 }
@@ -75,6 +76,7 @@ interface CreatePinsType {
 
 interface BodyForm {
   title: string;
+  author: string;
   description: string;
   tags: string;
 }
@@ -82,6 +84,7 @@ interface BodyForm {
 const defaultCreatedPinCurrent = {
   index: undefined,
   fileType: '',
+  author: '',
   description: '',
   pinSrc: '',
   tags: [],
@@ -90,7 +93,7 @@ const defaultCreatedPinCurrent = {
   videoThumb: '',
 };
 
-export default function PublishPin({ token }: Props) {
+export default function PublishPin({ token, isAdmin }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [selectCreatedPinIndex, setSelectCreatedPinIndex] = useState<
     number | undefined
@@ -163,6 +166,7 @@ export default function PublishPin({ token }: Props) {
             isLoading={isLoading}
             setIsLoading={setIsLoading}
             token={token}
+            isAdmin={isAdmin}
           />
         </div>
       </div>
@@ -182,6 +186,7 @@ const NewPin = forwardRef(
       isLoading: boolean;
       setIsLoading: Dispatch<SetStateAction<boolean>>;
       token: string;
+      isAdmin: boolean;
     },
     ref
   ) => {
@@ -195,6 +200,7 @@ const NewPin = forwardRef(
       token,
       selectCreatedPinIndex,
       setCreatedPins,
+      isAdmin,
     } = props;
 
     const {
@@ -272,7 +278,7 @@ const NewPin = forwardRef(
       submitForm.current = true;
       if (isLoading) return;
 
-      const { description, tags, title, file, videoThumb } =
+      const { description, tags, title, file, videoThumb, author, } =
         refCreatedPinCurrent.current;
       if (!handleFormErrors(title, tags)) return;
 
@@ -280,6 +286,7 @@ const NewPin = forwardRef(
       formData.append('midia', file);
       formData.append('thumb', videoThumb);
       formData.append('title', title.trim());
+      formData.append('author', author.trim());
       formData.append('description', description.trim());
       formData.append('tags', tags.join(',').trim());
 
@@ -297,15 +304,14 @@ const NewPin = forwardRef(
             setUploadProgress(percentage);
           },
         });
-        const bson = decode(token) as any;
-        if (bson.isAdmin) {
+        if (isAdmin) {
           await revalidatePin();
           handleSuccess('Pin adicionado ao feed');
           return;
         }
         handleSuccess('Pin enviado para análise aguarde');
       } catch (err: any) {
-        console.log(err);
+        // console.log(err);
         if (get(err, 'response.data.error', false)) {
           handleError(err.response.data.error);
           return;
@@ -547,6 +553,26 @@ const NewPin = forwardRef(
             />
             {errors.title && <ErrorMsg errorMsg={errors.title.message} />}
           </div>
+          {isAdmin && <div className='container-input'>
+            <label htmlFor="author">Autor</label>
+            <input
+              id="author"
+              placeholder="Nome do autor"
+              maxLength={100}
+              value={createdPinCurrent.author}
+              type="text"
+              {...register('author', {
+                onChange(event) {
+                  const value = event.target.value;
+                  setCreatedPinCurrent(state => ({
+                    ...state,
+                    author: value,
+                  }));
+                },
+                disabled: !createdPinCurrent.file ? true : false,
+              })}
+            />
+          </div>}
           <div className="container-input">
             <label htmlFor="description">Descrição</label>
             <textarea
