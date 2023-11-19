@@ -78,6 +78,10 @@ export const ContainerLinks = styled.div<TypeTheme>`
     left: 0;
     top: 0;
 
+    & > :first-child {
+      margin-bottom: 5px;
+    }
+
     & > a,
     & > button {
       display: inline-block;
@@ -92,7 +96,6 @@ export const ContainerLinks = styled.div<TypeTheme>`
       min-height: 37px;
       position: relative;
       cursor: pointer;
-      margin-bottom: 5px;
 
       &.link-active::before {
         content: '';

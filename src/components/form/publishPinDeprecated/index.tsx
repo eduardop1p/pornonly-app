@@ -72,7 +72,7 @@ export default function PublishPin({
     register,
     handleSubmit,
     formState: { errors },
-    resetField,
+    reset,
     setValue,
   } = useForm<BodyFile>({
     resolver: zodResolver(ZodUserSchema),
@@ -288,9 +288,10 @@ export default function PublishPin({
                   type="button"
                   onClick={() => {
                     setFileContent({ src: '', file: null });
-                    resetField('midia');
-                    resetField('title');
-                    resetField('tags');
+                    reset({
+                      tags: [],
+                      title: '',
+                    });
                     setDescriptionValue('');
                     setValueInputTags([]);
                   }}

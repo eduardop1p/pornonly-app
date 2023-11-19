@@ -3,13 +3,13 @@ export default function Logo() {
     <div
       style={{
         backgroundColor: '#111',
-        width: '23px',
-        height: '23px',
+        width: '24px',
+        height: '24px',
         borderRadius: '100%',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        overflow: 'hidden',
+        // overflow: 'hidden',
       }}
     >
       <svg

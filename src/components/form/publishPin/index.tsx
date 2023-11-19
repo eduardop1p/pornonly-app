@@ -207,9 +207,9 @@ const NewPin = forwardRef(
       register,
       handleSubmit,
       formState: { errors },
-      resetField,
       setError,
       clearErrors,
+      reset,
     } = useForm<BodyForm>({ reValidateMode: undefined });
 
     const [uploadProgress, setUploadProgress] = useState(0);
@@ -266,9 +266,12 @@ const NewPin = forwardRef(
     }, [createdPinCurrent, manageTitleTag, handleFormErrors]);
 
     const handleResetFilds = () => {
-      resetField('title');
-      resetField('description');
-      resetField('tags');
+      reset({
+        author: '',
+        description: '',
+        tags: '',
+        title: '',
+      })
       setTagValue('');
       setShowTagsArr(false);
       submitForm.current = false;
