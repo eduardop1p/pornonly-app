@@ -21,8 +21,10 @@ export interface MidiaResultsType {
   midiaType: 'img' | 'gif' | 'video';
   tags: string[];
   likes: LikesType;
-  width: number;
-  height: number;
+  width: string;
+  height: string;
+  newWidth: string;
+  newHeight: string;
   description: string;
   userId: UserIdResultsType;
   url: string;

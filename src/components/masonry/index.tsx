@@ -11,6 +11,7 @@ import {
 } from 'react-responsive-masonry';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { usePathname } from 'next/navigation';
+import calHeight from '@/config/calcHeight';
 
 import { Container, MasonryContainer } from './styled';
 import { MidiaResultsType } from '@/app/page';
@@ -56,10 +57,18 @@ export default function Masonry({
   const pathName = usePathname();
 
   const [columnCount] = useState(6);
-  const [columnWidth, setColumnWidth] = useState(
-    (window.innerWidth - 118) / columnCount
+  const [columnWidth] = useState((window.innerWidth - 118) / columnCount);
+  const [stResults, setStResults] = useState(
+    results.map(val => ({
+      ...val,
+      newWidth: columnWidth.toFixed(0),
+      newHeight: calHeight({
+        customWidth: columnWidth,
+        originalHeight: +val.height,
+        originalWidth: +val.width,
+      }).toFixed(0),
+    }))
   );
-  const [stResults, setStResults] = useState(results);
   const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -89,20 +98,20 @@ export default function Masonry({
   }, [results, username, pathName]);
 
   useEffect(() => {
-    const prevWindowWidth = window.innerWidth;
     const onresize = () => {
-      const newWindowWidth = window.innerWidth;
-      if (newWindowWidth != prevWindowWidth) {
-        document.querySelectorAll('.pin').forEach((el: Element) => {
-          const pin = el as HTMLDivElement;
-          const newPinWidth = newWindowWidth / 6.5;
-          const newPinHeigth =
-            (newPinWidth * pin.clientHeight) / pin.clientWidth;
-          pin.style.width = `${newPinWidth.toFixed(0)}px`;
-          pin.style.height = `${newPinHeigth.toFixed(0)}px`;
-          setColumnWidth(newPinWidth);
-        });
-      }
+      const newWindowWidth = window.innerWidth - 118;
+      const newWColumnWidth = newWindowWidth / columnCount;
+      setStResults(state =>
+        state.map(val => ({
+          ...val,
+          newWidth: newWColumnWidth.toFixed(0),
+          newHeight: calHeight({
+            customWidth: newWColumnWidth,
+            originalHeight: +val.height,
+            originalWidth: +val.width,
+          }).toFixed(0),
+        }))
+      );
     };
 
     window.addEventListener('resize', onresize);
@@ -315,7 +324,6 @@ export default function Masonry({
                   key={`${midiaValue._id}-${midiaIndex}`}
                   midiaValue={midiaValue}
                   midiaIndex={midiaIndex}
-                  columnWidth={columnWidth}
                   handleGetElement={handleGetElement}
                   handlePLayVideo={handlePLayVideo}
                   handlePauseVideo={handlePauseVideo}

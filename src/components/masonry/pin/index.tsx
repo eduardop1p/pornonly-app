@@ -6,7 +6,6 @@ import { upperFirst } from 'lodash';
 
 import { Container } from './styled';
 import { MidiaResultsType } from '@/app/page';
-import calHeight from '@/config/calcHeight';
 import LoadingPin from '../LoadingPin';
 // import WaitingPin from '../waitingPin';
 import UserPin from '../userPin';
@@ -18,7 +17,6 @@ interface Props {
   midiaIndex: number;
   handlePLayVideo(event: MouseEvent<HTMLAnchorElement | HTMLDivElement>): void;
   handlePauseVideo(event: MouseEvent<HTMLAnchorElement | HTMLDivElement>): void;
-  columnWidth: number;
   handleRemoveLoading(element: Element | null): void;
   handleGetElement(id: string, index: number): Element | null;
   handleVideoCompleteLoad(element: Element | null): void;
@@ -40,7 +38,6 @@ export default function Pin({
   midiaIndex,
   handlePLayVideo,
   handlePauseVideo,
-  columnWidth,
   handleRemoveLoading,
   handleGetElement,
   handleVideoCompleteLoad,
@@ -60,7 +57,6 @@ export default function Pin({
       {midiaValue.midiaType === 'video' &&
         midiaValue.status === 'published' && (
           <PinVideoPublished
-            columnWidth={columnWidth}
             handleGetElement={handleGetElement}
             handleRemoveLoading={handleRemoveLoading}
             midiaIndex={midiaIndex}
@@ -76,7 +72,6 @@ export default function Pin({
       {(midiaValue.midiaType === 'img' || midiaValue.midiaType === 'gif') &&
         midiaValue.status === 'published' && (
           <PinImgPublished
-            columnWidth={columnWidth}
             handleGetElement={handleGetElement}
             handleRemoveLoading={handleRemoveLoading}
             midiaIndex={midiaIndex}
@@ -90,7 +85,6 @@ export default function Pin({
         <>
           {isUniqueUser && (
             <PinVideoPending
-              columnWidth={columnWidth}
               handleGetElement={handleGetElement}
               handleRemoveLoading={handleRemoveLoading}
               midiaIndex={midiaIndex}
@@ -100,7 +94,6 @@ export default function Pin({
           )}
           {isAdmin && (
             <PinVideoPublished
-              columnWidth={columnWidth}
               handleGetElement={handleGetElement}
               handleRemoveLoading={handleRemoveLoading}
               midiaIndex={midiaIndex}
@@ -136,7 +129,6 @@ export default function Pin({
           <>
             {isUniqueUser && (
               <PinImgPending
-                columnWidth={columnWidth}
                 handleGetElement={handleGetElement}
                 handleRemoveLoading={handleRemoveLoading}
                 midiaIndex={midiaIndex}
@@ -147,7 +139,6 @@ export default function Pin({
 
             {isAdmin && (
               <PinImgPublished
-                columnWidth={columnWidth}
                 handleGetElement={handleGetElement}
                 handleRemoveLoading={handleRemoveLoading}
                 midiaIndex={midiaIndex}
@@ -177,7 +168,6 @@ function PinImgPublished({
   midiaValue,
   midiaIndex,
   masonryPublishs,
-  columnWidth,
   handleGetElement,
   handleRemoveLoading,
   visibleUserInfo,
@@ -186,7 +176,6 @@ function PinImgPublished({
   midiaValue: MidiaResultsType;
   masonryPublishs?: boolean;
   midiaIndex: number;
-  columnWidth: number;
   handleRemoveLoading(element: Element | null): void;
   handleGetElement(id: string, index: number): Element | null;
   visibleUserInfo?: boolean;
@@ -204,12 +193,8 @@ function PinImgPublished({
         className="pin"
         id={`pin-${midiaValue._id}-${midiaIndex}`}
         style={{
-          width: `${columnWidth.toFixed(0)}px`,
-          height: `${calHeight({
-            customWidth: columnWidth,
-            originalHeight: midiaValue.height,
-            originalWidth: midiaValue.width,
-          })}px`,
+          width: `${midiaValue.newWidth}px`,
+          height: `${midiaValue.newHeight}px`,
         }}
       >
         <Image
@@ -250,7 +235,6 @@ function PinImgPublished({
 }
 
 function PinImgPending({
-  columnWidth,
   handleGetElement,
   handleRemoveLoading,
   midiaIndex,
@@ -259,7 +243,6 @@ function PinImgPending({
 }: {
   midiaValue: MidiaResultsType;
   midiaIndex: number;
-  columnWidth: number;
   handleRemoveLoading(element: Element | null): void;
   handleGetElement(id: string, index: number): Element | null;
   masonryPublishs?: boolean;
@@ -275,12 +258,8 @@ function PinImgPending({
         className="pin pin-pending"
         id={`pin-${midiaValue._id}-${midiaIndex}`}
         style={{
-          width: `${columnWidth.toFixed(0)}px`,
-          height: `${calHeight({
-            customWidth: columnWidth,
-            originalHeight: midiaValue.height,
-            originalWidth: midiaValue.width,
-          })}px`,
+          width: `${midiaValue.newWidth}px`,
+          height: `${midiaValue.newHeight}px`,
         }}
       >
         <span className="title-pending">Em análise</span>
@@ -307,7 +286,6 @@ function PinVideoPublished({
   midiaValue,
   midiaIndex,
   masonryPublishs,
-  columnWidth,
   handleGetElement,
   handleRemoveLoading,
   visibleUserInfo,
@@ -320,7 +298,6 @@ function PinVideoPublished({
   midiaValue: MidiaResultsType;
   masonryPublishs?: boolean;
   midiaIndex: number;
-  columnWidth: number;
   handleRemoveLoading(element: Element | null): void;
   handleGetElement(id: string, index: number): Element | null;
   visibleUserInfo?: boolean;
@@ -344,12 +321,8 @@ function PinVideoPublished({
         onMouseEnter={handlePLayVideo}
         onMouseLeave={handlePauseVideo}
         style={{
-          width: `${columnWidth.toFixed(0)}px`,
-          height: `${calHeight({
-            customWidth: columnWidth,
-            originalHeight: midiaValue.height,
-            originalWidth: midiaValue.width,
-          })}px`,
+          width: `${midiaValue.newWidth}px`,
+          height: `${midiaValue.newHeight}px`,
         }}
       >
         <span className="video-time">{midiaValue.duration}</span>
@@ -423,14 +396,12 @@ function PinVideoPublished({
 function PinVideoPending({
   midiaValue,
   midiaIndex,
-  columnWidth,
   handleGetElement,
   handleRemoveLoading,
   masonryPublishs,
 }: {
   midiaValue: MidiaResultsType;
   midiaIndex: number;
-  columnWidth: number;
   handleRemoveLoading(element: Element | null): void;
   handleGetElement(id: string, index: number): Element | null;
   masonryPublishs?: boolean;
@@ -446,12 +417,8 @@ function PinVideoPending({
         className="pin pin-pending"
         id={`pin-${midiaValue._id}-${midiaIndex}`}
         style={{
-          width: `${columnWidth.toFixed(0)}px`,
-          height: `${calHeight({
-            customWidth: columnWidth,
-            originalHeight: midiaValue.height,
-            originalWidth: midiaValue.width,
-          })}px`,
+          width: `${midiaValue.newWidth}px`,
+          height: `${midiaValue.newHeight}px`,
         }}
       >
         <span className="title-pending">Em análise</span>

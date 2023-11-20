@@ -22,26 +22,34 @@ interface Props {
 
 export default function MasonryCategories({ results }: Props) {
   const [columnCount] = useState(5);
-  const [columnWidth, setColumnWidth] = useState(
-    (window.innerWidth - 118) / columnCount
+  const [columnWidth] = useState((window.innerWidth - 100) / columnCount);
+  const [stResults, setStResults] = useState(
+    results.map(val => ({
+      ...val,
+      newWidth: columnWidth.toFixed(0),
+      newHeight: calHeight({
+        customWidth: columnWidth,
+        originalHeight: +val.height,
+        originalWidth: +val.width,
+      }).toFixed(0),
+    }))
   );
-  const [stResults, setStResults] = useState(results);
 
   useEffect(() => {
-    const prevWindowWidth = window.innerWidth;
     const onresize = () => {
-      const newWindowWidth = window.innerWidth;
-      if (newWindowWidth != prevWindowWidth) {
-        document.querySelectorAll('.pin').forEach((el: Element) => {
-          const pin = el as HTMLDivElement;
-          const newPinWidth = newWindowWidth / 6.5;
-          const newPinHeigth =
-            (newPinWidth * pin.clientHeight) / pin.clientWidth;
-          pin.style.width = `${newPinWidth.toFixed(0)}px`;
-          pin.style.height = `${newPinHeigth.toFixed(0)}px`;
-          setColumnWidth(newPinWidth);
-        });
-      }
+      const newWindowWidth = window.innerWidth - 100;
+      const newWColumnWidth = newWindowWidth / columnCount;
+      setStResults(state =>
+        state.map(val => ({
+          ...val,
+          newWidth: newWColumnWidth.toFixed(0),
+          newHeight: calHeight({
+            customWidth: newWColumnWidth,
+            originalHeight: +val.height,
+            originalWidth: +val.width,
+          }).toFixed(0),
+        }))
+      );
     };
 
     window.addEventListener('resize', onresize);
@@ -80,12 +88,8 @@ export default function MasonryCategories({ results }: Props) {
                 className="pin"
                 id={`pin-${midiaValue._id}-${midiaIndex}`}
                 style={{
-                  width: `${columnWidth.toFixed(0)}px`,
-                  height: `${calHeight({
-                    customWidth: columnWidth,
-                    originalHeight: midiaValue.height,
-                    originalWidth: midiaValue.width,
-                  })}px`,
+                  width: `${midiaValue.newWidth}px`,
+                  height: `${midiaValue.newHeight}px`,
                 }}
               >
                 <Image

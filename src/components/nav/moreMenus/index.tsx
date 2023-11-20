@@ -87,7 +87,7 @@ function Menus({
           />
         </>
       )}
-      <span>Mais opções</span>
+      {isAuth && <span>Mais opções</span>}
       {isAuth && (
         <Link
           href={`/settings/${username}`}

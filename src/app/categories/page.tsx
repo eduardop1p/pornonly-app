@@ -13,8 +13,10 @@ export interface CategoryType {
   _id: string;
   title: string;
   tag: string;
-  width: number;
-  height: number;
+  width: string;
+  height: string;
+  newWidth: string;
+  newHeight: string;
   url: string;
 }
 
