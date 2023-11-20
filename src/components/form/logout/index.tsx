@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import type { Dispatch, SetStateAction } from 'react';
 
 import styles from './styles.module.css';
 
@@ -9,7 +10,11 @@ import Loading from '../loading';
 import { GlobalErrorToastify } from '../globalErrorToastify';
 import useGlobalErro from '@/utils/useGlobalError';
 
-export default function Logout() {
+export default function Logout({
+  setShowMenus,
+}: {
+  setShowMenus?: Dispatch<SetStateAction<boolean>>;
+}) {
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -17,6 +22,7 @@ export default function Logout() {
 
   const handleLogout = async () => {
     if (isLoading) return;
+    if (setShowMenus) setShowMenus(state => !state);
 
     try {
       setIsLoading(true);

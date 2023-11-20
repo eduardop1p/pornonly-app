@@ -67,7 +67,7 @@ function Menus({
       const height = containerMenus.clientHeight;
       setContainerMenusHeight(-(height + 8));
     }
-  }, []);
+  }, [isAuth]);
 
   return (
     <ContainerMenus
@@ -79,7 +79,12 @@ function Menus({
       {isAuth && (
         <>
           <span>Atualmente em</span>
-          <User username={username} email={email} userAvatar={userAvatar} />
+          <User
+            username={username}
+            email={email}
+            userAvatar={userAvatar}
+            setShowMenus={setShowMenus}
+          />
         </>
       )}
       <span>Mais opções</span>
@@ -149,7 +154,7 @@ function Menus({
       <Link href="/create-account">
         {isAuth ? 'Criar nova conta' : 'Criar conta'}
       </Link>
-      {isAuth && <Logout />}
+      {isAuth && <Logout setShowMenus={setShowMenus} />}
     </ContainerMenus>
   );
 }
@@ -158,10 +163,12 @@ function User({
   username,
   email,
   userAvatar,
+  setShowMenus,
 }: {
   username: string;
   email: string;
   userAvatar: ReactNode;
+  setShowMenus: Dispatch<SetStateAction<boolean>>;
 }) {
   const handleFormatText = (value: string) => {
     return value.length > 21 ? `${value.slice(0, 21)}...` : value;
@@ -169,7 +176,7 @@ function User({
 
   return (
     <ContainerUser>
-      <Link href={`/settings/${username}`}>
+      <Link href={`/${username}`} onClick={() => setShowMenus(state => !state)}>
         <div className="user-avatar">
           {userAvatar}
           <div>
