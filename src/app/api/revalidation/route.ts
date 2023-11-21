@@ -12,5 +12,5 @@ export async function GET(req: NextRequest) {
   const tag = req.nextUrl.searchParams.get('tag');
 
   revalidateTag(tag as string);
-  return Response.json({ revalidated: true, now: Date.now() });
+  return NextResponse.json({ revalidated: true, now: Date.now() });
 }

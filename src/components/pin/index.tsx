@@ -17,7 +17,7 @@ interface Props {
 }
 
 export default function Pin({ data }: Props) {
-  const pinProportion = data.width / data.height;
+  const pinProportion = +data.width / +data.height;
   const [newHeight, setNewHeight] = useState(0);
   const [newWidth, setNewWidth] = useState(0);
   const [initialRender, setInitialRender] = useState(true);
@@ -39,8 +39,8 @@ export default function Pin({ data }: Props) {
       setNewHeight(
         calHeight({
           customWidth: 800,
-          originalHeight: data.height,
-          originalWidth: data.width,
+          originalHeight: +data.height,
+          originalWidth: +data.width,
         })
       );
     }

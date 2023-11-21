@@ -4,7 +4,6 @@ import { cookies } from 'next/headers';
 import styles from './page.module.css';
 
 import PublishPin from '@/components/form/publishPinDeprecated';
-import { UserType } from '../[usernameparam]/page';
 import UserAvatar from '@/components/userAvatar';
 
 export const metadata: Metadata = {
@@ -34,7 +33,7 @@ async function UserAvatarName({ token }: { token: string }) {
     },
     // cache: 'no-cache',
   });
-  const data = (await response.json()) as UserType;
+  const data = await response.json();
   const { username } = data;
 
   return (

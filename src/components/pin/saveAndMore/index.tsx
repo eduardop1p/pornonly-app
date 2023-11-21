@@ -22,8 +22,8 @@ interface Props {
     midiaType?: 'video' | 'img' | 'gif';
     username: string;
     description: string;
-    height: number;
-    width: number;
+    height: string;
+    width: string;
   };
   isAuth: boolean;
   token: string;
@@ -46,7 +46,7 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
   const refBtnMoreOptions = useRef<HTMLButtonElement | null>(null);
   const fileName = data.url.split('/').pop() as string;
 
-  const pinProportion = data.width / data.height;
+  const pinProportion = +data.width / +data.height;
   const newHeight = document.documentElement.clientHeight;
   const newWidth = Math.round(newHeight * pinProportion);
 

@@ -21,7 +21,7 @@ export default function UserInfo({
   token: string;
   profilePhoto: ProfilePhotoType[];
   username: string;
-  email: string;
+  email?: string;
   userMidiaResultsLength: number;
   userSavesResultsLength: number;
 }) {
