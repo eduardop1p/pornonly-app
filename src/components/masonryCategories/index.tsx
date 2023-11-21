@@ -22,7 +22,7 @@ interface Props {
 
 export default function MasonryCategories({ results }: Props) {
   const [columnCount] = useState(5);
-  const [columnWidth] = useState((window.innerWidth - 100) / columnCount);
+  const [columnWidth] = useState((window.innerWidth - 102) / columnCount);
   const [stResults, setStResults] = useState(
     results.map(val => ({
       ...val,
@@ -37,7 +37,7 @@ export default function MasonryCategories({ results }: Props) {
 
   useEffect(() => {
     const onresize = () => {
-      const newWindowWidth = window.innerWidth - 100;
+      const newWindowWidth = window.innerWidth - 102;
       const newWColumnWidth = newWindowWidth / columnCount;
       setStResults(state =>
         state.map(val => ({
@@ -82,13 +82,14 @@ export default function MasonryCategories({ results }: Props) {
             <div
               key={`${midiaValue._id}-${midiaIndex}`}
               className="pin-container"
+              style={{ width: '100%' }}
             >
               <Link
                 href={`/categories/${clearPathName(midiaValue.tag)}`}
                 className="pin"
                 id={`pin-${midiaValue._id}-${midiaIndex}`}
                 style={{
-                  width: `${midiaValue.newWidth}px`,
+                  width: '100%',
                   height: `${midiaValue.newHeight}px`,
                 }}
               >

@@ -187,13 +187,16 @@ function PinImgPublished({
       data-index={
         typeof midiaValue.index != 'undefined' ? midiaValue.index : false
       }
+      style={{
+        width: '100%',
+      }}
     >
       <Link
         href={`/pin/${midiaValue._id} `}
         className="pin"
         id={`pin-${midiaValue._id}-${midiaIndex}`}
         style={{
-          width: `${midiaValue.newWidth}px`,
+          width: '100%',
           height: `${midiaValue.newHeight}px`,
         }}
       >
@@ -253,12 +256,15 @@ function PinImgPending({
       data-index={
         typeof midiaValue.index != 'undefined' ? midiaValue.index : false
       }
+      style={{
+        width: '100%',
+      }}
     >
       <div
         className="pin pin-pending"
         id={`pin-${midiaValue._id}-${midiaIndex}`}
         style={{
-          width: `${midiaValue.newWidth}px`,
+          width: '100%',
           height: `${midiaValue.newHeight}px`,
         }}
       >
@@ -313,6 +319,9 @@ function PinVideoPublished({
       data-index={
         typeof midiaValue.index != 'undefined' ? midiaValue.index : false
       }
+      style={{
+        width: '100%',
+      }}
     >
       <Link
         href={`/pin/${midiaValue._id}`}
@@ -321,7 +330,7 @@ function PinVideoPublished({
         onMouseEnter={handlePLayVideo}
         onMouseLeave={handlePauseVideo}
         style={{
-          width: `${midiaValue.newWidth}px`,
+          width: '100%',
           height: `${midiaValue.newHeight}px`,
         }}
       >
@@ -412,12 +421,15 @@ function PinVideoPending({
       data-index={
         typeof midiaValue.index != 'undefined' ? midiaValue.index : false
       }
+      style={{
+        width: '100%',
+      }}
     >
       <div
         className="pin pin-pending"
         id={`pin-${midiaValue._id}-${midiaIndex}`}
         style={{
-          width: `${midiaValue.newWidth}px`,
+          width: '100%',
           height: `${midiaValue.newHeight}px`,
         }}
       >

@@ -54,9 +54,10 @@ export default function Masonry({
   const pathName = usePathname();
 
   const maxWidth1400 = useMediaQuery({ maxWidth: 1400 });
+  const maxWidth1100 = useMediaQuery({ maxWidth: 1100 });
 
-  const columnCount = maxWidth1400 ? 5 : 6;
-  const columnWidth = (window.innerWidth - 118) / columnCount;
+  const columnCount = maxWidth1400 ? (maxWidth1100 ? 4 : 5) : 6;
+  const columnWidth = (window.innerWidth - 102) / columnCount;
   const [stResults, setStResults] = useState(
     results.map(val => ({
       ...val,
@@ -97,7 +98,7 @@ export default function Masonry({
   }, [results, username, pathName]);
 
   const handleOnresize = useCallback(() => {
-    const newWindowWidth = window.innerWidth - 118;
+    const newWindowWidth = window.innerWidth - 102;
     const newWColumnWidth = newWindowWidth / columnCount;
     setStResults(state =>
       state.map(val => ({
@@ -149,58 +150,63 @@ export default function Masonry({
     return document.querySelector(`#pin-${id}-${index}`);
   };
 
-  const handleManageNextPage = () => {
+  const handleManageNextPage = async () => {
     switch (masonryPage) {
       case 'home': {
-        useFetchItemsHome(
+        await useFetchItemsHome(
           setHasMore,
           currentPage,
           midiaType,
           order,
           setStResults
         );
+        handleOnresize();
         return;
       }
       case 'new': {
-        useFetchItemsNew(setHasMore, currentPage, setStResults);
+        await useFetchItemsNew(setHasMore, currentPage, setStResults);
+        handleOnresize();
         return;
       }
       case 'img': {
         midiaType.current = 'img';
-        useFetchItemsMidiaType(
+        await useFetchItemsMidiaType(
           setHasMore,
           currentPage,
           order,
           midiaType,
           setStResults
         );
+        handleOnresize();
         return;
       }
       case 'video': {
         midiaType.current = 'video';
-        useFetchItemsMidiaType(
+        await useFetchItemsMidiaType(
           setHasMore,
           currentPage,
           order,
           midiaType,
           setStResults
         );
+        handleOnresize();
         return;
       }
       case 'gif': {
         midiaType.current = 'gif';
-        useFetchItemsMidiaType(
+        await useFetchItemsMidiaType(
           setHasMore,
           currentPage,
           order,
           midiaType,
           setStResults
         );
+        handleOnresize();
         return;
       }
       case 'tags': {
         if (typeof tags === 'undefined') return;
-        useFetchItemsTags(
+        await useFetchItemsTags(
           setHasMore,
           currentPage,
           order,
@@ -208,58 +214,64 @@ export default function Masonry({
           tags,
           midiaType
         );
+        handleOnresize();
         return;
       }
       case 'readHeads': {
         if (typeof tags === 'undefined') return;
-        useFetchItemsReadHeads(
+        await useFetchItemsReadHeads(
           setHasMore,
           currentPage,
           order,
           setStResults,
           tags
         );
+        handleOnresize();
         return;
       }
       case 'search': {
         if (typeof search_query === 'undefined') return;
-        useFetchItemsSearch(
+        await useFetchItemsSearch(
           setHasMore,
           currentPage,
           setStResults,
           search_query
         );
+        handleOnresize();
         return;
       }
       case 'user-midia': {
         if (typeof userId === 'undefined') return;
-        useFetchItemsUserMidia(
+        await useFetchItemsUserMidia(
           setHasMore,
           currentPage,
           setStResults,
           userId,
           midiaType
         );
+        handleOnresize();
         return;
       }
       case 'user-saves': {
         if (typeof userId === 'undefined') return;
-        useFetchItemsUserSaves(
+        await useFetchItemsUserSaves(
           setHasMore,
           currentPage,
           setStResults,
           userId,
           midiaType
         );
+        handleOnresize();
         return;
       }
       case 'pending': {
-        useFetchItemsPending(
+        await useFetchItemsPending(
           setHasMore,
           currentPage,
           setStResults,
           token as string
         );
+        handleOnresize();
         return;
       }
       default:

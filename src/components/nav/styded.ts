@@ -130,7 +130,7 @@ export const ContainerArrowMore = styled.div<TypeTheme>`
       background-color: ${theme.colors.g_colorGray0};
       border-radius: 1rem;
       position: absolute;
-      top: 2.5rem;
+      top: 1.5rem;
       padding: 8px;
       left: 50%;
       transform: translateX(-50%);
@@ -173,6 +173,9 @@ export const ContainerArrowMore = styled.div<TypeTheme>`
         font-weight: ${theme.font_weight.font_weight_500};
         padding: 8px;
         width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         text-align: left;
         border-radius: 8px;
         transition: background 200ms ease-in-out;
