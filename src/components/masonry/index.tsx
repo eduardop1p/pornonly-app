@@ -4,11 +4,8 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import type { MouseEvent } from 'react';
 import type { Dispatch, SetStateAction, MutableRefObject } from 'react';
-// import { useMediaQuery } from 'react-responsive';
-import {
-  default as MasonryUi,
-  // ResponsiveMasonry,
-} from 'react-responsive-masonry';
+import { useMediaQuery } from 'react-responsive';
+import { default as MasonryUi } from 'react-responsive-masonry';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { usePathname } from 'next/navigation';
 import calHeight from '@/config/calcHeight';
@@ -56,8 +53,10 @@ export default function Masonry({
 }: Props) {
   const pathName = usePathname();
 
-  const [columnCount] = useState(6);
-  const [columnWidth] = useState((window.innerWidth - 118) / columnCount);
+  const maxWidth1400 = useMediaQuery({ maxWidth: 1400 });
+
+  const columnCount = maxWidth1400 ? 5 : 6;
+  const columnWidth = (window.innerWidth - 118) / columnCount;
   const [stResults, setStResults] = useState(
     results.map(val => ({
       ...val,
@@ -97,27 +96,31 @@ export default function Masonry({
     // console.log('update results');
   }, [results, username, pathName]);
 
-  useEffect(() => {
-    const onresize = () => {
-      const newWindowWidth = window.innerWidth - 118;
-      const newWColumnWidth = newWindowWidth / columnCount;
-      setStResults(state =>
-        state.map(val => ({
-          ...val,
-          newWidth: newWColumnWidth.toFixed(0),
-          newHeight: calHeight({
-            customWidth: newWColumnWidth,
-            originalHeight: +val.height,
-            originalWidth: +val.width,
-          }).toFixed(0),
-        }))
-      );
-    };
-
-    window.addEventListener('resize', onresize);
-
-    return () => removeEventListener('resize', onresize);
+  const handleOnresize = useCallback(() => {
+    const newWindowWidth = window.innerWidth - 118;
+    const newWColumnWidth = newWindowWidth / columnCount;
+    setStResults(state =>
+      state.map(val => ({
+        ...val,
+        newWidth: newWColumnWidth.toFixed(0),
+        newHeight: calHeight({
+          customWidth: newWColumnWidth,
+          originalHeight: +val.height,
+          originalWidth: +val.width,
+        }).toFixed(0),
+      }))
+    );
   }, [columnCount]);
+
+  useEffect(() => {
+    handleOnresize();
+  }, [columnCount, handleOnresize]);
+
+  useEffect(() => {
+    window.addEventListener('resize', handleOnresize);
+
+    return () => removeEventListener('resize', handleOnresize);
+  }, [columnCount, handleOnresize]);
 
   const handleRemoveLoading = useCallback((element: Element | null) => {
     const loading = element?.querySelector('#loading-pin') as HTMLDivElement;
@@ -302,12 +305,7 @@ export default function Masonry({
       {isLoading && <Loading />}
       <GlobalErrorToastify errorMsg={msgError} />
       <GlobalSuccessToastify successMsg={msgSuccess} />
-      <MasonryContainer
-        $columnWidth={columnWidth}
-        $columnCount={columnCount}
-        id="masonry"
-      >
-        {/* <ResponsiveMasonry> */}
+      <MasonryContainer id="masonry">
         <InfiniteScroll
           dataLength={stResults.length}
           scrollThreshold={0.7}
@@ -345,7 +343,6 @@ export default function Masonry({
             )}
           </MasonryUi>
         </InfiniteScroll>
-        {/* </ResponsiveMasonry> */}
       </MasonryContainer>
     </Container>
   );

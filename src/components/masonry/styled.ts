@@ -2,11 +2,6 @@ import { styled, css } from 'styled-components';
 
 import { TypeTheme } from '@/utils/theme/myTheme';
 
-interface Props {
-  $columnWidth: number;
-  $columnCount: number;
-}
-
 export const Container = styled.div`
   padding: 0 3px;
   width: 100%;
@@ -14,11 +9,8 @@ export const Container = styled.div`
   z-index: 1;
 `;
 
-export const MasonryContainer = styled.div<TypeTheme & Props>`
-  ${({ theme, $columnCount, $columnWidth }) => css`
-    /* column-count: ${$columnCount};
-    column-width: ${$columnWidth.toFixed(0)}px;
-    column-gap: 1rem; */
+export const MasonryContainer = styled.div<TypeTheme>`
+  ${({ theme }) => css`
     width: 100%;
 
     & > .category-and-order {
