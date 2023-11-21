@@ -13,6 +13,10 @@ export const Container = styled.nav<TypeTheme>`
       display: flex;
       align-items: center;
 
+      & > :not(:last-child) {
+        margin-right: 5px;
+      }
+
       & > a {
         white-space: nowrap;
         height: 48px;
@@ -26,6 +30,12 @@ export const Container = styled.nav<TypeTheme>`
         font-size: ${theme.font_size.font_size_1rem};
         transition: background 150ms ease-in-out;
 
+        /* @media (max-width: 1200px) {
+          &[href='/'] {
+            display: none;
+          }
+        } */
+
         &.link-active {
           background-color: ${theme.colors.g_colorGray400};
           color: ${theme.colors.g_colorGray0};
@@ -34,10 +44,6 @@ export const Container = styled.nav<TypeTheme>`
         &:not(.link-active):hover {
           background-color: ${theme.colors.g_colorTransparentGray60};
         }
-      }
-
-      & :not(:last-child) {
-        margin-right: 5px;
       }
     }
 
@@ -107,12 +113,13 @@ export const ContainerArrowMore = styled.div<TypeTheme>`
     margin-left: 5px;
 
     & > span {
+      color: ${theme.colors.g_colorGray300};
       font-size: ${theme.font_size.font_size_1rem};
       font-weight: ${theme.font_weight.font_weight_500};
     }
 
     & > svg {
-      margin-left: 7px;
+      margin-left: 8px;
       flex: none;
       transform: rotate(0);
       transition: transform 200ms ease-in-out;
@@ -164,6 +171,108 @@ export const ContainerArrowMore = styled.div<TypeTheme>`
       }
 
       & > :first-child {
+        margin-bottom: 5px;
+      }
+
+      & > a {
+        color: ${theme.colors.g_colorGray400};
+        font-size: ${theme.font_size.font_size_1rem};
+        font-weight: ${theme.font_weight.font_weight_500};
+        padding: 8px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        text-align: left;
+        border-radius: 8px;
+        transition: background 200ms ease-in-out;
+
+        &.link-active {
+          background-color: ${theme.colors.g_colore9e9e9};
+        }
+
+        &:hover {
+          background-color: ${theme.colors.g_colore9e9e9};
+        }
+      }
+    }
+  `}
+`;
+
+export const ContainerBreakMenu = styled.div<TypeTheme>`
+  ${({ theme }) => css`
+    position: relative;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    height: 48px;
+    border-radius: 24px;
+    padding: 0 1rem;
+    transition: background 150ms ease-in-out;
+
+    &[data-break-menu-active='true'] {
+      background-color: ${theme.colors.g_colorTransparentGray60};
+    }
+
+    &.link-active {
+      background-color: ${theme.colors.g_colorGray400};
+
+      & > span {
+        color: ${theme.colors.g_colorGray0} !important;
+      }
+
+      & > svg {
+        fill: ${theme.colors.g_colorGray0} !important;
+      }
+    }
+
+    &:not(&.link-active):hover {
+      background-color: ${theme.colors.g_colorTransparentGray60};
+    }
+
+    & > span {
+      white-space: nowrap;
+      color: ${theme.colors.g_colorGray300};
+      font-size: ${theme.font_size.font_size_1rem};
+      font-weight: ${theme.font_weight.font_weight_500};
+    }
+
+    & > svg {
+      margin-left: 8px;
+      flex: none;
+      transform: rotate(0);
+      transition: transform 200ms ease-in-out;
+
+      &[data-break-menu-active='true'] {
+        transform: rotate(180deg);
+      }
+    }
+
+    & > .container-more-links {
+      visibility: hidden;
+      opacity: 0;
+      width: 180px;
+      background-color: ${theme.colors.g_colorGray0};
+      border-radius: 1rem;
+      position: absolute;
+      top: 3.5rem;
+      left: 0;
+      padding: 8px;
+      box-shadow: ${theme.box_shadow.box_shadow_04};
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: default;
+
+      &[data-break-menu-active='true'] {
+        visibility: visible;
+        opacity: 1;
+      }
+
+      & > :not(:last-child) {
         margin-bottom: 5px;
       }
 
