@@ -39,13 +39,13 @@ export const Container = styled.div<TypeTheme>`
 export const ContainerMenus = styled.div<TypeTheme & { $containerMenusHeight: number }>`
   ${({ theme, $containerMenusHeight }) => css`
     box-shadow: ${theme.box_shadow.box_shadow_04};
-    max-height: 600px;
-    width: 320px;
+    max-height: calc(100vh / 1.3);
+    width: 340px;
     background-color: ${theme.colors.g_colorGray0};
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    visibility: hidden;
+    overflow: hidden auto;
     opacity: 0;
     position: absolute;
     right: -1rem;
@@ -53,6 +53,10 @@ export const ContainerMenus = styled.div<TypeTheme & { $containerMenusHeight: nu
     bottom:;
     padding: 8px;
     bottom: ${$containerMenusHeight}px;
+
+    @media (max-width: 650px) {
+      width: 300px;
+    }
 
     &[data-show-menus='true'] {
       visibility: visible;
@@ -81,6 +85,7 @@ export const ContainerMenus = styled.div<TypeTheme & { $containerMenusHeight: nu
       display: flex;
       justify-content: space-between;
       align-items: center;
+      line-height: 1.2;
 
       &:not(:last-child) {
         margin-bottom: 5px;
@@ -124,29 +129,41 @@ export const ContainerUser = styled.div<TypeTheme>`
       & > .user-avatar {
         display: flex;
         align-items: center;
+        width: calc(100% - 12px);
 
         & > :last-child {
           display: flex;
           flex-direction: column;
           margin-left: 10px;
+          width: calc(100% - 70px);
 
           & > h3 {
             color: ${theme.colors.g_colorGray300};
             font-weight: ${theme.font_weight.font_weight_500};
             font-size: ${theme.font_size.font_size_1rem};
-            margin-bottom: 5px;
+            margin-bottom: 3px;
+            width: calc(100% - 10px);
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            line-height: 1.2;
           }
 
           & > p {
             color: ${theme.colors.g_color5f5f5f};
             font-weight: ${theme.font_weight.font_weight_400};
             font-size: ${theme.font_size.font_size_0_90rem};
+            width: calc(100% - 10px);
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            line-height: 1.2;
           }
         }
       }
 
       & > svg {
-        margin-right: 10px;
+        flex: none;
       }
     }
   `}

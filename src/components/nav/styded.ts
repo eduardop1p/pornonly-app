@@ -81,9 +81,24 @@ export const Container = styled.nav<TypeTheme>`
         cursor: pointer;
         transition: background 150ms ease-in-out;
 
+        @media (max-width: 1150px) {
+          width: 100px;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+        }
+        @media (max-width: 840px) {
+          width: 40px;
+          height: 40px;
+          overflow: hidden;
+          border-radius: 100%;
+          padding: 0;
+        }
+
         &.login {
           background-color: ${theme.colors.g_colorRed100};
           color: ${theme.colors.g_colorGray0};
+          flex: none;
 
           &:hover {
             background-color: ${theme.colors.g_colorRed100Hovered};
@@ -93,6 +108,7 @@ export const Container = styled.nav<TypeTheme>`
         &.create-account {
           color: ${theme.colors.g_colorGray300};
           background-color: ${theme.colors.g_colorGray100};
+          flex: none;
 
           &:hover {
             background-color: ${theme.colors.g_colorGray100Hovered};

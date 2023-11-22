@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
@@ -21,17 +22,19 @@ interface Props {
 }
 
 export default function MasonryCategories({ results }: Props) {
+  if (typeof window === 'undefined') return;
+
   const [columnCount] = useState(5);
   const [columnWidth] = useState((window.innerWidth - 102) / columnCount);
   const [stResults, setStResults] = useState(
     results.map(val => ({
       ...val,
-      newWidth: columnWidth.toFixed(0),
+      newWidth: columnWidth.toFixed(2),
       newHeight: calHeight({
         customWidth: columnWidth,
         originalHeight: +val.height,
         originalWidth: +val.width,
-      }).toFixed(0),
+      }).toFixed(2),
     }))
   );
 
@@ -42,12 +45,12 @@ export default function MasonryCategories({ results }: Props) {
       setStResults(state =>
         state.map(val => ({
           ...val,
-          newWidth: newWColumnWidth.toFixed(0),
+          newWidth: newWColumnWidth.toFixed(2),
           newHeight: calHeight({
             customWidth: newWColumnWidth,
             originalHeight: +val.height,
             originalWidth: +val.width,
-          }).toFixed(0),
+          }).toFixed(2),
         }))
       );
     };
@@ -99,7 +102,7 @@ export default function MasonryCategories({ results }: Props) {
                   priority
                   fill
                   sizes="100%"
-                  onLoadingComplete={() =>
+                  onLoad={() =>
                     handleRemoveLoading(
                       handleGetElement(midiaValue._id, midiaIndex)
                     )

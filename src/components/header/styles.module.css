@@ -25,4 +25,10 @@
   color: var(--g-colorRedSecondary);
 }
 
+@media (max-width: 720px) {
+  .logo-title > h2{
+    display: none;
+  }
+}
+
 

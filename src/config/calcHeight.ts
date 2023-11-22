@@ -10,5 +10,5 @@ export default function calHeight({
   originalWidth,
 }: Props) {
   const calc = (customWidth * originalHeight) / originalWidth;
-  return +calc.toFixed(0);
+  return +calc.toFixed(2);
 }

@@ -206,7 +206,7 @@ function PinImgPublished({
           priority
           fill
           sizes="100%"
-          onLoadingComplete={() =>
+          onLoad={() =>
             handleRemoveLoading(handleGetElement(midiaValue._id, midiaIndex))
           }
           onError={() =>
@@ -275,7 +275,7 @@ function PinImgPending({
           priority
           fill
           sizes="100%"
-          onLoadingComplete={() =>
+          onLoad={() =>
             handleRemoveLoading(handleGetElement(midiaValue._id, midiaIndex))
           }
           onError={() =>
@@ -351,7 +351,7 @@ function PinVideoPublished({
           fill
           sizes="100%"
           style={{ position: 'absolute', inset: 0, zIndex: 2 }}
-          onLoadingComplete={() =>
+          onLoad={() =>
             handleRemoveLoading(handleGetElement(midiaValue._id, midiaIndex))
           }
           onError={() =>
@@ -451,7 +451,7 @@ function PinVideoPending({
           fill
           sizes="100%"
           style={{ position: 'absolute', inset: 0, zIndex: 2 }}
-          onLoadingComplete={() =>
+          onLoad={() =>
             handleRemoveLoading(handleGetElement(midiaValue._id, midiaIndex))
           }
           onError={() =>

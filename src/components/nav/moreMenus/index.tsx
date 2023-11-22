@@ -159,6 +159,7 @@ function Menus({
       <Link href="/create-account">
         {isAuth ? 'Criar nova conta' : 'Criar conta'}
       </Link>
+      {!isAuth && <Link href="/login">Login</Link>}
       {isAuth && <Logout setShowMenus={setShowMenus} />}
     </ContainerMenus>
   );

@@ -3,6 +3,7 @@ import { TypeTheme } from '@/utils/theme/myTheme';
 
 export const Container = styled.form<TypeTheme>`
   ${({ theme }) => css`
+    min-width: 260px;
     width: 100%;
     position: relative;
     margin: 0 10px;

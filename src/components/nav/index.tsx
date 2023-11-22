@@ -2,7 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ReactNode, useState, useEffect } from 'react';
+import { ReactNode, useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { deburr, upperFirst } from 'lodash';
 import { useMediaQuery } from 'react-responsive';
@@ -22,50 +22,164 @@ interface Props {
   userAvatar: ReactNode;
 }
 
+const breakMenuActiveInitalState = {
+  active: false,
+  value: 'Página inicial',
+  routeActive: false,
+};
+
 export default function Nav({ user, tags, children, userAvatar }: Props) {
   const pathName = usePathname();
   const { isAuth } = user;
 
   const [publishActive, setPublishActive] = useState(false);
-  const [breakMenuActive, setBreakMenuActive] = useState({
-    active: false,
-    value: 'Página inicial',
-  });
+  const [breakMenuActive, setBreakMenuActive] = useState(
+    breakMenuActiveInitalState
+  );
 
-  const maxWidth1300 = useMediaQuery({ maxWidth: 1300 });
-  const navMenus = ['/', '/new'];
+  const maxWidth1370 = useMediaQuery({ maxWidth: 1370 });
+  const maxWidth1325 = useMediaQuery({ maxWidth: 1325 });
+  const maxWidth1240 = useMediaQuery({ maxWidth: 1240 });
+  const maxWidth1100 = useMediaQuery({ maxWidth: 1100 });
+  const maxWidth1015 = useMediaQuery({ maxWidth: 1015 });
+  const maxWidth950 = useMediaQuery({ maxWidth: 950 });
+  const maxWidth840 = useMediaQuery({ maxWidth: 840 });
+  const navMenus = useRef([
+    '/',
+    '/new',
+    '/redheads',
+    '/category/imgs',
+    '/category/videos',
+    '/category/gifs',
+    '/categories',
+  ]);
 
   useEffect(() => {
-    const header = document.querySelector('header');
-    const onscroll = () => {
-      if (window.scrollY > 1) {
-        header?.classList.add('on-scrollY-header');
+    if (pathName.includes('/categories')) {
+      if (maxWidth950) {
+        setBreakMenuActive({
+          active: false,
+          value: 'Categorias',
+          routeActive: true,
+        });
       } else {
-        header?.classList.remove('on-scrollY-header');
+        setBreakMenuActive({
+          active: false,
+          value: 'Página inicial',
+          routeActive: false,
+        });
       }
-    };
-    window.addEventListener('scroll', onscroll);
+      return;
+    }
 
-    return () => window.removeEventListener('scroll', onscroll);
-  }, []);
-
-  useEffect(() => {
     switch (pathName) {
       case '/new': {
-        setBreakMenuActive({ active: false, value: 'New' });
+        if (maxWidth1370) {
+          setBreakMenuActive({
+            active: false,
+            value: 'New',
+            routeActive: true,
+          });
+        } else {
+          setBreakMenuActive({
+            active: false,
+            value: 'Página inicial',
+            routeActive: false,
+          });
+        }
+        break;
+      }
+      case '/redheads': {
+        if (maxWidth1325) {
+          setBreakMenuActive({
+            active: false,
+            value: 'Ruivas',
+            routeActive: true,
+          });
+        } else {
+          setBreakMenuActive({
+            active: false,
+            value: 'Página inicial',
+            routeActive: false,
+          });
+        }
+        break;
+      }
+      case '/category/imgs': {
+        if (maxWidth1240) {
+          setBreakMenuActive({
+            active: false,
+            value: 'Imagens',
+            routeActive: true,
+          });
+        } else {
+          setBreakMenuActive({
+            active: false,
+            value: 'Página inicial',
+            routeActive: false,
+          });
+        }
+        break;
+      }
+      case '/category/videos': {
+        if (maxWidth1100) {
+          setBreakMenuActive({
+            active: false,
+            value: 'Videos',
+            routeActive: true,
+          });
+        } else {
+          setBreakMenuActive({
+            active: false,
+            value: 'Página inicial',
+            routeActive: false,
+          });
+        }
+        break;
+      }
+      case '/category/gifs': {
+        if (maxWidth1015) {
+          setBreakMenuActive({
+            active: false,
+            value: 'Gifs',
+            routeActive: true,
+          });
+        } else {
+          setBreakMenuActive({
+            active: false,
+            value: 'Página inicial',
+            routeActive: false,
+          });
+        }
+        break;
+      }
+      case '/': {
+        setBreakMenuActive({
+          active: false,
+          value: 'Página inicial',
+          routeActive: true,
+        });
         break;
       }
       default: {
-        setBreakMenuActive({ active: false, value: 'Página inicial' });
+        setBreakMenuActive(breakMenuActiveInitalState);
         break;
       }
     }
-  }, [pathName]);
+  }, [
+    pathName,
+    maxWidth1370,
+    maxWidth1325,
+    maxWidth1240,
+    maxWidth1100,
+    maxWidth1015,
+    maxWidth950,
+  ]);
 
   return (
     <Container>
       <div className="main-navs">
-        {maxWidth1300 ? (
+        {maxWidth1370 && (
           <ContainerBreakMenu
             onClick={() =>
               setBreakMenuActive(state => ({ ...state, active: !state.active }))
@@ -75,7 +189,12 @@ export default function Nav({ user, tags, children, userAvatar }: Props) {
               if (!event.currentTarget.contains(event.relatedTarget))
                 setBreakMenuActive(state => ({ ...state, active: false }));
             }}
-            className={navMenus.includes(pathName) ? 'link-active' : ''}
+            className={
+              //  eslint-disable-next-line
+              navMenus.current.some(val => pathName.includes(val)) && breakMenuActive.routeActive
+                ? 'link-active'
+                : ''
+            }
             tabIndex={0}
           >
             <span>{breakMenuActive.value}</span>
@@ -100,7 +219,6 @@ export default function Nav({ user, tags, children, userAvatar }: Props) {
                 Página inicial
                 {pathName === '/' && <IsActiveIcon />}
               </Link>
-
               <Link
                 className={pathName === '/new' ? 'link-active' : ''}
                 href="/new"
@@ -109,64 +227,128 @@ export default function Nav({ user, tags, children, userAvatar }: Props) {
                 New
                 {pathName === '/new' && <IsActiveIcon />}
               </Link>
+              {maxWidth1325 && (
+                <Link
+                  className={pathName === '/redheads' ? 'link-active' : ''}
+                  href="/redheads"
+                  scroll={false}
+                >
+                  Ruivas
+                  {pathName === '/redheads' && <IsActiveIcon />}
+                </Link>
+              )}
+              {maxWidth1240 && (
+                <Link
+                  className={pathName === '/category/imgs' ? 'link-active' : ''}
+                  href="/category/imgs"
+                  scroll={false}
+                >
+                  Imagens
+                  {pathName === '/category/imgs' && <IsActiveIcon />}
+                </Link>
+              )}
+              {maxWidth1100 && (
+                <Link
+                  className={
+                    pathName === '/category/videos' ? 'link-active' : ''
+                  }
+                  href="/category/videos"
+                  scroll={false}
+                >
+                  Videos
+                  {pathName === '/category/videos' && <IsActiveIcon />}
+                </Link>
+              )}
+              {maxWidth1015 && (
+                <Link
+                  className={pathName === '/category/gifs' ? 'link-active' : ''}
+                  href="/category/gifs"
+                  scroll={false}
+                >
+                  Gifs
+                  {pathName === '/category/gifs' && <IsActiveIcon />}
+                </Link>
+              )}
+              {maxWidth950 && (
+                <Link
+                  className={
+                    pathName.includes('/categories') ? 'link-active' : ''
+                  }
+                  href="/categories"
+                  scroll={false}
+                >
+                  Categorias
+                  {pathName.includes('/categories') && <IsActiveIcon />}
+                </Link>
+              )}
             </div>
           </ContainerBreakMenu>
-        ) : (
-          <>
-            <Link
-              className={pathName === '/' ? 'link-active' : ''}
-              href="/"
-              scroll={false}
-            >
-              Página inicial
-            </Link>
-
-            <Link
-              className={pathName === '/new' ? 'link-active' : ''}
-              href="/new"
-              scroll={false}
-            >
-              New
-            </Link>
-          </>
+        )}
+        {!maxWidth1370 && (
+          <Link
+            className={pathName === '/' ? 'link-active' : ''}
+            href="/"
+            scroll={false}
+          >
+            Página inicial
+          </Link>
         )}
 
-        <Link
-          className={pathName === '/redheads' ? 'link-active' : ''}
-          href="/redheads"
-          scroll={false}
-        >
-          Ruivas
-        </Link>
-        <Link
-          className={pathName === '/category/imgs' ? 'link-active' : ''}
-          href="/category/imgs"
-          scroll={false}
-        >
-          Imagens
-        </Link>
-        <Link
-          className={pathName === '/category/videos' ? 'link-active' : ''}
-          href="/category/videos"
-          scroll={false}
-        >
-          Videos
-        </Link>
-        <Link
-          className={pathName === '/category/gifs' ? 'link-active' : ''}
-          href="/category/gifs"
-          scroll={false}
-        >
-          Gifs
-        </Link>
+        {!maxWidth1370 && (
+          <Link
+            className={pathName === '/new' ? 'link-active' : ''}
+            href="/new"
+            scroll={false}
+          >
+            New
+          </Link>
+        )}
+        {!maxWidth1325 && (
+          <Link
+            className={pathName === '/redheads' ? 'link-active' : ''}
+            href="/redheads"
+            scroll={false}
+          >
+            Ruivas
+          </Link>
+        )}
+        {!maxWidth1240 && (
+          <Link
+            className={pathName === '/category/imgs' ? 'link-active' : ''}
+            href="/category/imgs"
+            scroll={false}
+          >
+            Imagens
+          </Link>
+        )}
+        {!maxWidth1100 && (
+          <Link
+            className={pathName === '/category/videos' ? 'link-active' : ''}
+            href="/category/videos"
+            scroll={false}
+          >
+            Videos
+          </Link>
+        )}
+        {!maxWidth1015 && (
+          <Link
+            className={pathName === '/category/gifs' ? 'link-active' : ''}
+            href="/category/gifs"
+            scroll={false}
+          >
+            Gifs
+          </Link>
+        )}
         {/* <CategoryTags tags={tags} /> */}
-        <Link
-          href="/categories"
-          className={pathName.includes('/categories') ? 'link-active' : ''}
-          scroll={false}
-        >
-          Categorias
-        </Link>
+        {!maxWidth950 && (
+          <Link
+            href="/categories"
+            className={pathName.includes('/categories') ? 'link-active' : ''}
+            scroll={false}
+          >
+            Categorias
+          </Link>
+        )}
         {isAuth && (
           <ContainerArrowMore
             onClick={() => setPublishActive(!publishActive)}
@@ -218,10 +400,10 @@ export default function Nav({ user, tags, children, userAvatar }: Props) {
       {!isAuth ? (
         <div className="links-no-auth">
           <Link className="login" href="/login">
-            Login
+            {!maxWidth840 ? 'Login' : 'L'}
           </Link>
           <Link className="create-account" href="/create-account">
-            Criar conta
+            {!maxWidth840 ? 'Criar conta' : 'C'}
           </Link>
         </div>
       ) : (

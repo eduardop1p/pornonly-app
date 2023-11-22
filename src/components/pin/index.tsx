@@ -124,7 +124,7 @@ export default function Pin({ data }: Props) {
             priority
             fill
             sizes="100%"
-            onLoadingComplete={handleRemoveLoading}
+            onLoad={handleRemoveLoading}
             onError={handleRemoveLoading}
           />
         </>

@@ -186,7 +186,7 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
               height={newHeight}
               width={newWidth}
               alt={data.title}
-              onLoadingComplete={() => setIsLoadingFullScreen(false)}
+              onLoad={() => setIsLoadingFullScreen(false)}
             />
           </div>
         </ContainerFullScreen>

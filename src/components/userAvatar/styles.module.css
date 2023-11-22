@@ -20,6 +20,7 @@
   font-size: var(--font-size-0_75rem);
   font-weight: var(--font-weight-400);
   color: var(--g-colorGray400);
+  position: relative;
 }
 .container-profile{
   display: flex;
@@ -30,6 +31,7 @@
   font-size: var(--font-size-1_25rem);
   font-weight: var(--font-weight-600);
   color: var(--g-colorGray400);
+  position: relative;
 }
 .container img{
   object-fit: cover;

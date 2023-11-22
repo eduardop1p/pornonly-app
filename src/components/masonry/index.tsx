@@ -51,22 +51,47 @@ export default function Masonry({
   isAdmin,
   isUniqueUser,
 }: Props) {
+  if (typeof window === 'undefined') return;
+
   const pathName = usePathname();
 
   const maxWidth1400 = useMediaQuery({ maxWidth: 1400 });
   const maxWidth1100 = useMediaQuery({ maxWidth: 1100 });
+  const maxWidth800 = useMediaQuery({ maxWidth: 800 });
+  const maxWidth600 = useMediaQuery({ maxWidth: 600 });
 
-  const columnCount = maxWidth1400 ? (maxWidth1100 ? 4 : 5) : 6;
-  const columnWidth = (window.innerWidth - 102) / columnCount;
+  const handleWindowInnerWidth = useCallback(() => {
+    return maxWidth1400
+      ? maxWidth1100
+        ? maxWidth800
+          ? maxWidth600
+            ? 54
+            : 70
+          : 86
+        : 102
+      : 118;
+  }, [maxWidth1400, maxWidth1100, maxWidth800, maxWidth600]);
+
+  const columnCount = maxWidth1400
+    ? maxWidth1100
+      ? maxWidth800
+        ? maxWidth600
+          ? 2
+          : 3
+        : 4
+      : 5
+    : 6;
+  const columnWidth =
+    (window.innerWidth - handleWindowInnerWidth()) / columnCount;
   const [stResults, setStResults] = useState(
     results.map(val => ({
       ...val,
-      newWidth: columnWidth.toFixed(0),
+      newWidth: columnWidth.toFixed(2),
       newHeight: calHeight({
-        customWidth: columnWidth,
+        customWidth: +columnWidth.toFixed(2),
         originalHeight: +val.height,
         originalWidth: +val.width,
-      }).toFixed(0),
+      }).toFixed(2),
     }))
   );
   const [hasMore, setHasMore] = useState(true);
@@ -91,12 +116,12 @@ export default function Masonry({
       setStResults(
         results.map(val => ({
           ...val,
-          newWidth: columnWidth.toFixed(0),
+          newWidth: columnWidth.toFixed(2),
           newHeight: calHeight({
-            customWidth: columnWidth,
+            customWidth: +columnWidth.toFixed(2),
             originalHeight: +val.height,
             originalWidth: +val.width,
-          }).toFixed(0),
+          }).toFixed(2),
         }))
       );
       setHasMore(true);
@@ -108,20 +133,20 @@ export default function Masonry({
   }, [results, username, pathName, columnWidth]);
 
   const handleOnresize = useCallback(() => {
-    const newWindowWidth = window.innerWidth - 102;
+    const newWindowWidth = window.innerWidth - handleWindowInnerWidth();
     const newWColumnWidth = newWindowWidth / columnCount;
     setStResults(state =>
       state.map(val => ({
         ...val,
-        newWidth: newWColumnWidth.toFixed(0),
+        newWidth: newWColumnWidth.toFixed(2),
         newHeight: calHeight({
-          customWidth: newWColumnWidth,
+          customWidth: +newWColumnWidth.toFixed(2),
           originalHeight: +val.height,
           originalWidth: +val.width,
-        }).toFixed(0),
+        }).toFixed(2),
       }))
     );
-  }, [columnCount]);
+  }, [columnCount, handleWindowInnerWidth]);
 
   useEffect(() => {
     handleOnresize();
