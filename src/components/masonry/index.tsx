@@ -88,14 +88,24 @@ export default function Masonry({
       pathName == `/created/${username}` ||
       pathName == `/saves/${username}`
     ) {
-      setStResults(results);
+      setStResults(
+        results.map(val => ({
+          ...val,
+          newWidth: columnWidth.toFixed(0),
+          newHeight: calHeight({
+            customWidth: columnWidth,
+            originalHeight: +val.height,
+            originalWidth: +val.width,
+          }).toFixed(0),
+        }))
+      );
       setHasMore(true);
       currentPage.current = 1;
       midiaType.current = undefined;
       order.current = 'popular';
     }
     // console.log('update results');
-  }, [results, username, pathName]);
+  }, [results, username, pathName, columnWidth]);
 
   const handleOnresize = useCallback(() => {
     const newWindowWidth = window.innerWidth - 102;

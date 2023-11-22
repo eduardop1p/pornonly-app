@@ -151,6 +151,11 @@
   margin-bottom: 5px;
 }
 
+.btn-midiatype-option{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 .btn-midiatype-option[data-btn-midiatype-active='true']{
   background-color: var(--g-colore9e9e9);
 }
