@@ -7,6 +7,10 @@ export const Container = styled.div<TypeTheme>`
     margin-left: 7px;
     position: relative;
 
+    @media (max-width: 500px) {
+      margin-left: 0;
+    }
+
     & > .btn-more-menus {
       cursor: pointer;
       transition:
@@ -36,8 +40,8 @@ export const Container = styled.div<TypeTheme>`
 `;
 
 // eslint-disable-next-line
-export const ContainerMenus = styled.div<TypeTheme & { $containerMenusHeight: number }>`
-  ${({ theme, $containerMenusHeight }) => css`
+export const ContainerMenus = styled.div<TypeTheme>`
+  ${({ theme }) => css`
     box-shadow: ${theme.box_shadow.box_shadow_04};
     max-height: calc(100vh / 1.3);
     width: 340px;
@@ -52,7 +56,7 @@ export const ContainerMenus = styled.div<TypeTheme & { $containerMenusHeight: nu
     border-radius: 1rem;
     bottom:;
     padding: 8px;
-    bottom: ${$containerMenusHeight}px;
+    top: 1.8rem;
 
     @media (max-width: 650px) {
       width: 300px;

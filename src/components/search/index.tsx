@@ -11,6 +11,7 @@ import {
   MouseEvent,
 } from 'react';
 import { useRouter, useParams, usePathname } from 'next/navigation';
+import { useMediaQuery } from 'react-responsive';
 
 import { Container } from './styled';
 import Clear from './clear';
@@ -19,11 +20,14 @@ export default function Search() {
   const router = useRouter();
   const pathName = usePathname();
 
+  const maxWidth630 = useMediaQuery({ maxWidth: 630 });
+
   const [focusSearch, setFocusSearch] = useState(false);
   const [titlesSuggestion, setTitleSugestions] = useState<
     { _id: string; title: string }[]
   >([]);
   const [searchValueInput, setSearchValueInput] = useState('');
+  const [maxSearch, setMaxSearch] = useState(false);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const refFormContainer = useRef<HTMLFormElement | null>(null);
@@ -154,11 +158,23 @@ export default function Search() {
     selectedIndex.current = -1;
   };
 
+  const handleSearchFocus = () => {
+    setFocusSearch(true);
+    if (!maxWidth630) return;
+    setMaxSearch(true);
+  };
+
+  const handleSearchBlur = () => {
+    setFocusSearch(false);
+    setMaxSearch(false);
+  };
+
   return (
     <Container
       data-focus-search={focusSearch}
-      onFocus={() => setFocusSearch(true)}
-      onBlur={() => setFocusSearch(false)}
+      data-max-search={maxSearch}
+      onFocus={handleSearchFocus}
+      onBlur={handleSearchBlur}
       tabIndex={1}
       onSubmit={handleSubmitSearch}
       ref={refFormContainer}

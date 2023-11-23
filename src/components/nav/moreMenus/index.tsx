@@ -1,12 +1,14 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import type { SetStateAction, Dispatch, ReactNode } from 'react';
+import { useMediaQuery } from 'react-responsive';
 
 import { Container, ContainerMenus, ContainerUser } from './styled';
 
 import Logout from '@/components/form/logout';
 import { UserAuthType } from '@/components/header';
+import PornonlyTitle from '@/components/pornonlyTilte';
 
 export default function MoreMenus({
   user,
@@ -59,23 +61,15 @@ function Menus({
   const { isAuth, username, email } = user;
   const pathName = usePathname();
 
-  const [containerMenusHeight, setContainerMenusHeight] = useState<number>(0);
-
-  useEffect(() => {
-    const containerMenus = document.querySelector('#container-menus');
-    if (containerMenus) {
-      const height = containerMenus.clientHeight;
-      setContainerMenusHeight(-(height + 8));
-    }
-  }, [isAuth]);
+  const maxWidth720 = useMediaQuery({ maxWidth: 720 });
 
   return (
     <ContainerMenus
       data-show-menus={showMenus}
       onClick={event => event.stopPropagation()}
       id="container-menus"
-      $containerMenusHeight={containerMenusHeight}
     >
+      {maxWidth720 && <PornonlyTitle marginBottom0={isAuth} />}
       {isAuth && (
         <>
           <span>Atualmente em</span>

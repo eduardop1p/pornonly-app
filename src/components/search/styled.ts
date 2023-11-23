@@ -15,6 +15,23 @@ export const Container = styled.form<TypeTheme>`
     box-shadow: none;
     padding-left: 1rem;
 
+    @media (max-width: 630px) {
+      width: 100%;
+      min-width: initial;
+
+      &[data-max-search='true'] {
+        position: absolute;
+        margin: 0;
+        width: 100%;
+        left: -3px;
+        z-index: 1;
+
+        & > .titles-suggestions-container {
+          top: 3.3rem !important;
+        }
+      }
+    }
+
     &[data-focus-search='true'] {
       box-shadow: ${theme.box_shadow.box_shadow_02};
 
@@ -42,6 +59,8 @@ export const Container = styled.form<TypeTheme>`
 
     & > .titles-suggestions-container {
       position: absolute;
+      max-height: calc(100vh / 1.3);
+      overflow: hidden auto;
       left: 0;
       top: 2.8rem;
       background-color: ${theme.colors.g_colorGray0};
@@ -65,7 +84,7 @@ export const Container = styled.form<TypeTheme>`
         display: flex;
         align-items: center;
         cursor: pointer;
-        padding: 10px 2rem;
+        padding: 10px 1.5rem;
 
         &:hover,
         &.selected {
@@ -76,7 +95,7 @@ export const Container = styled.form<TypeTheme>`
           flex: none;
           width: 14px;
           height: 14px;
-          margin-right: 1.5rem;
+          margin-right: 1rem;
         }
 
         & > span {

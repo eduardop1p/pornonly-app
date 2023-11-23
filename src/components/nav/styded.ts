@@ -8,6 +8,7 @@ export const Container = styled.nav<TypeTheme>`
     align-items: center;
     margin-left: 12px;
     width: 100%;
+    position: relative;
 
     & > .main-navs {
       display: flex;
@@ -51,6 +52,10 @@ export const Container = styled.nav<TypeTheme>`
       display: flex;
       align-items: center;
 
+      @media (max-width: 500px) {
+        display: none;
+      }
+
       & > :not(:last-child) {
         margin-right: 10px;
       }
@@ -63,6 +68,10 @@ export const Container = styled.nav<TypeTheme>`
     & > .links-no-auth {
       display: flex;
       align-items: center;
+
+      @media (max-width: 500px) {
+        display: none;
+      }
 
       & > :not(:last-child) {
         margin-right: 10px;

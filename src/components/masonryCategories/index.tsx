@@ -31,7 +31,7 @@ export default function MasonryCategories({ results }: Props) {
       ...val,
       newWidth: columnWidth.toFixed(2),
       newHeight: calHeight({
-        customWidth: columnWidth,
+        customWidth: +columnWidth.toFixed(2),
         originalHeight: +val.height,
         originalWidth: +val.width,
       }).toFixed(2),
@@ -47,7 +47,7 @@ export default function MasonryCategories({ results }: Props) {
           ...val,
           newWidth: newWColumnWidth.toFixed(2),
           newHeight: calHeight({
-            customWidth: newWColumnWidth,
+            customWidth: +newWColumnWidth.toFixed(2),
             originalHeight: +val.height,
             originalWidth: +val.width,
           }).toFixed(2),

@@ -32,3 +32,8 @@
 }
 
 
+@media (max-width: 630px) {
+  .header-container{
+    padding: 1rem 20px;
+  }
+}

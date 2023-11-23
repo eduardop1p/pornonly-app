@@ -454,6 +454,7 @@ function useFetchItemsNew(
       }
       setStResults(state => [...state, ...results]);
     } catch (err) {
+      alert(err);
       console.error(err);
     }
   };
@@ -490,6 +491,7 @@ function useFetchItemsMidiaType(
       }
       setStResults(state => [...state, ...results]);
     } catch (err) {
+      alert(err);
       console.error(err);
     }
   };

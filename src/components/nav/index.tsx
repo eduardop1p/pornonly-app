@@ -6,6 +6,7 @@ import { ReactNode, useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { deburr, upperFirst } from 'lodash';
 import { useMediaQuery } from 'react-responsive';
+import type { Dispatch, SetStateAction } from 'react';
 
 import { Container, ContainerArrowMore, ContainerBreakMenu } from './styded';
 import MoreMenus from './moreMenus';
@@ -29,13 +30,70 @@ const breakMenuActiveInitalState = {
 };
 
 export default function Nav({ user, tags, children, userAvatar }: Props) {
-  const pathName = usePathname();
   const { isAuth } = user;
 
-  const [publishActive, setPublishActive] = useState(false);
   const [breakMenuActive, setBreakMenuActive] = useState(
     breakMenuActiveInitalState
   );
+  const maxWidth840 = useMediaQuery({ maxWidth: 840 });
+
+  useEffect(() => {
+    const header = document.querySelector('header');
+    const onscroll = () => {
+      if (window.scrollY > 1) {
+        header?.classList.add('on-scrollY-header');
+      } else {
+        header?.classList.remove('on-scrollY-header');
+      }
+    };
+    window.addEventListener('scroll', onscroll);
+    return () => window.removeEventListener('scroll', onscroll);
+  }, []);
+
+  return (
+    <Container>
+      <div className="main-navs">
+        <Menu
+          breakMenuActive={breakMenuActive}
+          setBreakMenuActive={setBreakMenuActive}
+          isAuth={isAuth}
+        />
+      </div>
+      <Search />
+      {!isAuth ? (
+        <div className="links-no-auth">
+          <Link className="login" href="/login">
+            {!maxWidth840 ? 'Login' : 'L'}
+          </Link>
+          <Link className="create-account" href="/create-account">
+            {!maxWidth840 ? 'Criar conta' : 'C'}
+          </Link>
+        </div>
+      ) : (
+        <div className="links-auth">
+          {children}
+          {/* <Logout /> */}
+        </div>
+      )}
+      <MoreMenus user={user} userAvatar={userAvatar} />
+    </Container>
+  );
+}
+
+function Menu({
+  setBreakMenuActive,
+  breakMenuActive,
+  isAuth,
+}: {
+  setBreakMenuActive: Dispatch<
+    SetStateAction<typeof breakMenuActiveInitalState>
+  >;
+  breakMenuActive: typeof breakMenuActiveInitalState;
+  isAuth: boolean;
+}) {
+  const pathName = usePathname();
+
+  const [publishActive, setPublishActive] = useState(false);
 
   const maxWidth1370 = useMediaQuery({ maxWidth: 1370 });
   const maxWidth1325 = useMediaQuery({ maxWidth: 1325 });
@@ -43,7 +101,7 @@ export default function Nav({ user, tags, children, userAvatar }: Props) {
   const maxWidth1100 = useMediaQuery({ maxWidth: 1100 });
   const maxWidth1015 = useMediaQuery({ maxWidth: 1015 });
   const maxWidth950 = useMediaQuery({ maxWidth: 950 });
-  const maxWidth840 = useMediaQuery({ maxWidth: 840 });
+
   const navMenus = useRef([
     '/',
     '/new',
@@ -174,246 +232,225 @@ export default function Nav({ user, tags, children, userAvatar }: Props) {
     maxWidth1100,
     maxWidth1015,
     maxWidth950,
+    setBreakMenuActive,
   ]);
 
   return (
-    <Container>
-      <div className="main-navs">
-        {maxWidth1370 && (
-          <ContainerBreakMenu
-            onClick={() =>
-              setBreakMenuActive(state => ({ ...state, active: !state.active }))
-            }
+    <>
+      {maxWidth1370 && (
+        <ContainerBreakMenu
+          onClick={() =>
+            setBreakMenuActive(state => ({ ...state, active: !state.active }))
+          }
+          data-break-menu-active={breakMenuActive.active}
+          onBlur={event => {
+            if (!event.currentTarget.contains(event.relatedTarget))
+              setBreakMenuActive(state => ({ ...state, active: false }));
+          }}
+          className={
+            //  eslint-disable-next-line
+            navMenus.current.some(val => pathName.includes(val)) && breakMenuActive.routeActive
+              ? 'link-active'
+              : ''
+          }
+          tabIndex={0}
+        >
+          <span>{breakMenuActive.value}</span>
+          <svg
             data-break-menu-active={breakMenuActive.active}
-            onBlur={event => {
-              if (!event.currentTarget.contains(event.relatedTarget))
-                setBreakMenuActive(state => ({ ...state, active: false }));
-            }}
-            className={
-              //  eslint-disable-next-line
-              navMenus.current.some(val => pathName.includes(val)) && breakMenuActive.routeActive
-                ? 'link-active'
-                : ''
-            }
-            tabIndex={0}
+            height="12"
+            width="12"
+            viewBox="0 0 24 24"
           >
-            <span>{breakMenuActive.value}</span>
-            <svg
-              data-break-menu-active={breakMenuActive.active}
-              height="12"
-              width="12"
-              viewBox="0 0 24 24"
+            <path d="M12 19.5.66 8.29c-.88-.86-.88-2.27 0-3.14.88-.87 2.3-.87 3.18 0L12 13.21l8.16-8.06c.88-.87 2.3-.87 3.18 0 .88.87.88 2.28 0 3.14L12 19.5z"></path>
+          </svg>
+          <div
+            className="container-more-links"
+            data-break-menu-active={breakMenuActive.active}
+            onClick={event => event.stopPropagation()}
+          >
+            <Link
+              className={pathName === '/' ? 'link-active' : ''}
+              href="/"
+              scroll={false}
             >
-              <path d="M12 19.5.66 8.29c-.88-.86-.88-2.27 0-3.14.88-.87 2.3-.87 3.18 0L12 13.21l8.16-8.06c.88-.87 2.3-.87 3.18 0 .88.87.88 2.28 0 3.14L12 19.5z"></path>
-            </svg>
-            <div
-              className="container-more-links"
-              data-break-menu-active={breakMenuActive.active}
-              onClick={event => event.stopPropagation()}
+              Página inicial
+              {pathName === '/' && <IsActiveIcon />}
+            </Link>
+            <Link
+              className={pathName === '/new' ? 'link-active' : ''}
+              href="/new"
+              scroll={false}
             >
+              New
+              {pathName === '/new' && <IsActiveIcon />}
+            </Link>
+            {maxWidth1325 && (
               <Link
-                className={pathName === '/' ? 'link-active' : ''}
-                href="/"
+                className={pathName === '/redheads' ? 'link-active' : ''}
+                href="/redheads"
                 scroll={false}
               >
-                Página inicial
-                {pathName === '/' && <IsActiveIcon />}
+                Ruivas
+                {pathName === '/redheads' && <IsActiveIcon />}
               </Link>
+            )}
+            {maxWidth1240 && (
               <Link
-                className={pathName === '/new' ? 'link-active' : ''}
-                href="/new"
+                className={pathName === '/category/imgs' ? 'link-active' : ''}
+                href="/category/imgs"
                 scroll={false}
               >
-                New
-                {pathName === '/new' && <IsActiveIcon />}
+                Imagens
+                {pathName === '/category/imgs' && <IsActiveIcon />}
               </Link>
-              {maxWidth1325 && (
-                <Link
-                  className={pathName === '/redheads' ? 'link-active' : ''}
-                  href="/redheads"
-                  scroll={false}
-                >
-                  Ruivas
-                  {pathName === '/redheads' && <IsActiveIcon />}
-                </Link>
-              )}
-              {maxWidth1240 && (
-                <Link
-                  className={pathName === '/category/imgs' ? 'link-active' : ''}
-                  href="/category/imgs"
-                  scroll={false}
-                >
-                  Imagens
-                  {pathName === '/category/imgs' && <IsActiveIcon />}
-                </Link>
-              )}
-              {maxWidth1100 && (
-                <Link
-                  className={
-                    pathName === '/category/videos' ? 'link-active' : ''
-                  }
-                  href="/category/videos"
-                  scroll={false}
-                >
-                  Videos
-                  {pathName === '/category/videos' && <IsActiveIcon />}
-                </Link>
-              )}
-              {maxWidth1015 && (
-                <Link
-                  className={pathName === '/category/gifs' ? 'link-active' : ''}
-                  href="/category/gifs"
-                  scroll={false}
-                >
-                  Gifs
-                  {pathName === '/category/gifs' && <IsActiveIcon />}
-                </Link>
-              )}
-              {maxWidth950 && (
-                <Link
-                  className={
-                    pathName.includes('/categories') ? 'link-active' : ''
-                  }
-                  href="/categories"
-                  scroll={false}
-                >
-                  Categorias
-                  {pathName.includes('/categories') && <IsActiveIcon />}
-                </Link>
-              )}
-            </div>
-          </ContainerBreakMenu>
-        )}
-        {!maxWidth1370 && (
-          <Link
-            className={pathName === '/' ? 'link-active' : ''}
-            href="/"
-            scroll={false}
-          >
-            Página inicial
-          </Link>
-        )}
-
-        {!maxWidth1370 && (
-          <Link
-            className={pathName === '/new' ? 'link-active' : ''}
-            href="/new"
-            scroll={false}
-          >
-            New
-          </Link>
-        )}
-        {!maxWidth1325 && (
-          <Link
-            className={pathName === '/redheads' ? 'link-active' : ''}
-            href="/redheads"
-            scroll={false}
-          >
-            Ruivas
-          </Link>
-        )}
-        {!maxWidth1240 && (
-          <Link
-            className={pathName === '/category/imgs' ? 'link-active' : ''}
-            href="/category/imgs"
-            scroll={false}
-          >
-            Imagens
-          </Link>
-        )}
-        {!maxWidth1100 && (
-          <Link
-            className={pathName === '/category/videos' ? 'link-active' : ''}
-            href="/category/videos"
-            scroll={false}
-          >
-            Videos
-          </Link>
-        )}
-        {!maxWidth1015 && (
-          <Link
-            className={pathName === '/category/gifs' ? 'link-active' : ''}
-            href="/category/gifs"
-            scroll={false}
-          >
-            Gifs
-          </Link>
-        )}
-        {/* <CategoryTags tags={tags} /> */}
-        {!maxWidth950 && (
-          <Link
-            href="/categories"
-            className={pathName.includes('/categories') ? 'link-active' : ''}
-            scroll={false}
-          >
-            Categorias
-          </Link>
-        )}
-        {isAuth && (
-          <ContainerArrowMore
-            onClick={() => setPublishActive(!publishActive)}
-            data-publish-active={publishActive}
-            onBlur={event => {
-              if (!event.currentTarget.contains(event.relatedTarget))
-                setPublishActive(false);
-            }}
-            tabIndex={1}
-          >
-            <span>Criar</span>
-            <svg
-              data-publish-active={publishActive}
-              height="12"
-              width="12"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-              aria-label=""
-              role="img"
-            >
-              <path d="M12 19.5.66 8.29c-.88-.86-.88-2.27 0-3.14.88-.87 2.3-.87 3.18 0L12 13.21l8.16-8.06c.88-.87 2.3-.87 3.18 0 .88.87.88 2.28 0 3.14L12 19.5z"></path>
-            </svg>
-            <div
-              className="container-more-links"
-              data-publish-active={publishActive}
-              onClick={event => event.stopPropagation()}
-            >
+            )}
+            {maxWidth1100 && (
               <Link
-                className={pathName === '/publish-pin' ? 'link-active' : ''}
-                href="/publish-pin"
-                onClick={() => setPublishActive(false)}
+                className={pathName === '/category/videos' ? 'link-active' : ''}
+                href="/category/videos"
+                scroll={false}
               >
-                Criar pin
-                {pathName === '/publish-pin' && <IsActiveIcon />}
+                Videos
+                {pathName === '/category/videos' && <IsActiveIcon />}
               </Link>
+            )}
+            {maxWidth1015 && (
               <Link
-                className={pathName === '/publish-pack' ? 'link-active' : ''}
-                href="/publish-pack"
-                onClick={() => setPublishActive(false)}
+                className={pathName === '/category/gifs' ? 'link-active' : ''}
+                href="/category/gifs"
+                scroll={false}
               >
-                Criar pack
-                {pathName === '/publish-pack' && <IsActiveIcon />}
+                Gifs
+                {pathName === '/category/gifs' && <IsActiveIcon />}
               </Link>
-            </div>
-          </ContainerArrowMore>
-        )}
-      </div>
-      <Search />
-      {!isAuth ? (
-        <div className="links-no-auth">
-          <Link className="login" href="/login">
-            {!maxWidth840 ? 'Login' : 'L'}
-          </Link>
-          <Link className="create-account" href="/create-account">
-            {!maxWidth840 ? 'Criar conta' : 'C'}
-          </Link>
-        </div>
-      ) : (
-        <div className="links-auth">
-          {children}
-          {/* <Logout /> */}
-        </div>
+            )}
+            {maxWidth950 && (
+              <Link
+                className={
+                  pathName.includes('/categories') ? 'link-active' : ''
+                }
+                href="/categories"
+                scroll={false}
+              >
+                Categorias
+                {pathName.includes('/categories') && <IsActiveIcon />}
+              </Link>
+            )}
+          </div>
+        </ContainerBreakMenu>
       )}
-      <MoreMenus user={user} userAvatar={userAvatar} />
-    </Container>
+      {!maxWidth1370 && (
+        <Link
+          className={pathName === '/' ? 'link-active' : ''}
+          href="/"
+          scroll={false}
+        >
+          Página inicial
+        </Link>
+      )}
+      {!maxWidth1370 && (
+        <Link
+          className={pathName === '/new' ? 'link-active' : ''}
+          href="/new"
+          scroll={false}
+        >
+          New
+        </Link>
+      )}
+      {!maxWidth1325 && (
+        <Link
+          className={pathName === '/redheads' ? 'link-active' : ''}
+          href="/redheads"
+          scroll={false}
+        >
+          Ruivas
+        </Link>
+      )}
+      {!maxWidth1240 && (
+        <Link
+          className={pathName === '/category/imgs' ? 'link-active' : ''}
+          href="/category/imgs"
+          scroll={false}
+        >
+          Imagens
+        </Link>
+      )}
+      {!maxWidth1100 && (
+        <Link
+          className={pathName === '/category/videos' ? 'link-active' : ''}
+          href="/category/videos"
+          scroll={false}
+        >
+          Videos
+        </Link>
+      )}
+      {!maxWidth1015 && (
+        <Link
+          className={pathName === '/category/gifs' ? 'link-active' : ''}
+          href="/category/gifs"
+          scroll={false}
+        >
+          Gifs
+        </Link>
+      )}
+      {!maxWidth950 && (
+        <Link
+          href="/categories"
+          className={pathName.includes('/categories') ? 'link-active' : ''}
+          scroll={false}
+        >
+          Categorias
+        </Link>
+      )}
+
+      {isAuth && (
+        <ContainerArrowMore
+          onClick={() => setPublishActive(!publishActive)}
+          data-publish-active={publishActive}
+          onBlur={event => {
+            if (!event.currentTarget.contains(event.relatedTarget))
+              setPublishActive(false);
+          }}
+          tabIndex={1}
+        >
+          <span>Criar</span>
+          <svg
+            data-publish-active={publishActive}
+            height="12"
+            width="12"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            aria-label=""
+            role="img"
+          >
+            <path d="M12 19.5.66 8.29c-.88-.86-.88-2.27 0-3.14.88-.87 2.3-.87 3.18 0L12 13.21l8.16-8.06c.88-.87 2.3-.87 3.18 0 .88.87.88 2.28 0 3.14L12 19.5z"></path>
+          </svg>
+          <div
+            className="container-more-links"
+            data-publish-active={publishActive}
+            onClick={event => event.stopPropagation()}
+          >
+            <Link
+              className={pathName === '/publish-pin' ? 'link-active' : ''}
+              href="/publish-pin"
+              onClick={() => setPublishActive(false)}
+            >
+              Criar pin
+              {pathName === '/publish-pin' && <IsActiveIcon />}
+            </Link>
+            <Link
+              className={pathName === '/publish-pack' ? 'link-active' : ''}
+              href="/publish-pack"
+              onClick={() => setPublishActive(false)}
+            >
+              Criar pack
+              {pathName === '/publish-pack' && <IsActiveIcon />}
+            </Link>
+          </div>
+        </ContainerArrowMore>
+      )}
+    </>
   );
 }
 
