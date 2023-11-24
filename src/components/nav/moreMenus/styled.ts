@@ -94,6 +94,10 @@ export const ContainerMenus = styled.div<TypeTheme>`
 
       &:not(:last-child) {
         margin-bottom: 5px;
+
+        @media (max-width: 800px) {
+          margin-bottom: 0;
+        }
       }
 
       &:hover {

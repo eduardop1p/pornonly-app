@@ -101,6 +101,7 @@ function Menu({
   const maxWidth1100 = useMediaQuery({ maxWidth: 1100 });
   const maxWidth1015 = useMediaQuery({ maxWidth: 1015 });
   const maxWidth950 = useMediaQuery({ maxWidth: 950 });
+  const maxWidth440 = useMediaQuery({ maxWidth: 440 });
 
   useEffect(() => {
     if (pathName.includes('/categories')) {
@@ -367,7 +368,7 @@ function Menu({
         </Link>
       )}
 
-      {isAuth && (
+      {isAuth && !maxWidth440 && (
         <ContainerArrowMore
           onClick={() => setPublishActive(!publishActive)}
           data-publish-active={publishActive}

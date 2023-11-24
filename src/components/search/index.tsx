@@ -13,7 +13,7 @@ import {
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useMediaQuery } from 'react-responsive';
 
-import { Container } from './styled';
+import { Container, ContainerBtn } from './styled';
 import Clear from './clear';
 
 export default function Search() {
@@ -27,7 +27,7 @@ export default function Search() {
     { _id: string; title: string }[]
   >([]);
   const [searchValueInput, setSearchValueInput] = useState('');
-  const [maxSearch, setMaxSearch] = useState(false);
+  const [showMaxSearch, setShowMaxSearch] = useState(false);
   const searchQuery = useSearchParams().get('search_query');
   const [searchQueryValue, setSearchQueryValue] = useState(searchQuery);
 
@@ -105,7 +105,10 @@ export default function Search() {
   }, []);
 
   useEffect(() => {
-    if (pathName != '/search') setSearchValueInput('');
+    if (pathName != '/search') {
+      setSearchValueInput('');
+      setSearchQueryValue('');
+    }
   }, [pathName]);
 
   const handleClickClear = () => {
@@ -164,66 +167,93 @@ export default function Search() {
   const handleSearchFocus = () => {
     setFocusSearch(true);
     if (!maxWidth630 || !inputRef.current) return;
-    setMaxSearch(true);
+    setShowMaxSearch(true);
     inputRef.current.selectionStart = inputRef.current.value.length;
     inputRef.current.selectionEnd = inputRef.current.value.length;
-    inputRef.current.focus();
+    setTimeout(() => {
+      inputRef.current?.focus();
+    }, 100);
   };
 
   const handleSearchBlur = () => {
     setFocusSearch(false);
-    setMaxSearch(false);
+    setShowMaxSearch(false);
   };
 
   return (
-    <Container
-      data-focus-search={focusSearch}
-      data-max-search={maxSearch}
-      onFocus={handleSearchFocus}
-      onBlur={handleSearchBlur}
-      tabIndex={1}
-      onSubmit={handleSubmitSearch}
-      ref={refFormContainer}
-    >
-      <svg
-        height="16"
-        width="16"
-        viewBox="0 0 24 24"
-        aria-label="Ícone de pesquisa"
-        role="img"
-      >
-        <path d="M10 16c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6m13.12 2.88-4.26-4.26A9.842 9.842 0 0 0 20 10c0-5.52-4.48-10-10-10S0 4.48 0 10s4.48 10 10 10c1.67 0 3.24-.41 4.62-1.14l4.26 4.26a3 3 0 0 0 4.24 0 3 3 0 0 0 0-4.24"></path>
-      </svg>
-      <input
-        type="text"
-        name="search"
-        placeholder="Pesquisar"
-        value={searchQueryValue ? searchQueryValue : searchValueInput}
-        onChange={handleChangeSearch}
-        ref={inputRef}
-      />
-      <Clear onClickCustom={handleClickClear} focusSearch={focusSearch} />
-      <div
-        className="titles-suggestions-container"
-        data-show-suggestion={
-          titlesSuggestion.length && focusSearch && searchValueInput
-            ? true
-            : false
-        }
-      >
-        {titlesSuggestion.map(value => (
-          <div
-            key={value._id}
-            className="titles-suggestions"
-            onClick={() => handleClickTiSu(value)}
+    <>
+      {maxWidth630 ? (
+        <ContainerBtn onClick={handleSearchFocus}>
+          <svg
+            height="16"
+            width="16"
+            viewBox="0 0 24 24"
+            aria-label="Ícone de pesquisa"
+            role="img"
           >
-            <svg viewBox="0 0 24 24" aria-label="Ícone de pesquisa" role="img">
-              <path d="M10 16c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6m13.12 2.88-4.26-4.26A9.842 9.842 0 0 0 20 10c0-5.52-4.48-10-10-10S0 4.48 0 10s4.48 10 10 10c1.67 0 3.24-.41 4.62-1.14l4.26 4.26a3 3 0 0 0 4.24 0 3 3 0 0 0 0-4.24"></path>
-            </svg>
-            <span>{value.title}</span>
-          </div>
-        ))}
-      </div>
-    </Container>
+            <path d="M10 16c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6m13.12 2.88-4.26-4.26A9.842 9.842 0 0 0 20 10c0-5.52-4.48-10-10-10S0 4.48 0 10s4.48 10 10 10c1.67 0 3.24-.41 4.62-1.14l4.26 4.26a3 3 0 0 0 4.24 0 3 3 0 0 0 0-4.24"></path>
+          </svg>
+          <input
+            type="text"
+            readOnly
+            placeholder="Pesquisar"
+            value={searchQueryValue ? searchQueryValue : searchValueInput}
+          />
+        </ContainerBtn>
+      ) : null}
+      <Container
+        data-focus-search={focusSearch}
+        data-show-max-search={showMaxSearch}
+        onFocus={handleSearchFocus}
+        onBlur={handleSearchBlur}
+        tabIndex={1}
+        onSubmit={handleSubmitSearch}
+        ref={refFormContainer}
+      >
+        <svg
+          height="16"
+          width="16"
+          viewBox="0 0 24 24"
+          aria-label="Ícone de pesquisa"
+          role="img"
+        >
+          <path d="M10 16c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6m13.12 2.88-4.26-4.26A9.842 9.842 0 0 0 20 10c0-5.52-4.48-10-10-10S0 4.48 0 10s4.48 10 10 10c1.67 0 3.24-.41 4.62-1.14l4.26 4.26a3 3 0 0 0 4.24 0 3 3 0 0 0 0-4.24"></path>
+        </svg>
+        <input
+          type="text"
+          name="search"
+          placeholder="Pesquisar"
+          value={searchQueryValue ? searchQueryValue : searchValueInput}
+          onChange={handleChangeSearch}
+          ref={inputRef}
+        />
+        <Clear onClickCustom={handleClickClear} focusSearch={focusSearch} />
+        <div
+          className="titles-suggestions-container"
+          data-show-suggestion={
+            titlesSuggestion.length && focusSearch && searchValueInput
+              ? true
+              : false
+          }
+        >
+          {titlesSuggestion.map(value => (
+            <div
+              key={value._id}
+              className="titles-suggestions"
+              onClick={() => handleClickTiSu(value)}
+            >
+              <svg
+                viewBox="0 0 24 24"
+                aria-label="Ícone de pesquisa"
+                role="img"
+              >
+                <path d="M10 16c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6m13.12 2.88-4.26-4.26A9.842 9.842 0 0 0 20 10c0-5.52-4.48-10-10-10S0 4.48 0 10s4.48 10 10 10c1.67 0 3.24-.41 4.62-1.14l4.26 4.26a3 3 0 0 0 4.24 0 3 3 0 0 0 0-4.24"></path>
+              </svg>
+              <span>{value.title}</span>
+            </div>
+          ))}
+        </div>
+      </Container>
+    </>
   );
 }

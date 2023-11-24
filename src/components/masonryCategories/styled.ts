@@ -46,6 +46,8 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
           position: absolute;
           width: 100%;
           height: 100%;
+          object-fit: cover;
+          object-position: center;
           z-index: 2;
 
           &::-webkit-media-controls {

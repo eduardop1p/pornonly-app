@@ -62,6 +62,7 @@ function Menus({
   const pathName = usePathname();
 
   const maxWidth720 = useMediaQuery({ maxWidth: 720 });
+  const maxWidth440 = useMediaQuery({ maxWidth: 440 });
 
   return (
     <ContainerMenus
@@ -81,7 +82,28 @@ function Menus({
           />
         </>
       )}
-      {isAuth && <span>Mais opções</span>}
+      {isAuth && maxWidth440 && (
+        <>
+          <span style={{ margin: '15px 0 5px 8px' }}>Criar</span>
+          <Link
+            className={pathName === '/publish-pin' ? 'link-active' : ''}
+            href="/publish-pin"
+            onClick={() => setShowMenus(state => !state)}
+          >
+            Criar pin
+            {pathName === '/publish-pin' && <IsActiveIcon />}
+          </Link>
+          <Link
+            className={pathName === '/publish-pack' ? 'link-active' : ''}
+            href="/publish-pack"
+            onClick={() => setShowMenus(state => !state)}
+          >
+            Criar pack
+            {pathName === '/publish-pack' && <IsActiveIcon />}
+          </Link>
+        </>
+      )}
+      {isAuth && <span style={{ margin: '10px 0 10px 8px' }}>Mais opções</span>}
       {isAuth && (
         <Link
           href={`/settings/${username}`}
@@ -89,11 +111,7 @@ function Menus({
           onClick={() => setShowMenus(state => !state)}
         >
           Configurações
-          {pathName === `/settings/${username}` && (
-            <svg height="12" width="12" viewBox="0 0 24 24">
-              <path d="M9.17 21.75.73 12.79c-.97-1.04-.97-2.71 0-3.75a2.403 2.403 0 0 1 3.53 0l4.91 5.22L19.74 3.03c.98-1.04 2.55-1.04 3.53 0 .97 1.03.97 2.71 0 3.74L9.17 21.75z"></path>
-            </svg>
-          )}
+          {pathName === `/settings/${username}` && <IsActiveIcon />}
         </Link>
       )}
       <Link
@@ -156,11 +174,7 @@ function Menus({
         onClick={() => setShowMenus(state => !state)}
       >
         {isAuth ? 'Criar nova conta' : 'Criar conta'}
-        {pathName === '/create-account' && (
-          <svg height="12" width="12" viewBox="0 0 24 24">
-            <path d="M9.17 21.75.73 12.79c-.97-1.04-.97-2.71 0-3.75a2.403 2.403 0 0 1 3.53 0l4.91 5.22L19.74 3.03c.98-1.04 2.55-1.04 3.53 0 .97 1.03.97 2.71 0 3.74L9.17 21.75z"></path>
-          </svg>
-        )}
+        {pathName === '/create-account' && <IsActiveIcon />}
       </Link>
       {!isAuth && (
         <Link
@@ -169,11 +183,7 @@ function Menus({
           onClick={() => setShowMenus(state => !state)}
         >
           Login
-          {pathName === '/login' && (
-            <svg height="12" width="12" viewBox="0 0 24 24">
-              <path d="M9.17 21.75.73 12.79c-.97-1.04-.97-2.71 0-3.75a2.403 2.403 0 0 1 3.53 0l4.91 5.22L19.74 3.03c.98-1.04 2.55-1.04 3.53 0 .97 1.03.97 2.71 0 3.74L9.17 21.75z"></path>
-            </svg>
-          )}
+          {pathName === '/login' && <IsActiveIcon />}
         </Link>
       )}
       {isAuth && <Logout setShowMenus={setShowMenus} />}
@@ -211,5 +221,13 @@ function User({
         </svg>
       </Link>
     </ContainerUser>
+  );
+}
+
+function IsActiveIcon() {
+  return (
+    <svg height="12" width="12" viewBox="0 0 24 24">
+      <path d="M9.17 21.75.73 12.79c-.97-1.04-.97-2.71 0-3.75a2.403 2.403 0 0 1 3.53 0l4.91 5.22L19.74 3.03c.98-1.04 2.55-1.04 3.53 0 .97 1.03.97 2.71 0 3.74L9.17 21.75z"></path>
+    </svg>
   );
 }

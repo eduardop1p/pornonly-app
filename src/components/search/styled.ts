@@ -17,13 +17,17 @@ export const Container = styled.form<TypeTheme>`
     @media (max-width: 630px) {
       width: 100%;
       min-width: initial;
+      position: absolute;
+      margin: 0;
+      width: 100%;
+      left: -3px;
+      z-index: 1;
+      visibility: hidden;
+      opacity: 0;
 
-      &[data-max-search='true'] {
-        position: absolute;
-        margin: 0;
-        width: 100%;
-        left: -3px;
-        z-index: 1;
+      &[data-show-max-search='true'] {
+        visibility: visible;
+        opacity: 1;
 
         & > input {
           padding-left: 1rem;
@@ -40,6 +44,10 @@ export const Container = styled.form<TypeTheme>`
 
       & > svg {
         display: none;
+      }
+
+      & > input {
+        padding-left: 1rem;
       }
     }
 
@@ -58,7 +66,7 @@ export const Container = styled.form<TypeTheme>`
       border: none;
       padding-left: 2.5rem;
       background-color: transparent;
-      font-size: 1rem;
+      font-size: ${theme.font_size.font_size_1rem};
       color: ${theme.colors.g_colo333};
       font-weight: ${theme.font_weight.font_weight_400};
     }
@@ -110,6 +118,63 @@ export const Container = styled.form<TypeTheme>`
           font-size: ${theme.font_size.font_size_1rem};
         }
       }
+    }
+  `}
+`;
+
+export const ContainerBtn = styled.button<TypeTheme>`
+  ${({ theme }) => css`
+    width: 100%;
+    border: none;
+    position: relative;
+    margin: 0 10px;
+    background-color: ${theme.colors.g_colore9e9e9};
+    display: flex;
+    align-items: center;
+    height: 48px;
+    border-radius: 24px;
+    box-shadow: none;
+
+    /* @media (max-width: 400px) {
+      justify-content: center;
+      height: 40px;
+      min-width: 40px;
+
+      & > svg {
+        left: initial;
+      }
+    } */
+
+    & > svg {
+      display: inline-block;
+      position: absolute;
+      left: 1rem;
+      fill: ${theme.colors.g_color5f5f5f};
+      flex: none;
+      visibility: visible;
+
+      /* @media (max-width: 400px) {
+        left: initial;
+      } */
+    }
+
+    & > input {
+      width: 100%;
+      height: 100%;
+      border: none;
+      padding-left: 2.5rem;
+      padding-right: 1rem;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      background-color: transparent;
+      font-size: ${theme.font_size.font_size_1rem};
+      color: ${theme.colors.g_colo333};
+      font-weight: ${theme.font_weight.font_weight_400};
+      /*
+      @media (max-width: 400px) {
+        display: none;
+      } */
     }
   `}
 `;

@@ -31,9 +31,13 @@
   }
 }
 
-
 @media (max-width: 630px) {
   .header-container{
     padding: 1rem 20px;
   }
 }
+/* @media (max-width: 480px) {
+  .header-container{
+    padding: 1rem 15px;
+  }
+} */
