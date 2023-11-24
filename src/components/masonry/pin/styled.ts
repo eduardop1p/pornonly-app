@@ -12,6 +12,13 @@ export const Container = styled.div<TypeTheme>`
     transition: all 200ms ease-in-out;
     /* break-inside: avoid-column; */
 
+    @media (max-width: 1400px) {
+      padding: 7px;
+    }
+    @media (max-width: 800px) {
+      padding: 6px;
+    }
+
     &.selected {
       scale: 0.95;
       border-radius: 1rem;
@@ -155,6 +162,8 @@ export const Container = styled.div<TypeTheme>`
         color: ${theme.colors.g_colorGray300};
         border-radius: 1rem;
         position: absolute;
+        object-fit: cover;
+        object-position: center;
         width: 100%;
         height: 100%;
         z-index: 2;

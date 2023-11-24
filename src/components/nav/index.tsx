@@ -1,9 +1,8 @@
-/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
 import Link from 'next/link';
-import { ReactNode, useState, useEffect, } from 'react';
+import { ReactNode, useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { deburr, upperFirst } from 'lodash';
 import { useMediaQuery } from 'react-responsive';
@@ -27,7 +26,7 @@ interface Props {
 const breakMenuActiveInitalState = {
   active: false,
   value: 'Página inicial',
-  routeActive: false,
+  routeActive: '/no-router-type-content-404',
 };
 
 export default function Nav({ user, tags, children, userAvatar }: Props) {
@@ -109,14 +108,10 @@ function Menu({
         setBreakMenuActive({
           active: false,
           value: 'Categorias',
-          routeActive: true,
+          routeActive: '/categories',
         });
       } else {
-        setBreakMenuActive({
-          active: false,
-          value: 'Página inicial',
-          routeActive: false,
-        });
+        setBreakMenuActive(breakMenuActiveInitalState);
       }
       return;
     }
@@ -127,7 +122,7 @@ function Menu({
           setBreakMenuActive({
             active: false,
             value: 'New',
-            routeActive: true,
+            routeActive: '/new',
           });
         } else {
           setBreakMenuActive(breakMenuActiveInitalState);
@@ -139,7 +134,7 @@ function Menu({
           setBreakMenuActive({
             active: false,
             value: 'Ruivas',
-            routeActive: true,
+            routeActive: '/redheads',
           });
         } else {
           setBreakMenuActive(breakMenuActiveInitalState);
@@ -151,7 +146,7 @@ function Menu({
           setBreakMenuActive({
             active: false,
             value: 'Imagens',
-            routeActive: true,
+            routeActive: '/category/imgs',
           });
         } else {
           setBreakMenuActive(breakMenuActiveInitalState);
@@ -163,7 +158,7 @@ function Menu({
           setBreakMenuActive({
             active: false,
             value: 'Videos',
-            routeActive: true,
+            routeActive: '/category/videos',
           });
         } else {
           setBreakMenuActive(breakMenuActiveInitalState);
@@ -175,7 +170,7 @@ function Menu({
           setBreakMenuActive({
             active: false,
             value: 'Gifs',
-            routeActive: true,
+            routeActive: '/category/gifs',
           });
         } else {
           setBreakMenuActive(breakMenuActiveInitalState);
@@ -186,7 +181,7 @@ function Menu({
         setBreakMenuActive({
           active: false,
           value: 'Página inicial',
-          routeActive: true,
+          routeActive: '/',
         });
         break;
       }
@@ -219,12 +214,7 @@ function Menu({
               setBreakMenuActive(state => ({ ...state, active: false }));
           }}
           className={
-            (pathName.includes(breakMenuActive.value.toLocaleLowerCase()) ||
-              pathName === '/' ||
-              pathName === '/redheads') &&
-              breakMenuActive.routeActive
-              ? 'link-active'
-              : ''
+            pathName.includes(breakMenuActive.routeActive) ? 'link-active' : ''
           }
           tabIndex={0}
         >

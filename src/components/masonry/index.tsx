@@ -65,10 +65,10 @@ export default function Masonry({
       ? maxWidth1100
         ? maxWidth800
           ? maxWidth600
-            ? 54
-            : 70
-          : 86
-        : 102
+            ? 46
+            : 58
+          : 78
+        : 92
       : 118;
   }, [maxWidth1400, maxWidth1100, maxWidth800, maxWidth600]);
 
