@@ -13,7 +13,6 @@ export const Container = styled.form<TypeTheme>`
     height: 48px;
     border-radius: 24px;
     box-shadow: none;
-    padding-left: 1rem;
 
     @media (max-width: 630px) {
       width: 100%;
@@ -25,6 +24,10 @@ export const Container = styled.form<TypeTheme>`
         width: 100%;
         left: -3px;
         z-index: 1;
+
+        & > input {
+          padding-left: 1rem;
+        }
 
         & > .titles-suggestions-container {
           top: 3.3rem !important;
@@ -42,7 +45,8 @@ export const Container = styled.form<TypeTheme>`
 
     & > svg {
       display: inline-block;
-      margin-right: 8px;
+      position: absolute;
+      left: 1rem;
       fill: ${theme.colors.g_color5f5f5f};
       flex: none;
       visibility: visible;
@@ -50,7 +54,9 @@ export const Container = styled.form<TypeTheme>`
 
     & > input {
       width: 100%;
+      height: 100%;
       border: none;
+      padding-left: 2.5rem;
       background-color: transparent;
       font-size: 1rem;
       color: ${theme.colors.g_colo333};

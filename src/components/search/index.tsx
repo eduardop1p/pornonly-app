@@ -10,7 +10,7 @@ import {
   useCallback,
   MouseEvent,
 } from 'react';
-import { useRouter, useParams, usePathname } from 'next/navigation';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useMediaQuery } from 'react-responsive';
 
 import { Container } from './styled';
@@ -28,6 +28,8 @@ export default function Search() {
   >([]);
   const [searchValueInput, setSearchValueInput] = useState('');
   const [maxSearch, setMaxSearch] = useState(false);
+  const searchQuery = useSearchParams().get('search_query');
+  const [searchQueryValue, setSearchQueryValue] = useState(searchQuery);
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const refFormContainer = useRef<HTMLFormElement | null>(null);
@@ -122,6 +124,7 @@ export default function Search() {
 
   const handleChangeSearch = async (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
+    setSearchQueryValue('');
     setSearchValueInput(value);
     if (!value) return;
 
@@ -160,8 +163,11 @@ export default function Search() {
 
   const handleSearchFocus = () => {
     setFocusSearch(true);
-    if (!maxWidth630) return;
+    if (!maxWidth630 || !inputRef.current) return;
     setMaxSearch(true);
+    inputRef.current.selectionStart = inputRef.current.value.length;
+    inputRef.current.selectionEnd = inputRef.current.value.length;
+    inputRef.current.focus();
   };
 
   const handleSearchBlur = () => {
@@ -192,7 +198,7 @@ export default function Search() {
         type="text"
         name="search"
         placeholder="Pesquisar"
-        value={searchValueInput}
+        value={searchQueryValue ? searchQueryValue : searchValueInput}
         onChange={handleChangeSearch}
         ref={inputRef}
       />

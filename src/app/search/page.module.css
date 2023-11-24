@@ -39,4 +39,6 @@
   font-weight: var(--font-weight-500);
   color: var(--g-colorGray400);
   font-size: var(--font-size-1rem);
+  width: calc(100% - 3rem);
+  text-align: center;
 }
