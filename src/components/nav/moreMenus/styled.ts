@@ -50,6 +50,7 @@ export const ContainerMenus = styled.div<TypeTheme>`
     flex-direction: column;
     align-items: flex-start;
     overflow: hidden auto;
+    visibility: hidden;
     opacity: 0;
     position: absolute;
     right: -1rem;

@@ -1,11 +1,15 @@
 import './globals.css';
 import type { Metadata } from 'next';
+import dynamic from 'next/dynamic';
 
 import StyledComponentsRegistry from '@/lib/registry';
 
 import AppTheme from '@/utils/theme/themeProvider';
-import Header from '@/components/header';
 import AppContext from '@/utils/appContextUser/appContext';
+
+const Header = dynamic(() => import('@/components/header'), {
+  ssr: false,
+});
 
 export const metadata: Metadata = {
   title: 'Pornonly',

@@ -1,8 +1,9 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
 import Link from 'next/link';
-import { ReactNode, useState, useEffect, useRef } from 'react';
+import { ReactNode, useState, useEffect, } from 'react';
 import { usePathname } from 'next/navigation';
 import { deburr, upperFirst } from 'lodash';
 import { useMediaQuery } from 'react-responsive';
@@ -102,16 +103,6 @@ function Menu({
   const maxWidth1015 = useMediaQuery({ maxWidth: 1015 });
   const maxWidth950 = useMediaQuery({ maxWidth: 950 });
 
-  const navMenus = useRef([
-    '/',
-    '/new',
-    '/redheads',
-    '/category/imgs',
-    '/category/videos',
-    '/category/gifs',
-    '/categories',
-  ]);
-
   useEffect(() => {
     if (pathName.includes('/categories')) {
       if (maxWidth950) {
@@ -139,11 +130,7 @@ function Menu({
             routeActive: true,
           });
         } else {
-          setBreakMenuActive({
-            active: false,
-            value: 'Página inicial',
-            routeActive: false,
-          });
+          setBreakMenuActive(breakMenuActiveInitalState);
         }
         break;
       }
@@ -155,11 +142,7 @@ function Menu({
             routeActive: true,
           });
         } else {
-          setBreakMenuActive({
-            active: false,
-            value: 'Página inicial',
-            routeActive: false,
-          });
+          setBreakMenuActive(breakMenuActiveInitalState);
         }
         break;
       }
@@ -171,11 +154,7 @@ function Menu({
             routeActive: true,
           });
         } else {
-          setBreakMenuActive({
-            active: false,
-            value: 'Página inicial',
-            routeActive: false,
-          });
+          setBreakMenuActive(breakMenuActiveInitalState);
         }
         break;
       }
@@ -187,11 +166,7 @@ function Menu({
             routeActive: true,
           });
         } else {
-          setBreakMenuActive({
-            active: false,
-            value: 'Página inicial',
-            routeActive: false,
-          });
+          setBreakMenuActive(breakMenuActiveInitalState);
         }
         break;
       }
@@ -203,11 +178,7 @@ function Menu({
             routeActive: true,
           });
         } else {
-          setBreakMenuActive({
-            active: false,
-            value: 'Página inicial',
-            routeActive: false,
-          });
+          setBreakMenuActive(breakMenuActiveInitalState);
         }
         break;
       }
@@ -248,8 +219,10 @@ function Menu({
               setBreakMenuActive(state => ({ ...state, active: false }));
           }}
           className={
-            //  eslint-disable-next-line
-            navMenus.current.some(val => pathName.includes(val)) && breakMenuActive.routeActive
+            (pathName.includes(breakMenuActive.value.toLocaleLowerCase()) ||
+              pathName === '/' ||
+              pathName === '/redheads') &&
+              breakMenuActive.routeActive
               ? 'link-active'
               : ''
           }

@@ -31,12 +31,6 @@ export const Container = styled.nav<TypeTheme>`
         font-size: ${theme.font_size.font_size_1rem};
         transition: background 150ms ease-in-out;
 
-        /* @media (max-width: 1200px) {
-          &[href='/'] {
-            display: none;
-          }
-        } */
-
         &.link-active {
           background-color: ${theme.colors.g_colorGray400};
           color: ${theme.colors.g_colorGray0};

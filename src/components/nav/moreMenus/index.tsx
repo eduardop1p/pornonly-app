@@ -150,10 +150,32 @@ function Menus({
           <path d="M20.97 12a2 2 0 0 1-1.99-2V7.81l-7.07 7.1a2 2 0 1 1-2.83-2.83L16.16 5h-2.17a2 2 0 0 1 0-4H23l-.03 9a2 2 0 0 1-2 2zM6.75 4a1.25 1.25 0 1 1 0 2.5H3.5v14h14v-3.26a1.25 1.25 0 1 1 2.5 0v4.51c0 .69-.56 1.25-1.25 1.25H2.25C1.56 23 1 22.44 1 21.75V5.25C1 4.56 1.56 4 2.25 4z"></path>
         </svg>
       </Link>
-      <Link href="/create-account">
+      <Link
+        href="/create-account"
+        className={pathName === '/create-account' ? 'link-active' : ''}
+        onClick={() => setShowMenus(state => !state)}
+      >
         {isAuth ? 'Criar nova conta' : 'Criar conta'}
+        {pathName === '/create-account' && (
+          <svg height="12" width="12" viewBox="0 0 24 24">
+            <path d="M9.17 21.75.73 12.79c-.97-1.04-.97-2.71 0-3.75a2.403 2.403 0 0 1 3.53 0l4.91 5.22L19.74 3.03c.98-1.04 2.55-1.04 3.53 0 .97 1.03.97 2.71 0 3.74L9.17 21.75z"></path>
+          </svg>
+        )}
       </Link>
-      {!isAuth && <Link href="/login">Login</Link>}
+      {!isAuth && (
+        <Link
+          href="/login"
+          className={pathName === '/login' ? 'link-active' : ''}
+          onClick={() => setShowMenus(state => !state)}
+        >
+          Login
+          {pathName === '/login' && (
+            <svg height="12" width="12" viewBox="0 0 24 24">
+              <path d="M9.17 21.75.73 12.79c-.97-1.04-.97-2.71 0-3.75a2.403 2.403 0 0 1 3.53 0l4.91 5.22L19.74 3.03c.98-1.04 2.55-1.04 3.53 0 .97 1.03.97 2.71 0 3.74L9.17 21.75z"></path>
+            </svg>
+          )}
+        </Link>
+      )}
       {isAuth && <Logout setShowMenus={setShowMenus} />}
     </ContainerMenus>
   );
