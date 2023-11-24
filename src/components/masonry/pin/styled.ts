@@ -66,7 +66,8 @@ export const Container = styled.div<TypeTheme>`
         color: ${theme.colors.g_colorGray300};
         font-weight: ${theme.font_weight.font_weight_600};
         font-size: ${theme.font_size.font_size_0_90rem};
-        width: 100%;
+        max-width: 100%;
+        width: fit-content;
         line-height: 1.2;
         overflow: hidden;
         display: -webkit-box;
@@ -82,7 +83,8 @@ export const Container = styled.div<TypeTheme>`
 
       & > .pin-original-user {
         display: inline-block;
-        width: 100%;
+        max-width: 100%;
+        width: fit-content;
         margin-top: 7px;
         margin-left: -2px;
 
