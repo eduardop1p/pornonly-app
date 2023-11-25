@@ -34,6 +34,13 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
       transition: all 200ms ease-in-out;
       /* break-inside: avoid-column; */
 
+      @media (max-width: 1400px) {
+        padding: 7px;
+      }
+      @media (max-width: 800px) {
+        padding: 6px;
+      }
+
       & > .pin {
         position: relative;
         overflow: hidden;
@@ -66,7 +73,7 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
         text-align: center;
         width: fit-content;
         display: inline-block;
-        margin: 10px auto 8px;
+        margin: 10px auto 4px;
 
         &:hover {
           text-decoration: underline;
@@ -80,11 +87,17 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
         align-items: center;
         justify-content: center;
 
-        & > :not(:last-child) {
-          margin-right: 8px;
+        @media (max-width: 566px) {
+          flex-wrap: wrap;
+          justify-content: left;
+        }
+        @media (max-width: 460px) {
+          flex-wrap: wrap;
+          justify-content: center;
         }
 
         & > a {
+          margin: 4px;
           background-color: ${theme.colors.g_colorGray300};
           color: ${theme.colors.g_colorGray0};
           font-size: ${theme.font_size.font_size_0_90rem};
@@ -93,8 +106,8 @@ export const MasonryContainer = styled.div<TypeTheme & Props>`
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 0 10px;
-          border-radius: 5px;
+          padding: 0 1rem;
+          border-radius: 10px;
           transition: scale 200ms ease-in-out;
 
           &:hover {

@@ -26,6 +26,13 @@ export default function LoadingPin({ children }: { children?: ReactNode }) {
     '#2a0e25',
     '#282535',
     '#f6ead5',
+    '#312110',
+    '#44473b',
+    '#838383',
+    '#656565',
+    '#454545',
+    '#5a4026',
+    '#a9523a',
   ]);
   const indexBgRamdom = useRef(
     Math.floor(Math.random() * backgrounds.current.length)

@@ -29,7 +29,7 @@ export const Container = styled.div<TypeTheme>`
         font-weight: ${theme.font_weight.font_weight_500};
         color: ${theme.colors.g_colorGray300};
         font-size: ${theme.font_size.font_size_1_75rem};
-        margin-bottom: 12px;
+        margin-bottom: 1rem;
       }
 
       & > p {
@@ -52,7 +52,7 @@ export const Container = styled.div<TypeTheme>`
         width: fit-content;
         display: flex;
         align-items: center;
-        margin-top: 1rem;
+        margin-top: 1.1rem;
 
         & > button {
           padding: 8px 12px;
@@ -66,6 +66,10 @@ export const Container = styled.div<TypeTheme>`
           height: 40px;
           cursor: pointer;
           transition: background 100ms ease-in-out;
+        }
+
+        & > :first-child {
+          margin-right: 10px;
           background-color: ${theme.colors.g_colorRed100};
           color: ${theme.colors.g_colorGray0};
 
@@ -74,8 +78,13 @@ export const Container = styled.div<TypeTheme>`
           }
         }
 
-        & > :first-child {
-          margin-right: 10px;
+        & > :last-child {
+          background-color: ${theme.colors.g_colorGray100};
+          color: ${theme.colors.g_colorGray300};
+
+          &:hover {
+            background-color: ${theme.colors.g_colorGray100Hovered};
+          }
         }
       }
     }

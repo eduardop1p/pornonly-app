@@ -60,6 +60,11 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
   };
 
   const handleDawnload = async () => {
+    if (!isAuth) {
+      router.push(`/login?from=${pathName}`);
+      return;
+    }
+
     const link = document.createElement('a');
     link.style.display = 'none';
     link.href = data.url;

@@ -12,7 +12,7 @@ export const ContainerError = styled.div<TypeTheme>`
     display: flex;
     align-items: center;
     justify-content: center;
-    max-width: 300px;
+    max-width: 350px;
     border-radius: 10px;
     padding: 10px;
     background-color: ${theme.colors.g_colorRed100};

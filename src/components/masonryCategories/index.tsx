@@ -24,8 +24,25 @@ interface Props {
 export default function MasonryCategories({ results }: Props) {
   if (typeof window === 'undefined') return;
 
-  const [columnCount] = useState(5);
-  const [columnWidth] = useState((window.innerWidth - 102) / columnCount);
+  const maxWidth1400 = useMediaQuery({ maxWidth: 1400 });
+  const maxWidth1100 = useMediaQuery({ maxWidth: 1100 });
+  const maxWidth800 = useMediaQuery({ maxWidth: 800 });
+  const maxWidth600 = useMediaQuery({ maxWidth: 600 });
+
+  const handleWindowInnerWidth = useCallback(() => {
+    return maxWidth1400 ? (maxWidth1100 ? (maxWidth800 ? 46 : 64) : 78) : 102;
+  }, [maxWidth1400, maxWidth1100, maxWidth800]);
+
+  const columnCount = maxWidth1400
+    ? maxWidth1100
+      ? maxWidth800
+        ? 2
+        : 3
+      : 4
+    : 5;
+
+  const columnWidth =
+    (window.innerWidth - handleWindowInnerWidth()) / columnCount;
   const [stResults, setStResults] = useState(
     results.map(val => ({
       ...val,
@@ -38,27 +55,31 @@ export default function MasonryCategories({ results }: Props) {
     }))
   );
 
+  const handleOnresize = useCallback(() => {
+    const newWindowWidth = window.innerWidth - handleWindowInnerWidth();
+    const newWColumnWidth = newWindowWidth / columnCount;
+    setStResults(state =>
+      state.map(val => ({
+        ...val,
+        newWidth: newWColumnWidth.toFixed(2),
+        newHeight: calHeight({
+          customWidth: +newWColumnWidth.toFixed(2),
+          originalHeight: +val.height,
+          originalWidth: +val.width,
+        }).toFixed(2),
+      }))
+    );
+  }, [columnCount, handleWindowInnerWidth]);
+
   useEffect(() => {
-    const onresize = () => {
-      const newWindowWidth = window.innerWidth - 102;
-      const newWColumnWidth = newWindowWidth / columnCount;
-      setStResults(state =>
-        state.map(val => ({
-          ...val,
-          newWidth: newWColumnWidth.toFixed(2),
-          newHeight: calHeight({
-            customWidth: +newWColumnWidth.toFixed(2),
-            originalHeight: +val.height,
-            originalWidth: +val.width,
-          }).toFixed(2),
-        }))
-      );
-    };
+    handleOnresize();
+  }, [columnCount, handleOnresize]);
 
-    window.addEventListener('resize', onresize);
+  useEffect(() => {
+    window.addEventListener('resize', handleOnresize);
 
-    return () => removeEventListener('resize', onresize);
-  }, [columnCount]);
+    return () => removeEventListener('resize', handleOnresize);
+  }, [columnCount, handleOnresize]);
 
   const handleRemoveLoading = useCallback((element: Element | null) => {
     const loading = element?.querySelector('#loading-pin') as HTMLDivElement;
