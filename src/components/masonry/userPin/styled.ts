@@ -8,7 +8,6 @@ export const Container = styled.div<TypeTheme>`
     align-items: center;
     width: 100%;
 
-
     & > * {
       flex: none;
     }
@@ -35,17 +34,22 @@ export const Container = styled.div<TypeTheme>`
       color: ${theme.colors.g_colorGray400};
     }
 
-    & > h4 {
-      font-size: ${theme.font_size.font_size_0_90rem};
-      font-weight: ${theme.font_weight.font_weight_400};
-      color: ${theme.colors.g_colorGray300};
-      height: 1rem;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      width: calc(100% - 32px);
+    & > .container-username {
       display: flex;
       align-items: center;
+      width: 100%;
+
+      & > h4 {
+        font-size: ${theme.font_size.font_size_0_90rem};
+        font-weight: ${theme.font_weight.font_weight_400};
+        color: ${theme.colors.g_colorGray300};
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: calc(100% - 56px);
+        line-height: 1.5;
+      }
+    }
   `}
 `;
 
@@ -91,6 +95,7 @@ export const ContainerLink = styled.div<TypeTheme>`
         font-size: ${theme.font_size.font_size_0_90rem};
         font-weight: ${theme.font_weight.font_weight_500};
         color: ${theme.colors.g_colorGray300};
+        line-height: 1.5;
       }
 
       & > .publishs-count {

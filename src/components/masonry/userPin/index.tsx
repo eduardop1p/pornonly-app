@@ -43,12 +43,12 @@ export default function UserPin({
           {username?.at(0)?.toUpperCase()}
         </span>
       )}
-      <h4>
-        {username}
+      <div className="container-username">
+        <h4>{username}</h4>
         {isAdmin && (
           <VerifyIcon width={15} height={15} marginLeft="3px" marginTop="2px" />
         )}
-      </h4>
+      </div>
     </Container>
   ) : (
     <Link
