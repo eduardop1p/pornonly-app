@@ -12,7 +12,7 @@ import Masonry from '../masonry';
 import { MidiaResultsType } from '@/app/page';
 import { MidiaType } from '@/app/page';
 import type { MidiaTypeFilterType } from '../userPublishs';
-import { GlobalErrorToastify } from '../form/globalErrorToastify';
+import { GlobalErrorComponent } from '../form/globalErrorComponent';
 import useGlobalError from '@/utils/useGlobalError';
 
 export default function UserSaves({
@@ -38,7 +38,7 @@ export default function UserSaves({
   return (
     <div className={styles['container']}>
       {isLoading && <Loading />}
-      <GlobalErrorToastify errorMsg={msgError} />
+      <GlobalErrorComponent errorMsg={msgError} />
 
       <div className={styles['btns-publishs-or-saves']}>
         {savesResults.length ? (

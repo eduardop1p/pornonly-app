@@ -36,9 +36,9 @@ import {
 } from './styled';
 
 import ErrorMsg from '../errorMsg';
-import { GlobalErrorToastify } from '../globalErrorToastify';
+import { GlobalErrorComponent } from '../globalErrorComponent';
 import useGlobalError from '@/utils/useGlobalError';
-import { GlobalSuccessToastify } from '../globalSuccessToastify';
+import { GlobalSuccessComponent } from '../globalSuccessComponent';
 import useGlobalSuccess from '@/utils/useGlobalSuccess';
 import Loading from '../loading';
 import revalidatePin from '@/services/revalidatePin';
@@ -116,8 +116,8 @@ export default function PublishPin({ token, isAdmin }: Props) {
   return (
     <Container>
       {isLoading && <Loading />}
-      <GlobalErrorToastify errorMsg={msgError} />
-      <GlobalSuccessToastify
+      <GlobalErrorComponent errorMsg={msgError} />
+      <GlobalSuccessComponent
         successMsg={msgSuccess}
       >
         {createdPinCurrent.pinSrc && (
@@ -133,7 +133,7 @@ export default function PublishPin({ token, isAdmin }: Props) {
             height={25}
           />
         )}
-      </GlobalSuccessToastify>
+      </ GlobalSuccessComponent>
 
       <div className="container-created-title">
         <PublishsCreated

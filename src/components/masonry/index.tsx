@@ -14,9 +14,9 @@ import { Container, MasonryContainer } from './styled';
 import { MidiaResultsType } from '@/app/page';
 import ScrollTop from './scrollTop';
 import { MidiaTypeFilterType } from '../userPublishs';
-import { GlobalSuccessToastify } from '../form/globalSuccessToastify';
+import { GlobalSuccessComponent } from '../form/globalSuccessComponent';
 import useGlobalSuccess from '@/utils/useGlobalSuccess';
-import { GlobalErrorToastify } from '../form/globalErrorToastify';
+import { GlobalErrorComponent } from '../form/globalErrorComponent';
 import useGlobalError from '@/utils/useGlobalError';
 import Loading from '../form/loading';
 import Pin from './pin';
@@ -350,8 +350,8 @@ export default function Masonry({
     <Container>
       {currentPage.current > 2 && <ScrollTop />}
       {isLoading && <Loading />}
-      <GlobalErrorToastify errorMsg={msgError} />
-      <GlobalSuccessToastify successMsg={msgSuccess} />
+      <GlobalErrorComponent errorMsg={msgError} />
+      <GlobalSuccessComponent successMsg={msgSuccess} />
       <MasonryContainer id="masonry">
         <InfiniteScroll
           dataLength={stResults.length}

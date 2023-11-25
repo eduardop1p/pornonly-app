@@ -10,9 +10,9 @@ import { ResultsCommentsType, CommentsType } from '@/app/pin/[pinid]/page';
 import UserPinAndComments from './userPinAndComments';
 import AddComments from '@/components/pin/comments/addComments';
 import Loading from '@/components/form/loading';
-import { GlobalErrorToastify } from '@/components/form/globalErrorToastify';
+import { GlobalErrorComponent } from '@/components/form/globalErrorComponent';
 import useGlobalError from '@/utils/useGlobalError';
-import { GlobalSuccessToastify } from '@/components/form/globalSuccessToastify';
+import { GlobalSuccessComponent } from '@/components/form/globalSuccessComponent';
 import useGlobalSuccess from '@/utils/useGlobalSuccess';
 import { MidiaResultsType } from '@/app/page';
 import { useRouter, usePathname } from 'next/navigation';
@@ -146,8 +146,8 @@ export default function Comments({
   return (
     <Container $showComments={showComments}>
       {isLoading && <Loading />}
-      <GlobalSuccessToastify successMsg={msgSuccess} />
-      <GlobalErrorToastify errorMsg={msgError} />
+      <GlobalSuccessComponent successMsg={msgSuccess} />
+      <GlobalErrorComponent errorMsg={msgError} />
       <div className="container-comments-scrollab">
         <div className="title-and-icon">
           <h2>Comentários</h2>

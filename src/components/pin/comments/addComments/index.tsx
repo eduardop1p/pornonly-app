@@ -6,9 +6,9 @@ import type { ReactNode, FormEvent, Dispatch, SetStateAction } from 'react';
 
 import { Container } from './styled';
 import Loading from '@/components/form/loading';
-import { GlobalErrorToastify } from '@/components/form/globalErrorToastify';
+import { GlobalErrorComponent } from '@/components/form/globalErrorComponent';
 import useGlobalError from '@/utils/useGlobalError';
-import { GlobalSuccessToastify } from '@/components/form/globalSuccessToastify';
+import { GlobalSuccessComponent } from '@/components/form/globalSuccessComponent';
 import useGlobalSuccess from '@/utils/useGlobalSuccess';
 import { ResultsCommentsType } from '@/app/pin/[pinid]/page';
 
@@ -85,8 +85,8 @@ export default function AddComments({
   return (
     <Container onSubmit={handleAddCommentInPin}>
       {isLoading && <Loading />}
-      <GlobalSuccessToastify successMsg={msgSuccess} />
-      <GlobalErrorToastify errorMsg={msgError} />
+      <GlobalSuccessComponent successMsg={msgSuccess} />
+      <GlobalErrorComponent errorMsg={msgError} />
       {children}
       <input
         name="comment"

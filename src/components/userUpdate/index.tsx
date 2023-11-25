@@ -10,7 +10,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import Loading from '../form/loading';
 import Input from './input';
 import ShowPassword from '../form/showPassword';
-import { GlobalErrorToastify } from '../form/globalErrorToastify';
+import { GlobalErrorComponent } from '../form/globalErrorComponent';
 import useGlobalError from '@/utils/useGlobalError';
 import FallbackUserUpdate from './fallbackUserUpdate';
 import revalidatePin from '@/services/revalidatePin';
@@ -233,7 +233,7 @@ export default function UserUpdate({
   return (
     <Container>
       {isLoading && <Loading />}
-      <GlobalErrorToastify errorMsg={msgError} />
+      <GlobalErrorComponent errorMsg={msgError} />
       {sendUserUpdate && (
         <FallbackUserUpdate
           setSendUserUpdate={setSendUserUpdate}

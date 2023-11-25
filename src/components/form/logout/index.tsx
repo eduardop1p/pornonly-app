@@ -7,7 +7,7 @@ import type { Dispatch, SetStateAction } from 'react';
 import styles from './styles.module.css';
 
 import Loading from '../loading';
-import { GlobalErrorToastify } from '../globalErrorToastify';
+import { GlobalErrorComponent } from '../globalErrorComponent';
 import useGlobalErro from '@/utils/useGlobalError';
 
 export default function Logout({
@@ -46,7 +46,7 @@ export default function Logout({
   return (
     <>
       {isLoading && <Loading />}
-      <GlobalErrorToastify errorMsg={msgError} />
+      <GlobalErrorComponent errorMsg={msgError} />
       <button type="button" className={styles.logout} onClick={handleLogout}>
         Sair
       </button>

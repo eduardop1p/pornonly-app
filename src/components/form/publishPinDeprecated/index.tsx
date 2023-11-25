@@ -14,9 +14,9 @@ import VideoSnapshot from 'video-snapshot';
 import { Container } from './styled';
 
 import ErrorMsg from '../errorMsg';
-import { GlobalErrorToastify } from '../globalErrorToastify';
+import { GlobalErrorComponent } from '../globalErrorComponent';
 import useGlobalError from '@/utils/useGlobalError';
-import { GlobalSuccessToastify } from '../globalSuccessToastify';
+import { GlobalSuccessComponent } from '../globalSuccessComponent';
 import useGlobalSuccess from '@/utils/useGlobalSuccess';
 import Loading from '../loading';
 import WaitingPin from '@/components/masonry/waitingPin';
@@ -249,8 +249,8 @@ export default function PublishPin({
   return (
     <Container>
       {isLoading && <Loading />}
-      <GlobalErrorToastify errorMsg={msgError} />
-      <GlobalSuccessToastify successMsg={msgSuccess}>
+      <GlobalErrorComponent errorMsg={msgError} />
+      <GlobalSuccessComponent successMsg={msgSuccess}>
         {fileType.includes('video') && (
           <video src={fileScrRef.current} controls={false}></video>
         )}
@@ -263,7 +263,7 @@ export default function PublishPin({
             height={25}
           />
         )}
-      </GlobalSuccessToastify>
+      </GlobalSuccessComponent>
 
       <form onSubmit={handleSubmit(handleSubmitFile)}>
         <div className="publish-and-btn">

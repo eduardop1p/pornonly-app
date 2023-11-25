@@ -8,8 +8,8 @@ import { get } from 'lodash';
 import { Container } from './styled';
 import Loading from '../form/loading';
 import useGlobalError from '@/utils/useGlobalError';
-import { GlobalErrorToastify } from '../form/globalErrorToastify';
-import { GlobalSuccessToastify } from '../form/globalSuccessToastify';
+import { GlobalErrorComponent } from '../form/globalErrorComponent';
+import { GlobalSuccessComponent } from '../form/globalSuccessComponent';
 import useGlobalSuccess from '@/utils/useGlobalSuccess';
 import { ProfilePhotoType } from '../masonry/userPin';
 
@@ -132,10 +132,8 @@ export default function UserProfile({ children, token, photo }: Props) {
   return (
     <Container>
       {isLoading && <Loading />}
-      <div className="errors-success">
-        <GlobalErrorToastify errorMsg={msgError} />
-        <GlobalSuccessToastify successMsg={msgSuccess} />
-      </div>
+      <GlobalErrorComponent errorMsg={msgError} />
+      <GlobalSuccessComponent successMsg={msgSuccess} />
 
       <div
         className="user-children"

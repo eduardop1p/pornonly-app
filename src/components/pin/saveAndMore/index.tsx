@@ -8,9 +8,9 @@ import Image from 'next/image';
 import { Container, ContainerFullScreen } from './styled';
 import Loading from '../../form/loading';
 import { default as LoadingFullScreen } from '../loading';
-import { GlobalErrorToastify } from '@/components/form/globalErrorToastify';
+import { GlobalErrorComponent } from '@/components/form/globalErrorComponent';
 import useGlobalError from '@/utils/useGlobalError';
-import { GlobalSuccessToastify } from '@/components/form/globalSuccessToastify';
+import { GlobalSuccessComponent } from '@/components/form/globalSuccessComponent';
 import useGlobalSuccess from '@/utils/useGlobalSuccess';
 import revalidatePin from '@/services/revalidatePin';
 
@@ -192,8 +192,8 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
         </ContainerFullScreen>
       )}
       {isLoading && <Loading />}
-      <GlobalErrorToastify errorMsg={msgError} />
-      <GlobalSuccessToastify successMsg={msgSuccess}>
+      <GlobalErrorComponent errorMsg={msgError} />
+      <GlobalSuccessComponent successMsg={msgSuccess}>
         {data.midiaType === 'video' ? (
           <video src={data.url} controls={false} preload="auto"></video>
         ) : (
@@ -205,7 +205,7 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
             height={25}
           />
         )}
-      </GlobalSuccessToastify>
+      </GlobalSuccessComponent>
       <div className="container-more-aptions-and-compress">
         <div
           className="more-options"

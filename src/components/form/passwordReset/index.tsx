@@ -9,9 +9,9 @@ import { FormContainer } from '../formContainer/styles';
 import Input from './input';
 import Loading from '../loading';
 import Logo from '../../logo';
-import { GlobalSuccessToastify } from '../globalSuccessToastify';
+import { GlobalSuccessComponent } from '../globalSuccessComponent';
 import useGlobalSuccess from '@/utils/useGlobalSuccess';
-import { GlobalErrorToastify } from '../globalErrorToastify';
+import { GlobalErrorComponent } from '../globalErrorComponent';
 import useGlobalError from '@/utils/useGlobalError';
 import FallbackPassworReset from './fallbackPasswordReset';
 
@@ -85,8 +85,8 @@ export default function PasswordReset() {
         />
       )}
       {isLoading && <Loading />}
-      <GlobalErrorToastify errorMsg={msgError} />
-      <GlobalSuccessToastify successMsg={msgSuccess} />
+      <GlobalErrorComponent errorMsg={msgError} />
+      <GlobalSuccessComponent successMsg={msgSuccess} />
       <h1 className="title-password-reset">Vamos encontrar sua conta</h1>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <Input

@@ -17,7 +17,7 @@ import Input from './input';
 import ShowPassword from '../showPassword';
 import useGlobalError from '@/utils/useGlobalError';
 import useGlobalContext from '@/utils/useGlobalContext';
-import { GlobalErrorToastify } from '../globalErrorToastify';
+import { GlobalErrorComponent } from '../globalErrorComponent';
 import { dataSuccess } from '@/utils/appContextUser/actions';
 
 const ZodCreateAccountSchema = z
@@ -151,7 +151,7 @@ export default function CreateAccount({ isAuth }: { isAuth: boolean }) {
     <FormContainer>
       <Logo />
       {isLoading && <Loading />}
-      <GlobalErrorToastify errorMsg={msgError} />
+      <GlobalErrorComponent errorMsg={msgError} />
       <h1 className="title-login">Bem vind@ a Pornonly</h1>
       <p className={styles.param}>
         Crie uma conta grátes e aproveite o máximo do nosso site

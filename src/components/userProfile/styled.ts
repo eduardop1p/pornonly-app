@@ -6,12 +6,6 @@ export const Container = styled.div<TypeTheme>`
   ${({ theme }) => css`
     cursor: default;
 
-    & > .errors-success {
-      bottom: 1.5rem;
-      position: absolute;
-      z-index: 8;
-    }
-
     & > .user-children {
       cursor: pointer;
     }

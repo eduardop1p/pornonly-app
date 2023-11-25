@@ -19,9 +19,9 @@ import styles from './styles.module.css';
 import Masonry from '../masonry';
 import { MidiaResultsType } from '@/app/page';
 import Loading from '../form/loading';
-import { GlobalErrorToastify } from '../form/globalErrorToastify';
+import { GlobalErrorComponent } from '../form/globalErrorComponent';
 import useGlobalError from '@/utils/useGlobalError';
-import { GlobalSuccessToastify } from '../form/globalSuccessToastify';
+import { GlobalSuccessComponent } from '../form/globalSuccessComponent';
 import useGlobalSuccess from '@/utils/useGlobalSuccess';
 import revalidatePin from '@/services/revalidatePin';
 import { MidiaType } from '@/app/page';
@@ -141,8 +141,8 @@ export default function UserPublishs({
   return (
     <div className={styles['container']}>
       {isLoading && <Loading />}
-      <GlobalSuccessToastify successMsg={msgSuccess} />
-      <GlobalErrorToastify errorMsg={msgError} />
+      <GlobalSuccessComponent successMsg={msgSuccess} />
+      <GlobalErrorComponent errorMsg={msgError} />
       <div className={styles['btns-publishs-or-saves']}>
         {publishsResults.length ? (
           <div className={styles['container-options']}>

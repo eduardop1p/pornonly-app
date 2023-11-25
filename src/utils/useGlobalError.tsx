@@ -14,7 +14,7 @@ export default function useGlobalError() {
       setMsgError(undefined);
       clearTimeout(timeId.current);
       timeId.current = undefined;
-    }, 6000);
+    }, 4000);
   };
 
   return { msgError, handleError };

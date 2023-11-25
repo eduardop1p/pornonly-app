@@ -10,12 +10,12 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 import { FormContainer } from '../formContainer/styles';
 import Loading from '../loading';
-import { GlobalErrorToastify } from '../globalErrorToastify';
+import { GlobalErrorComponent } from '../globalErrorComponent';
 import Logo from '../../logo';
 import Input from './input';
 import ShowPassword from '../showPassword';
 import useGlobalError from '@/utils/useGlobalError';
-import { GlobalSuccessToastify } from '../globalSuccessToastify';
+import { GlobalSuccessComponent } from '../globalSuccessComponent';
 import useGlobalSuccess from '@/utils/useGlobalSuccess';
 import useGlobalContext from '@/utils/useGlobalContext';
 import { dataFailure } from '@/utils/appContextUser/actions';
@@ -97,8 +97,8 @@ export default function Login() {
     <FormContainer>
       <Logo />
       {isLoading && <Loading />}
-      <GlobalErrorToastify errorMsg={msgError} />
-      <GlobalSuccessToastify successMsg={msgSuccess} />
+      <GlobalErrorComponent errorMsg={msgError} />
+      <GlobalSuccessComponent successMsg={msgSuccess} />
       <h1 className="title-login">Bem vind@ a Pornonly</h1>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <Input
