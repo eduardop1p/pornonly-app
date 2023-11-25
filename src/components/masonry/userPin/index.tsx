@@ -5,6 +5,8 @@ import Link from 'next/link';
 
 import { Container, ContainerLink } from './styled';
 
+import VerifyIcon from '@/components/verify';
+
 export interface UserIdResultsType {
   _id?: string;
   username: string;
@@ -12,6 +14,7 @@ export interface UserIdResultsType {
   midia?: string[];
   saves?: string[];
   email?: string;
+  isAdmin: boolean;
 }
 
 export interface ProfilePhotoType {
@@ -23,6 +26,7 @@ export default function UserPin({
   username,
   profilePhoto,
   midia,
+  isAdmin,
 }: UserIdResultsType) {
   return !midia ? (
     <Container>
@@ -39,7 +43,12 @@ export default function UserPin({
           {username?.at(0)?.toUpperCase()}
         </span>
       )}
-      <h4>{username}</h4>
+      <h4>
+        {username}
+        {isAdmin && (
+          <VerifyIcon width={15} height={15} marginLeft="5px" marginTop="2px" />
+        )}
+      </h4>
     </Container>
   ) : (
     <Link
@@ -61,7 +70,17 @@ export default function UserPin({
           </span>
         )}
         <div>
-          <h4>{username}</h4>
+          <h4>
+            {username}
+            {isAdmin && (
+              <VerifyIcon
+                width={15}
+                height={15}
+                marginLeft="5px"
+                marginTop="2px"
+              />
+            )}
+          </h4>
           <span className="publishs-count ">
             {midia.length === 1
               ? `${midia.length} publicação`

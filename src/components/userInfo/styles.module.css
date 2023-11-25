@@ -44,6 +44,8 @@
   font-size: var(--font-size-2_5rem);
   font-weight: var(--font-weight-500);
   color: var(--g-colorGray300);
+  display: flex;
+  align-items: center;
 }
 .user-email{
   font-size: var(--font-size-0_90rem);

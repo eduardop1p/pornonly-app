@@ -195,7 +195,7 @@ export default function Comments({
                   style={{
                     textAlign: 'center',
                     fontSize: '15px',
-                    color: 'var(--g-color5f5f5f)',
+                    color: 'var(--g-colorGray300)',
                     fontWeight: 400,
                     marginTop: '-8px',
                     marginBottom: '5px',

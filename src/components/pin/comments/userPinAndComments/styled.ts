@@ -75,6 +75,8 @@ export const ContainerComment = styled.div<TypeTheme & Props>`
           & > a {
             color: inherit;
             font-weight: inherit;
+            display: flex;
+            align-items: center;
           }
         }
 

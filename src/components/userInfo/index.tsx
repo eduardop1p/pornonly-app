@@ -7,6 +7,7 @@ import styles from './styles.module.css';
 
 import UserProfile from '../userProfile';
 import { ProfilePhotoType } from '../masonry/userPin';
+import VerifyIcon from '../verify';
 
 export default function UserInfo({
   isUniqueUser,
@@ -16,6 +17,7 @@ export default function UserInfo({
   email,
   userMidiaResultsLength,
   userSavesResultsLength,
+  isAdmin,
 }: {
   isUniqueUser: boolean;
   token: string;
@@ -24,6 +26,7 @@ export default function UserInfo({
   email?: string;
   userMidiaResultsLength: number;
   userSavesResultsLength: number;
+  isAdmin: boolean;
 }) {
   return (
     <div className={styles['user-info']}>
@@ -67,7 +70,12 @@ export default function UserInfo({
         </div>
       )}
 
-      <h1 className={styles['user-username']}>{username}</h1>
+      <h1 className={styles['user-username']}>
+        {username}
+        {isAdmin && (
+          <VerifyIcon width={18} height={18} marginLeft="8px" marginTop="8px" />
+        )}
+      </h1>
       {isUniqueUser && <span className={styles['user-email']}>{email}</span>}
       {/* <div className={styles['user-createin']}>
     Conta ativa desde: {createIn}

@@ -194,6 +194,7 @@ export default async function Page({ params }: Props) {
                 profilePhoto={dataPin.userId.profilePhoto}
                 username={dataPin.userId.username}
                 midia={dataPin.userId.midia}
+                isAdmin={dataPin.userId.isAdmin}
               />
             </div>
           </div>

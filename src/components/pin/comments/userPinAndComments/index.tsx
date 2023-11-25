@@ -25,6 +25,7 @@ import {
   ResponsesCommentsType,
 } from '@/app/pin/[pinid]/page';
 import dateCommentsTranslate from '@/config/dateCommentsTranslate';
+import VerifyIcon from '@/components/verify';
 
 interface Props {
   token: string;
@@ -428,6 +429,14 @@ function UserComment({
           <h4 className="comment-username">
             <Link href={`/${comment.userId.username}`}>
               {comment.userId.username}
+              {comment.userId.isAdmin && (
+                <VerifyIcon
+                  width={15}
+                  height={15}
+                  marginLeft="3px"
+                  marginTop="2px"
+                />
+              )}
             </Link>
           </h4>
           <div className="comment">

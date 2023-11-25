@@ -44,6 +44,8 @@ export const Container = styled.div<TypeTheme>`
       text-overflow: ellipsis;
       white-space: nowrap;
       width: calc(100% - 32px);
+      display: flex;
+      align-items: center;
   `}
 `;
 
@@ -84,7 +86,8 @@ export const ContainerLink = styled.div<TypeTheme>`
       flex-direction: column;
 
       & > h4 {
-        display: inline-block;
+        display: flex;
+        align-items: center;
         font-size: ${theme.font_size.font_size_0_90rem};
         font-weight: ${theme.font_weight.font_weight_500};
         color: ${theme.colors.g_colorGray300};
