@@ -29,6 +29,7 @@
   justify-content: center;
   align-items: center;
   position: relative;
+  padding: 0 1rem;
 }
 
 .container-options{
@@ -168,4 +169,10 @@
 }
 .btn-midiatype-option[data-btn-midiatype-active='true']{
   background-color: var(--g-colore9e9e9);
+}
+
+@media (max-width: 550px) {
+  .btns-publishs-or-saves{
+    justify-content: right;
+  }
 }

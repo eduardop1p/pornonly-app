@@ -121,7 +121,7 @@ export default function UserPublishs({
   useEffect(() => {
     const masonry = document.body.querySelector('#masonry') as HTMLDivElement;
     if (pinSelectMode && stPublishsResults.length && masonry) {
-      masonry.style.scale = '0.95';
+      masonry.style.scale = '0.98';
       handleAddSelectDiv();
     } else if (stPublishsResults.length && masonry) {
       masonry.style.scale = '1';

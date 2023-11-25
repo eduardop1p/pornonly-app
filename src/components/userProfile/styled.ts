@@ -28,13 +28,18 @@ export const Container = styled.div<TypeTheme>`
 
       & > .profile {
         background-color: ${theme.colors.g_colorGray0};
-        width: 540px;
+        max-width: 540px;
+        width: calc(100% - 10rem);
         border-radius: 1rem;
         /* height: 500px; */
         padding: 2rem;
         display: flex;
         flex-direction: column;
         align-items: center;
+
+        @media (max-width: 550px) {
+          width: calc(100% - 5rem);
+        }
 
         & > h1 {
           font-weight: ${theme.font_weight.font_weight_500};
@@ -96,6 +101,10 @@ export const Container = styled.div<TypeTheme>`
             border-radius: 24px;
             cursor: pointer;
             transition: background 150ms ease-in-out;
+
+            @media (max-width: 550px) {
+              width: 100px;
+            }
           }
 
           & > .profile-update {
