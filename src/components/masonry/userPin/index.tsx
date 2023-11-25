@@ -46,7 +46,7 @@ export default function UserPin({
       <h4>
         {username}
         {isAdmin && (
-          <VerifyIcon width={15} height={15} marginLeft="5px" marginTop="2px" />
+          <VerifyIcon width={15} height={15} marginLeft="3px" marginTop="2px" />
         )}
       </h4>
     </Container>
@@ -76,7 +76,7 @@ export default function UserPin({
               <VerifyIcon
                 width={15}
                 height={15}
-                marginLeft="5px"
+                marginLeft="3px"
                 marginTop="2px"
               />
             )}
