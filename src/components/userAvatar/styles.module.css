@@ -9,7 +9,7 @@
   transition: box-shadow 200ms ease-in-out;
 }
 .container:not(.container-no-link):hover{
-  box-shadow: 0 0 0 4px var(--g-colore9e9e9);;
+  box-shadow: 0 0 0 5px var(--g-colore9e9e9);;
 }
 .container-profile-link{
   display: flex;

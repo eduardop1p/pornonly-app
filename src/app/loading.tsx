@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
 import Box from '@mui/material/Box';
@@ -8,9 +9,9 @@ import styles from './page.module.css';
 export default function Loading() {
   return (
     <>
-      <Box sx={{ width: '100%', position: 'fixed', top: 0, zIndex: 10 }}>
+      {/* <Box sx={{ width: '100%', position: 'fixed', top: 0, zIndex: 10 }}>
         <LinearProgress color="error" />
-      </Box>
+      </Box> */}
 
       <div className={styles['container-loading']}>
         <div className={styles['icon-container']}>

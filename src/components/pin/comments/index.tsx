@@ -55,6 +55,8 @@ export default function Comments({
   let currentPage = useRef(1);
   const refCommentsAndUsers = useRef<HTMLDivElement | null>(null);
 
+  const newDataPin = dataPin;
+
   useEffect(() => {
     const containerCommentsHeight = document.querySelector(
       '#container-comments'
@@ -77,11 +79,10 @@ export default function Comments({
 
     try {
       setIsLikePin(true);
-      setStDataPin(state => {
-        state.likes.likes += 1;
-        state.likes.users.push(userId as string);
-        return state;
-      });
+
+      newDataPin.likes.likes += 1;
+      newDataPin.likes.users.push(userId as string);
+      setStDataPin(newDataPin);
       const res = await fetch(
         // eslint-disable-next-line
         `${process.env.NEXT_PUBLIC_URL_API}/midia/like-in-comment/${stDataPin._id}`,
@@ -97,11 +98,11 @@ export default function Comments({
       // router.refresh();
     } catch (err) {
       setIsLikePin(false);
-      setStDataPin(state => {
-        state.likes.likes -= 1;
-        state.likes.users = state.likes.users.filter(value => value != userId);
-        return state;
-      });
+      newDataPin.likes.likes -= 1;
+      newDataPin.likes.users = newDataPin.likes.users.filter(
+        value => value != userId
+      );
+      setStDataPin(newDataPin);
       handleError('Erro interno no servidor');
     }
   };
@@ -114,11 +115,11 @@ export default function Comments({
 
     try {
       setIsLikePin(false);
-      setStDataPin(state => {
-        state.likes.likes -= 1;
-        state.likes.users = state.likes.users.filter(value => value != userId);
-        return state;
-      });
+      newDataPin.likes.likes -= 1;
+      newDataPin.likes.users = newDataPin.likes.users.filter(
+        value => value != userId
+      );
+      setStDataPin(newDataPin);
       const res = await fetch(
         // eslint-disable-next-line
         `${process.env.NEXT_PUBLIC_URL_API}/midia/unclick-in-comment/${stDataPin._id}`,
@@ -134,11 +135,9 @@ export default function Comments({
       // router.refresh();
     } catch (err) {
       setIsLikePin(true);
-      setStDataPin(state => {
-        state.likes.likes += 1;
-        state.likes.users.push(userId as string);
-        return state;
-      });
+      newDataPin.likes.likes += 1;
+      newDataPin.likes.users.push(userId as string);
+      setStDataPin(newDataPin);
       handleError('Erro interno no servidor');
     }
   };
@@ -212,6 +211,7 @@ export default function Comments({
                     isAuth={isAuth}
                     userId={userId}
                     setStResultsComments={setStResultsComments}
+                    stResultsComments={stResultsComments}
                     handleError={handleError}
                     handleSuccess={handleSuccess}
                     isLoading={isLoading}

@@ -102,6 +102,11 @@ export const ContainerComment = styled.div<TypeTheme & Props>`
             height: fit-content;
             width: fit-content;
             background-color: transparent;
+
+            /* &:hover {
+              text-decoration-line: underline;
+              text-decoration-thickness: 1px;
+            } */
           }
         }
       }

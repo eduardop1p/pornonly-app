@@ -33,6 +33,7 @@ interface Props {
   comment: ResultsCommentsType;
   userId: any;
   setStResultsComments: Dispatch<SetStateAction<ResultsCommentsType[]>>;
+  stResultsComments: ResultsCommentsType[];
   handleError(msg: string): void;
   handleSuccess(msg: string): void;
   isLoading: boolean;
@@ -48,6 +49,7 @@ export default function UserPinAndComments({
   comment,
   userId,
   setStResultsComments,
+  stResultsComments,
   handleError,
   handleSuccess,
   isLoading,
@@ -63,6 +65,7 @@ export default function UserPinAndComments({
   const [showResponseCommentParent, setShowResponseCommentParent] =
     useState(false);
   const [userNameResponse, setUserNameResponse] = useState('');
+  const newStResultsComments = stResultsComments;
 
   const handleAddResponse = async (commentValue: string) => {
     if (!commentValue || isLoading) return;
@@ -85,17 +88,15 @@ export default function UserPinAndComments({
           },
         }
       );
-      const jsonData = await res.json();
+      const data = await res.json();
       if (!res.ok) {
-        handleError(jsonData.error as string);
+        handleError(data.error as string);
         return;
       }
       handleSuccess('Resposta foi adicionada');
+      newStResultsComments[parentCommentIndex].responses.push(data);
+      setStResultsComments(newStResultsComments);
       setAllCommentsInPin(state => (state += 1));
-      setStResultsComments(state => {
-        state[parentCommentIndex].responses.push(jsonData);
-        return state;
-      });
       // router.refresh();
     } catch (err) {
       // console.log(err);
@@ -118,6 +119,7 @@ export default function UserPinAndComments({
           isLoading={isLoading}
           setIsLoading={setIsLoading}
           setStResultsComments={setStResultsComments}
+          newStResultsComments={newStResultsComments}
           parentCommentIndex={parentCommentIndex}
           parentCommentId={comment._id}
           setShowResponseCommentParent={setShowResponseCommentParent}
@@ -161,6 +163,7 @@ export default function UserPinAndComments({
                 parentCommentId={comment._id}
                 parentCommentIndex={parentCommentIndex}
                 setStResultsComments={setStResultsComments}
+                newStResultsComments={newStResultsComments}
                 responseIndex={index}
                 setShowResponseComment={setShowResponseComment}
                 setUserNameResponse={setUserNameResponse}
@@ -210,6 +213,7 @@ interface UserCommentType {
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   parentCommentId: string;
   setStResultsComments: Dispatch<SetStateAction<ResultsCommentsType[]>>;
+  newStResultsComments: ResultsCommentsType[];
   parentCommentIndex: number;
   setShowResponseComment: Dispatch<SetStateAction<boolean>>;
   setShowResponseCommentParent: Dispatch<SetStateAction<boolean>>;
@@ -229,6 +233,7 @@ function UserComment({
   setIsLoading,
   parentCommentId,
   setStResultsComments,
+  newStResultsComments,
   parentCommentIndex,
   responseIndex,
   setShowResponseComment,
@@ -266,19 +271,18 @@ function UserComment({
         }
       );
       if (!res.ok) {
-        const jsonData = await res.json();
-        handleError(jsonData.error as string);
+        const data = await res.json();
+        handleError(data.error as string);
         return;
       }
       handleSuccess('Comentário foi excluido');
       setAllCommentsInPin(state => (state -= 1));
       if (typeof responseIndex !== 'undefined') {
-        setStResultsComments(state => {
-          state[parentCommentIndex].responses = state[
-            parentCommentIndex
-          ].responses.filter(v => v._id != comment._id);
-          return state;
-        });
+        const responses = newStResultsComments[parentCommentIndex].responses;
+        newStResultsComments[parentCommentIndex].responses = responses.filter(
+          v => v._id != comment._id
+        );
+        setStResultsComments(newStResultsComments);
       }
       setStResultsComments(state =>
         state.filter(value => value._id != comment._id)
@@ -294,40 +298,38 @@ function UserComment({
 
   const handleSetLike = () => {
     if (typeof responseIndex !== 'undefined') {
-      setStResultsComments(state => {
-        state[parentCommentIndex].responses[responseIndex].likes.likes += 1;
-        state[parentCommentIndex].responses[responseIndex].likes.users.push(
-          userId
-        );
-        return state;
-      });
+      newStResultsComments[parentCommentIndex].responses[
+        responseIndex
+      ].likes.likes += 1;
+      newStResultsComments[parentCommentIndex].responses[
+        responseIndex
+      ].likes.users.push(userId);
+      setStResultsComments(newStResultsComments);
       return;
     }
-    setStResultsComments(state => {
-      state[parentCommentIndex].likes.likes += 1;
-      state[parentCommentIndex].likes.users.push(userId);
-      return state;
-    });
+    newStResultsComments[parentCommentIndex].likes.likes += 1;
+    newStResultsComments[parentCommentIndex].likes.users.push(userId);
+    setStResultsComments(newStResultsComments);
   };
 
   const handleSetUnClick = () => {
     if (parentCommentId && typeof responseIndex !== 'undefined') {
-      setStResultsComments(state => {
-        state[parentCommentIndex].responses[responseIndex].likes.likes -= 1;
-        state[parentCommentIndex].responses[responseIndex].likes.users = state[
-          parentCommentIndex
-        ].responses[responseIndex].likes.users.filter(value => value != userId);
-        return state;
-      });
+      newStResultsComments[parentCommentIndex].responses[
+        responseIndex
+      ].likes.likes -= 1;
+      newStResultsComments[parentCommentIndex].responses[
+        responseIndex
+      ].likes.users = newStResultsComments[parentCommentIndex].responses[
+        responseIndex
+      ].likes.users.filter(value => value != userId);
+      setStResultsComments(newStResultsComments);
       return;
     }
-    setStResultsComments(state => {
-      state[parentCommentIndex].likes.likes -= 1;
-      state[parentCommentIndex].likes.users = state[
-        parentCommentIndex
-      ].likes.users.filter(value => value != userId);
-      return state;
-    });
+    newStResultsComments[parentCommentIndex].likes.likes -= 1;
+    newStResultsComments[parentCommentIndex].likes.users = newStResultsComments[
+      parentCommentIndex
+    ].likes.users.filter(value => value != userId);
+    setStResultsComments(newStResultsComments);
   };
 
   const handleLikeComment = async () => {
