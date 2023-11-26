@@ -5,7 +5,7 @@ export const FormContainer = styled.div<TypeTheme>`
   ${({ theme }) => css`
     margin: 7.5rem auto 3rem;
     max-width: 700px;
-    min-height: 500px;
+    width: calc(100% - 4rem);
     padding: 2rem 1rem;
     border-radius: 2rem;
     /* box-shadow: ${theme.box_shadow.box_shadow_01}; */
@@ -16,6 +16,10 @@ export const FormContainer = styled.div<TypeTheme>`
     align-items: center;
     position: relative;
 
+    @media (max-width: 480px) {
+      margin: 6.5rem auto 3rem;
+    }
+
     & > :not(:last-child) {
       margin-bottom: 1rem;
     }
@@ -24,12 +28,19 @@ export const FormContainer = styled.div<TypeTheme>`
       color: ${theme.colors.g_colorGray333333};
       font-size: ${theme.font_size.font_size_2rem};
       font-weight: ${theme.font_weight.font_weight_600};
+      text-align: center;
     }
 
     & > form {
-      width: calc(100% - 12rem);
+      width: calc(100% - 10rem);
       margin-top: 1rem;
-      min-width: 240px;
+
+      @media (max-width: 650px) {
+        width: calc(100% - 5rem);
+      }
+      @media (max-width: 480px) {
+        width: calc(100% - 2.5rem);
+      }
 
       & > * {
         margin-bottom: 14px;

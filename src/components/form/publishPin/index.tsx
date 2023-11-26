@@ -329,6 +329,8 @@ const NewPin = forwardRef(
     const handleChangeFile = async (event: ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.item(0);
       if (!file) return;
+      handleSuccess('Pin enviado para análise aguarde');
+
 
       const maxFileSize = 500 * 1024 * 1024;
       // console.log(`${size}MB`);

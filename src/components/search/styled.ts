@@ -6,7 +6,7 @@ export const Container = styled.form<TypeTheme>`
     min-width: 260px;
     width: 100%;
     position: relative;
-    margin: 0 10px;
+    margin: 0 5px;
     background-color: ${theme.colors.g_colore9e9e9};
     display: flex;
     align-items: center;
@@ -127,7 +127,7 @@ export const ContainerBtn = styled.button<TypeTheme>`
     width: 100%;
     border: none;
     position: relative;
-    margin: 0 10px;
+    margin: 0 5px;
     background-color: ${theme.colors.g_colore9e9e9};
     display: flex;
     align-items: center;

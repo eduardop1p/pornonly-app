@@ -6,7 +6,7 @@ export const Container = styled.nav<TypeTheme>`
   ${({ theme }) => css`
     display: flex;
     align-items: center;
-    margin-left: 12px;
+    margin-left: 10px;
     width: 100%;
     position: relative;
 
@@ -51,7 +51,7 @@ export const Container = styled.nav<TypeTheme>`
       }
 
       & > :not(:last-child) {
-        margin-right: 10px;
+        margin-right: 5px;
       }
 
       & > button {
@@ -68,7 +68,7 @@ export const Container = styled.nav<TypeTheme>`
       }
 
       & > :not(:last-child) {
-        margin-right: 10px;
+        margin-right: 5px;
       }
 
       & > a {
@@ -129,7 +129,7 @@ export const ContainerArrowMore = styled.div<TypeTheme>`
     display: flex;
     align-items: center;
     cursor: pointer;
-    margin-left: 5px;
+    margin: 0 3px;
 
     & > span {
       color: ${theme.colors.g_colorGray300};

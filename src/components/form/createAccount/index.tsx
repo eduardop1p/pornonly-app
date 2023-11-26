@@ -152,7 +152,7 @@ export default function CreateAccount({ isAuth }: { isAuth: boolean }) {
       <Logo />
       {isLoading && <Loading />}
       <GlobalErrorComponent errorMsg={msgError} />
-      <h1 className="title-login">Bem vind@ a Pornonly</h1>
+      <h1>Bem vind@ a Pornonly</h1>
       <p className={styles.param}>
         Crie uma conta grátes e aproveite o máximo do nosso site
       </p>
