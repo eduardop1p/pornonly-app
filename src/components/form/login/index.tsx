@@ -79,9 +79,9 @@ export default function Login() {
         setError(jsonResponse.type, { message: jsonResponse.error });
         return;
       }
-      router.refresh(); // usar router.refresh() para atualizar os estados do react no client, esse refresh não irar carregar a pagina
       const from = searchParams.get('from');
       from ? router.push(from as string) : router.push('/');
+      router.refresh(); // usar router.refresh() para atualizar os estados do react no client, esse refresh não irar carregar a pagina
     } catch (err) {
       handleError('Erro interno no servidor');
     } finally {

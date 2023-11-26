@@ -35,8 +35,8 @@ export default function Logout({
         handleError(dataJson.error);
         return;
       }
-      router.refresh();
       router.push('/login');
+      router.refresh();
     } catch {
       handleError('O logout falhou. Tente novalmente');
     } finally {

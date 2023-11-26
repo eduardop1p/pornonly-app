@@ -134,8 +134,8 @@ export default function CreateAccount({ isAuth }: { isAuth: boolean }) {
         router.push('/login');
         return;
       }
-      router.refresh();
       router.push('/');
+      router.refresh();
     } catch (err) {
       handleError('Erro interno no servidor');
     } finally {

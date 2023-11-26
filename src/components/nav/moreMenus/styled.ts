@@ -4,7 +4,7 @@ import { TypeTheme } from '@/utils/theme/myTheme';
 
 export const Container = styled.div<TypeTheme>`
   ${({ theme }) => css`
-    margin-left: 7px;
+    margin-left: 5px;
     position: relative;
 
     @media (max-width: 500px) {

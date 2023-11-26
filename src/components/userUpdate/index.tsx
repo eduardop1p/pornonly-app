@@ -185,8 +185,8 @@ export default function UserUpdate({
           return;
         }
         await revalidatePin();
-        router.refresh();
         router.push('/login');
+        router.refresh();
       } catch (err) {
         handleError('Erro interno no servidor');
       } finally {
