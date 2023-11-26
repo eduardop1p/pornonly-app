@@ -8,7 +8,7 @@ export const ContainerSuccess = styled.div<TypeTheme>`
     left: 50%;
     bottom: 1rem;
     z-index: 10;
-    height: 50px;
+    min-height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -37,12 +37,12 @@ export const ContainerSuccess = styled.div<TypeTheme>`
       border-radius: 5px;
       margin-right: 8px;
       width: auto;
-      height: 30px !important;
+      min-height: 30px !important;
     }
 
     & > span {
       text-align: center;
-      white-space: nowrap;
+      /* white-space: nowrap; */
       color: ${theme.colors.g_colorGray0};
       font-size: ${theme.font_size.font_size_1rem};
       font-weight: ${theme.font_weight.font_weight_500};

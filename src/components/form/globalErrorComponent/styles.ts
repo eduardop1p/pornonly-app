@@ -8,7 +8,7 @@ export const ContainerError = styled.div<TypeTheme>`
     bottom: 1rem;
     left: 50%;
     z-index: 10;
-    height: 50px;
+    min-height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -32,7 +32,6 @@ export const ContainerError = styled.div<TypeTheme>`
 
     & > span {
       text-align: center;
-      white-space: nowrap;
       color: ${theme.colors.g_colorGray0};
       font-size: ${theme.font_size.font_size_1rem};
       font-weight: ${theme.font_weight.font_weight_500};

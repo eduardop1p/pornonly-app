@@ -17,7 +17,8 @@ export const Container = styled.div<TypeTheme>`
     & > .container-info {
       background-color: ${theme.colors.g_colorGray0};
       border-radius: 1.5rem;
-      width: 500px;
+      max-width: 500px;
+      width: calc(100% - 5rem);
       padding: 2rem;
       box-shadow: ${theme.box_shadow.box_shadow_04};
       display: flex;
@@ -30,6 +31,7 @@ export const Container = styled.div<TypeTheme>`
         color: ${theme.colors.g_colorGray300};
         font-size: ${theme.font_size.font_size_1_75rem};
         margin-bottom: 1rem;
+        text-align: center;
       }
 
       & > p {
