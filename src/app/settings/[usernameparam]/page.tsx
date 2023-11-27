@@ -46,6 +46,7 @@ export default async function Page({ params }: Props) {
   return (
     <main className={styles.main}>
       <UserInfo
+        isAdmin={userData.isAdmin}
         email={email as string}
         isUniqueUser={isUniqueUser}
         profilePhoto={profilePhoto}

@@ -14,6 +14,7 @@ import useGlobalError from '@/utils/useGlobalError';
 import { GlobalSuccessComponent } from '@/components/form/globalSuccessComponent';
 import useGlobalSuccess from '@/utils/useGlobalSuccess';
 import revalidatePin from '@/services/revalidatePin';
+import calHeight from '@/config/calcHeight';
 
 interface Props {
   data: {
@@ -50,8 +51,8 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
   const fileName = data.url.split('/').pop() as string;
 
   const pinProportion = +data.width / +data.height;
-  const newHeight = window.innerHeight;
-  const newWidth = Math.round(newHeight * pinProportion);
+  const [newHeight, setNewHeight] = useState(0);
+  const [newWidth, setNewWidth] = useState(0);
 
   const handleOnBlur = (event: FocusEvent<HTMLDivElement>) => {
     if (!refMoreOptions.current?.contains(event.relatedTarget)) {
@@ -61,6 +62,26 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
       }
     }
   };
+
+  useEffect(() => {
+    const localNewWidth = window.innerWidth;
+    const localNewHeight = calHeight({
+      customWidth: localNewWidth,
+      originalHeight: +data.height,
+      originalWidth: +data.width,
+    });
+
+    if (localNewHeight > window.innerHeight - 128) {
+      const newLocalNewHeight = window.innerHeight - 128;
+      let newLocalNewWidth = Math.round(newLocalNewHeight * pinProportion);
+      setNewHeight(newLocalNewHeight);
+      setNewWidth(newLocalNewWidth);
+      return;
+    }
+
+    setNewWidth(localNewWidth);
+    setNewHeight(localNewHeight);
+  }, [data, pinProportion]);
 
   const handleDawnload = async () => {
     if (!isAuth) {
