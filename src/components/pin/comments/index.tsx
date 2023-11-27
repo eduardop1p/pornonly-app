@@ -1,9 +1,10 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 'use client';
 
-import { useState, ReactNode, useRef, useEffect } from 'react';
+import { useState, ReactNode, useRef, useEffect, useCallback } from 'react';
 import type { Dispatch, SetStateAction, MutableRefObject } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { useMediaQuery } from 'react-responsive';
 
 import { Container, LikeContainer } from './styled';
 import { ResultsCommentsType, CommentsType } from '@/app/pin/[pinid]/page';
@@ -57,7 +58,9 @@ export default function Comments({
 
   const newDataPin = dataPin;
 
-  useEffect(() => {
+  const maxWidth1000 = useMediaQuery({ maxWidth: 1000 });
+
+  const handleOnResize = useCallback(() => {
     const containerCommentsHeight = document.querySelector(
       '#container-comments'
     )?.clientHeight as number;
@@ -66,10 +69,23 @@ export default function Comments({
 
     const dinamicHeight = pinUserInfoHeight + 216;
     if (refCommentsAndUsers.current) {
-      // eslint-disable-next-line
-      refCommentsAndUsers.current.style.height = `${containerCommentsHeight - dinamicHeight}px`;
+      if (!maxWidth1000) {
+        // eslint-disable-next-line
+        refCommentsAndUsers.current.style.height = `${containerCommentsHeight - dinamicHeight}px`;
+      } else {
+        refCommentsAndUsers.current.style.height = '500px';
+      }
     }
-  }, []);
+  }, [maxWidth1000]);
+
+  useEffect(() => {
+    // handleOnResize();
+  }, [handleOnResize]);
+
+  useEffect(() => {
+    // window.addEventListener('resize', handleOnResize);
+    // return () => window.removeEventListener('resize', handleOnResize);
+  }, [handleOnResize]);
 
   const handleLikePin = async () => {
     if (!isAuth) {
@@ -148,7 +164,10 @@ export default function Comments({
       <GlobalSuccessComponent successMsg={msgSuccess} />
       <GlobalErrorComponent errorMsg={msgError} />
       <div className="container-comments-scrollab">
-        <div className="title-and-icon">
+        <div
+          className="title-and-icon"
+          style={{ marginBottom: !showComments ? '10px' : '0' }}
+        >
           <h2>Comentários</h2>
           <button
             type="button"
@@ -172,6 +191,7 @@ export default function Comments({
           id="scroll-comments-and-users"
           data-show-comments={showComments}
           ref={refCommentsAndUsers}
+          style={{ height: !maxWidth1000 ? 'calc(100vh / 3)' : '300px' }}
         >
           {allCommentsInPin ? (
             <InfiniteScroll

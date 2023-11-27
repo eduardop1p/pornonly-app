@@ -28,32 +28,6 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  margin-left: 6rem;
-  margin-right: 2.5rem;
-}
-.container-comments{
-  flex: none;
-  height: 100%;
-  width: 508px;
-  position: relative;
-  background-color: var(--g-colorGray0);
-}
-.pin-info-user{
-  padding: 2rem 2rem 0 2rem;
-}
-
-.pin-info > :not(:last-child){
-  margin-bottom: 1rem;
-}
-
-.pin-title{
-  font-weight: var(--font-weight-600);
-  color: var(--g-colorGray300);
-  font-size: var(--font-size-1_75rem);
-}
-
-.comments{
-  margin-top: 1rem;
 }
 
 .more-similar{
@@ -67,3 +41,4 @@
 .results-search-tag{
   margin-top: 1.5rem;
 }
+

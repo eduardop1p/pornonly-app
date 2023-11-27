@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
@@ -31,6 +32,8 @@ interface Props {
 }
 
 export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
+  if (typeof window === 'undefined') return;
+
   const router = useRouter();
   const pathName = usePathname();
 
@@ -47,7 +50,7 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
   const fileName = data.url.split('/').pop() as string;
 
   const pinProportion = +data.width / +data.height;
-  const newHeight = document.documentElement.clientHeight;
+  const newHeight = window.innerHeight;
   const newWidth = Math.round(newHeight * pinProportion);
 
   const handleOnBlur = (event: FocusEvent<HTMLDivElement>) => {

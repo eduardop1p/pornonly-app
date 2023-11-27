@@ -44,7 +44,11 @@ export default function UserPin({
         </span>
       )}
       <div className="container-username">
-        <h4>{username}</h4>
+        <h4
+          style={{ width: isAdmin ? 'calc(100% - 56px)' : 'calc(100% - 32px)' }}
+        >
+          {username}
+        </h4>
         {isAdmin && (
           <VerifyIcon width={15} height={15} marginLeft="3px" marginTop="2px" />
         )}

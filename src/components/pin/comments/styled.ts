@@ -14,6 +14,13 @@ export const Container = styled.div<TypeTheme & Props>`
     & > .container-comments-scrollab {
       padding: 0 2rem;
 
+      @media (max-width: 1400px) {
+        padding: 0 1.5rem;
+      }
+      @media (max-width: 1200px) {
+        padding: 0 1rem;
+      }
+
       & > .title-and-icon {
         display: flex;
         align-items: center;
@@ -49,7 +56,7 @@ export const Container = styled.div<TypeTheme & Props>`
       & > .comments-and-users {
         display: flex;
         flex-direction: column;
-        margin-top: 10px;
+        margin-top: 5px;
         position: relative;
         /* position: absolute; */
         width: 100%;
@@ -97,8 +104,8 @@ export const Container = styled.div<TypeTheme & Props>`
     }
 
     & > .add-comments {
-      position: absolute;
-      bottom: 0;
+      /* position: absolute; */
+      /* bottom: 0; */
       background-color: ${theme.colors.g_colorGray0};
       display: flex;
       padding-top: 8px;
@@ -106,8 +113,19 @@ export const Container = styled.div<TypeTheme & Props>`
       width: 100%;
       border-top: 1px solid ${theme.colors.g_colorBgRgb_229};
 
+      @media (max-width: 1000px) {
+        position: static;
+      }
+
       & > div {
         padding: 0 2rem 2rem;
+
+        @media (max-width: 1400px) {
+          padding: 0 1.5rem 1.5rem;
+        }
+        @media (max-width: 1200px) {
+          padding: 0 1rem 1rem;
+        }
 
         & > .commet-title-and-likes {
           display: flex;

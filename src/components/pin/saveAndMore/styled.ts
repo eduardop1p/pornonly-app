@@ -162,8 +162,8 @@ export const ContainerFullScreen = styled.div<TypeTheme>`
 
     & > .close-full-screen {
       position: absolute;
-      left: 2rem;
-      top: 2rem;
+      left: 1rem;
+      top: 1rem;
       width: 48px;
       height: 48px;
       border-radius: 100%;

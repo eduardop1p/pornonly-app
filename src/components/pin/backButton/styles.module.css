@@ -20,3 +20,9 @@
 .container > svg{
   flex: none;
 }
+
+@media (max-width: 1000px) {
+  .container{
+    left: 0.8rem;
+  }
+}

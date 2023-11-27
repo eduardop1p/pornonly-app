@@ -233,9 +233,10 @@ const NewPin = forwardRef(
     }));
 
     const handleFormErrors = useCallback(
-      (title: string, tags: string[]) => {
+      (title: string, description: string, tags: string[]) => {
         let controller = true;
         clearErrors('title');
+        clearErrors('description');
         clearErrors('tags');
 
         if (title.trim().length < 4) {
@@ -244,6 +245,10 @@ const NewPin = forwardRef(
         }
         if (title.trim().length > 100) {
           setError('title', { message: 'Titulo muito grande.' });
+          controller = false;
+        }
+        if (description.trim().length > 500) {
+          setError('description', { message: 'Descrição muito grande.' });
           controller = false;
         }
         if (tags.length < 2) {
@@ -260,7 +265,7 @@ const NewPin = forwardRef(
 
     useEffect(() => {
       if (manageTitleTag && submitForm.current) {
-        handleFormErrors(createdPinCurrent.title, createdPinCurrent.tags);
+        handleFormErrors(createdPinCurrent.title, createdPinCurrent.description, createdPinCurrent.tags);
         setManageTitleTag(false);
       }
     }, [createdPinCurrent, manageTitleTag, handleFormErrors]);
@@ -283,7 +288,7 @@ const NewPin = forwardRef(
 
       const { description, tags, title, file, videoThumb, author, } =
         refCreatedPinCurrent.current;
-      if (!handleFormErrors(title, tags)) return;
+      if (!handleFormErrors(title, description, tags)) return;
 
       const formData = new FormData();
       formData.append('midia', file);
@@ -576,10 +581,11 @@ const NewPin = forwardRef(
               })}
             />
           </div>}
-          <div className="container-input">
+          <div className="container-input" >
             <label htmlFor="description">Descrição</label>
             <textarea
               disabled={!createdPinCurrent.file ? true : false}
+              data-input-error={errors.description ? true : false}
               id="description"
               value={createdPinCurrent.description}
               placeholder="Adicione uma descrição detalhada"
@@ -594,6 +600,7 @@ const NewPin = forwardRef(
                 },
               })}
             ></textarea>
+            {errors.description && <ErrorMsg errorMsg={errors.description.message} />}
           </div>
           <div className="container-input">
             <label htmlFor="tags">Tags</label>

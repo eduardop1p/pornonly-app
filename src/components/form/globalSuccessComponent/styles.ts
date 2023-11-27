@@ -37,7 +37,7 @@ export const ContainerSuccess = styled.div<TypeTheme>`
       border-radius: 5px;
       margin-right: 8px;
       width: auto;
-      min-height: 30px !important;
+      height: 30px !important;
     }
 
     & > span {

@@ -1,9 +1,11 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 // /* eslint-disable prettier/prettier */
 'use client';
 
 import Image from 'next/image';
 import { useEffect, useState, useCallback } from 'react';
 import ReactPlayer from 'react-player';
+import { useMediaQuery } from 'react-responsive';
 
 import { Container } from './styled';
 
@@ -17,47 +19,71 @@ interface Props {
 }
 
 export default function Pin({ data }: Props) {
+  if (typeof window === 'undefined') return;
+
   const pinProportion = +data.width / +data.height;
   const [newHeight, setNewHeight] = useState(0);
   const [newWidth, setNewWidth] = useState(0);
-  const [initialRender, setInitialRender] = useState(true);
 
-  const calcPinContainerHeight = useCallback(() => {
-    // const documentHeight = document.documentElement.clientHeight;
-    // console.log(documentHeight);
-    // const pinContainer = document.querySelector(
-    //   '#pin-container'
-    // ) as HTMLDivElement;
-    // pinContainer.style.height = `${documentHeight}px`;
+  const maxWidth1400 = useMediaQuery({ maxWidth: 1400 });
+  const maxWidth1300 = useMediaQuery({ maxWidth: 1300 });
+  const maxWidth1200 = useMediaQuery({ maxWidth: 1200 });
+  const maxWidth1000 = useMediaQuery({ maxWidth: 1000 });
+  const maxWidth600 = useMediaQuery({ maxWidth: 600 });
+  const maxWidth480 = useMediaQuery({ maxWidth: 480 });
 
-    const localNewHeight = document.documentElement.clientHeight - 128;
-    const localNewWidth = Math.round(localNewHeight * pinProportion);
-    setNewHeight(localNewHeight);
+  const handleOnResize = useCallback(() => {
+    const localNewWidth =
+      window.innerWidth -
+      (maxWidth1400
+        ? maxWidth1300
+          ? maxWidth1200
+            ? maxWidth1000
+              ? maxWidth600
+                ? maxWidth480
+                  ? 48
+                  : 64
+                : 80
+              : 430
+            : 480
+          : 530
+        : 580);
+    const localNewHeight = calHeight({
+      customWidth: localNewWidth,
+      originalHeight: +data.height,
+      originalWidth: +data.width,
+    });
+
+    if (localNewHeight > window.innerHeight - 128) {
+      const newLocalNewHeight = window.innerHeight - 128;
+      let newLocalNewWidth = Math.round(newLocalNewHeight * pinProportion);
+      setNewHeight(newLocalNewHeight);
+      setNewWidth(newLocalNewWidth);
+      return;
+    }
+
     setNewWidth(localNewWidth);
-    if (localNewWidth > 800) {
-      setNewWidth(800);
-      setNewHeight(
-        calHeight({
-          customWidth: 800,
-          originalHeight: +data.height,
-          originalWidth: +data.width,
-        })
-      );
-    }
-  }, [data, pinProportion]);
+    setNewHeight(localNewHeight);
+  }, [
+    pinProportion,
+    data,
+    maxWidth1400,
+    maxWidth1300,
+    maxWidth1200,
+    maxWidth1000,
+    maxWidth600,
+    maxWidth480,
+  ]);
 
   useEffect(() => {
-    window.addEventListener('resize', calcPinContainerHeight);
-
-    return () => window.removeEventListener('resize', calcPinContainerHeight);
-  }, [calcPinContainerHeight]);
+    handleOnResize();
+  }, [handleOnResize]);
 
   useEffect(() => {
-    if (initialRender) {
-      calcPinContainerHeight();
-      setInitialRender(false);
-    }
-  }, [calcPinContainerHeight, initialRender]);
+    window.addEventListener('resize', handleOnResize);
+
+    return () => window.removeEventListener('resize', handleOnResize);
+  }, [handleOnResize]);
 
   const [pinIsLoading, setPinIsLoading] = useState(true);
 

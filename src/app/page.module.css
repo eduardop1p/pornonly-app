@@ -55,7 +55,7 @@
   background-color: rgba(229, 229, 229, 0.5);
 }
 
-.icon-container{
+.container-icon{
   background-color: var(--g-colore9e9e9);
   display: flex;
   align-items: center;
@@ -70,7 +70,7 @@
   }
 }
 
-.icon-container > svg{
+.container-icon > svg{
   animation-name: rotateLoading;
   animation-duration: 1s;
   animation-timing-function: linear;

@@ -46,7 +46,6 @@ export const Container = styled.div<TypeTheme>`
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        width: calc(100% - 56px);
         line-height: 1.5;
       }
     }
