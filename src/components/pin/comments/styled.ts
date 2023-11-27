@@ -17,9 +17,6 @@ export const Container = styled.div<TypeTheme & Props>`
       @media (max-width: 1400px) {
         padding: 0 1.5rem;
       }
-      @media (max-width: 1200px) {
-        padding: 0 1rem;
-      }
 
       & > .title-and-icon {
         display: flex;
@@ -104,8 +101,8 @@ export const Container = styled.div<TypeTheme & Props>`
     }
 
     & > .add-comments {
-      /* position: absolute; */
-      /* bottom: 0; */
+      position: absolute;
+      bottom: 0;
       background-color: ${theme.colors.g_colorGray0};
       display: flex;
       padding-top: 8px;
@@ -122,9 +119,6 @@ export const Container = styled.div<TypeTheme & Props>`
 
         @media (max-width: 1400px) {
           padding: 0 1.5rem 1.5rem;
-        }
-        @media (max-width: 1200px) {
-          padding: 0 1rem 1rem;
         }
 
         & > .commet-title-and-likes {

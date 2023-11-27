@@ -59,6 +59,7 @@ export default function Comments({
   const newDataPin = dataPin;
 
   const maxWidth1000 = useMediaQuery({ maxWidth: 1000 });
+  const maxWidth1400 = useMediaQuery({ maxWidth: 1400 });
 
   const handleOnResize = useCallback(() => {
     const containerCommentsHeight = document.querySelector(
@@ -67,24 +68,24 @@ export default function Comments({
     const pinUserInfoHeight = document.querySelector('#pin-info-user')
       ?.clientHeight as number;
 
-    const dinamicHeight = pinUserInfoHeight + 216;
+    const dinamicHeight = pinUserInfoHeight + (maxWidth1400 ? 204 : 216);
     if (refCommentsAndUsers.current) {
       if (!maxWidth1000) {
         // eslint-disable-next-line
         refCommentsAndUsers.current.style.height = `${containerCommentsHeight - dinamicHeight}px`;
       } else {
-        refCommentsAndUsers.current.style.height = '500px';
+        refCommentsAndUsers.current.style.height = '300px';
       }
     }
-  }, [maxWidth1000]);
+  }, [maxWidth1000, maxWidth1400]);
 
   useEffect(() => {
-    // handleOnResize();
+    handleOnResize();
   }, [handleOnResize]);
 
   useEffect(() => {
-    // window.addEventListener('resize', handleOnResize);
-    // return () => window.removeEventListener('resize', handleOnResize);
+    window.addEventListener('resize', handleOnResize);
+    return () => window.removeEventListener('resize', handleOnResize);
   }, [handleOnResize]);
 
   const handleLikePin = async () => {
@@ -191,7 +192,6 @@ export default function Comments({
           id="scroll-comments-and-users"
           data-show-comments={showComments}
           ref={refCommentsAndUsers}
-          style={{ height: !maxWidth1000 ? 'calc(100vh / 3)' : '300px' }}
         >
           {allCommentsInPin ? (
             <InfiniteScroll
@@ -307,6 +307,7 @@ export default function Comments({
             midiaId={midiaId}
             setStResultsComments={setStResultsComments}
             setAllCommentsInPin={setAllCommentsInPin}
+            setShowComments={setShowComments}
           >
             {children}
           </AddComments>

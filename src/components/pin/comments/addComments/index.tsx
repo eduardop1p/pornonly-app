@@ -19,6 +19,7 @@ export default function AddComments({
   midiaId,
   setStResultsComments,
   setAllCommentsInPin,
+  setShowComments,
 }: {
   children: ReactNode;
   token?: string;
@@ -26,6 +27,7 @@ export default function AddComments({
   isAuth: boolean;
   setStResultsComments: Dispatch<SetStateAction<ResultsCommentsType[]>>;
   setAllCommentsInPin: Dispatch<SetStateAction<number>>;
+  setShowComments: Dispatch<SetStateAction<boolean>>;
 }) {
   const router = useRouter();
   const pathName = usePathname();
@@ -73,6 +75,7 @@ export default function AddComments({
       setStResultsComments(state => [jsonData, ...state]);
       setCommentValue('');
       commentsAndUsers.scrollTop = 0;
+      setShowComments(true);
       // router.refresh();
     } catch (err) {
       // console.log(err);

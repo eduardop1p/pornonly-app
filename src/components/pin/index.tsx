@@ -27,7 +27,6 @@ export default function Pin({ data }: Props) {
 
   const maxWidth1400 = useMediaQuery({ maxWidth: 1400 });
   const maxWidth1300 = useMediaQuery({ maxWidth: 1300 });
-  const maxWidth1200 = useMediaQuery({ maxWidth: 1200 });
   const maxWidth1000 = useMediaQuery({ maxWidth: 1000 });
   const maxWidth600 = useMediaQuery({ maxWidth: 600 });
   const maxWidth480 = useMediaQuery({ maxWidth: 480 });
@@ -37,14 +36,12 @@ export default function Pin({ data }: Props) {
       window.innerWidth -
       (maxWidth1400
         ? maxWidth1300
-          ? maxWidth1200
-            ? maxWidth1000
-              ? maxWidth600
-                ? maxWidth480
-                  ? 48
-                  : 64
-                : 80
-              : 430
+          ? maxWidth1000
+            ? maxWidth600
+              ? maxWidth480
+                ? 48
+                : 64
+              : 80
             : 480
           : 530
         : 580);
@@ -69,7 +66,6 @@ export default function Pin({ data }: Props) {
     data,
     maxWidth1400,
     maxWidth1300,
-    maxWidth1200,
     maxWidth1000,
     maxWidth600,
     maxWidth480,

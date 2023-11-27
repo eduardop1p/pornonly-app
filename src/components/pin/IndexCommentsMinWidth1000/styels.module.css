@@ -37,11 +37,3 @@
     width: 400px;
   }
 }
-@media (max-width: 1200px) {
-  .pin-info-user{
-    padding: 1rem 1rem 0 1rem;
-  }
-  .container-comments{
-    width: 350px;
-  }
-}
