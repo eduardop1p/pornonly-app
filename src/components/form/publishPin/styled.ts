@@ -23,6 +23,10 @@ export const Container = styled.div<TypeTheme>`
         justify-content: space-between;
         border-bottom: 1px solid ${({ theme }) => theme.colors.g_border_color01};
 
+        @media (max-width: 715px) {
+          padding: 0 1.15rem 0 5.6rem;
+        }
+
         & > .pin-title {
           font-weight: ${({ theme }) => theme.font_weight.font_weight_600};
           font-size: ${({ theme }) => theme.font_size.font_size_1_25rem};
@@ -42,9 +46,31 @@ export const ContainerNewPin = styled.div<TypeTheme>`
   align-items: flex-start;
   justify-content: center;
 
+  @media (max-width: 1500px) {
+    width: calc(100% - 10rem);
+  }
+  @media (max-width: 1400px) {
+    width: calc(100% - 5rem);
+  }
+  @media (max-width: 1300px) {
+    width: 100%;
+    padding: 1rem 3rem;
+  }
+  @media (max-width: 1200px) {
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+  }
+  @media (max-width: 715px) {
+    padding: 1rem 1.15rem 1rem 5.6rem;
+  }
+
   & > .container-img-100vh {
-    width: 342px;
+    width: 375px;
     flex: none;
+
+    @media (max-width: 525px) {
+      width: 100%;
+    }
 
     & > .container-file-img-current {
       position: relative;
@@ -97,6 +123,14 @@ export const ContainerNewPin = styled.div<TypeTheme>`
     background-color: ${({ theme }) => theme.colors.g_colore9e9e9};
     border-radius: 2rem;
     position: relative;
+
+    @media (max-width: 1200px) {
+      margin-top: 2rem;
+    }
+    @media (max-width: 525px) {
+      width: 100%;
+      height: 86vw;
+    }
 
     & > label {
       width: 100%;
@@ -153,9 +187,13 @@ export const ContainerNewPin = styled.div<TypeTheme>`
 export const ContainerFormNewPin = styled.form<TypeTheme>`
   display: flex;
   flex-direction: column;
-  margin-left: 4rem;
+  margin-left: 2rem;
   width: 100%;
   position: relative;
+
+  @media (max-width: 1200px) {
+    margin-left: 0;
+  }
 
   &[data-hidden-form='true'] {
     pointer-events: none;
@@ -243,6 +281,10 @@ export const ContainerShowTags = styled.div<TypeTheme>`
     box-shadow: ${theme.box_shadow.box_shadow_04};
     border-radius: 1rem;
     overflow: hidden;
+
+    @media (max-width: 715px) {
+      width: calc(100% - 2rem);
+    }
 
     & > .container-search-tags {
       height: 100%;
@@ -466,9 +508,21 @@ export const ContainerPublishsCreated = styled.div<TypeTheme>`
     align-items: center;
     display: flex;
     flex-direction: column;
+    background-color: ${theme.colors.g_colorGray0};
+
+    @media (max-width: 715px) {
+      position: fixed;
+      left: 0;
+      z-index: 3;
+      width: 70px;
+    }
 
     &.btn-active {
       width: 400px;
+
+      @media (max-width: 400px) {
+        width: 100%;
+      }
     }
 
     & > .container-btns-created-pins {
@@ -559,6 +613,11 @@ export const ContainerBtnPublishsCreated = styled.button<TypeTheme>`
   justify-content: center;
   cursor: pointer;
   transition: background 150ms ease-in-out;
+
+  @media (max-width: 715px) {
+    width: 37px;
+    height: 37px;
+  }
 
   & > svg {
     flex: none;

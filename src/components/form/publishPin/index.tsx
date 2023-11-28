@@ -686,7 +686,7 @@ const NewPin = forwardRef(
             </ContainerSelectedTags>
           </div>
           {createdPinCurrent.file && (
-            <input type="submit" style={{ visibility: 'hidden', opacity: 0 }} />
+            <input type="submit" style={{ visibility: 'hidden', opacity: 0, height: '0', width: '0' }} />
           )}
         </ContainerFormNewPin>
       </ContainerNewPin>
