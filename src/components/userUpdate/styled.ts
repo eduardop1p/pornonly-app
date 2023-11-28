@@ -7,11 +7,25 @@ export const Container = styled.div`
   display: flex;
   justify-content: center;
   position: relative;
+
+  @media (max-width: 700px) {
+    flex-direction: column-reverse;
+  }
 `;
 
 export const FormContainer = styled.form`
   flex: none;
-  width: 500px;
+  width: 600px;
+
+  @media (max-width: 1250px) {
+    width: calc(100% - 312px);
+    margin-left: 1rem;
+  }
+
+  @media (max-width: 700px) {
+    margin-left: 0;
+    width: 100%;
+  }
 
   & > :not(:last-child) {
     margin-bottom: 1rem;
@@ -77,6 +91,15 @@ export const ContainerLinks = styled.div<TypeTheme>`
     position: absolute;
     left: 0;
     top: 0;
+
+    @media (max-width: 1250px) {
+      position: static;
+      min-width: 295px;
+    }
+
+    @media (max-width: 700px) {
+      width: 100%;
+    }
 
     & > :first-child {
       margin-bottom: 5px;
