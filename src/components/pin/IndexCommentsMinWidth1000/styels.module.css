@@ -22,6 +22,7 @@
   width: 500px;
   position: relative;
   background-color: var(--g-colorGray0);
+  overflow: hidden;
 }
 
 @media (max-width: 1400px) {

@@ -42,3 +42,8 @@
   margin-top: 1.5rem;
 }
 
+@media (max-width: 1000px) {
+  .more-similar{
+    margin-top: 0;
+  }
+}

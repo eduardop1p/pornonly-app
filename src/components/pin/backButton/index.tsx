@@ -12,6 +12,7 @@ export default function BackButton() {
       type="button"
       className={styles.container}
       onClick={() => router.back()}
+      id="back-btn"
     >
       <svg
         height="20"
