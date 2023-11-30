@@ -144,7 +144,7 @@ export const ContainerCommentsAndUsers = styled.div<TypeTheme>`
     flex-direction: column;
     top: 0;
     width: 100%;
-    height: calc(100% - 140px);
+    height: calc(100% - 151px);
     overflow: hidden auto;
     background-color: ${theme.colors.g_colorGray0};
     position: absolute;
@@ -170,6 +170,7 @@ export const ContainerCommentsAndUsers = styled.div<TypeTheme>`
 
     & > .container-fixed-comments {
       width: 100%;
+      height: 100%;
       background-color: ${theme.colors.g_colorGray0};
       overflow: hidden;
       transform: translateX(100%);
@@ -197,7 +198,7 @@ export const ContainerCommentsAndUsers = styled.div<TypeTheme>`
 
       & > .comments-pin {
         padding-left: 1.5rem;
-        max-height: calc(100vh - 16.7rem);
+        height: calc(100% - 45px);
         overflow: hidden auto;
 
         @media (max-width: 1000px) {
@@ -221,6 +222,7 @@ export const ContainerCommentsAndUsers = styled.div<TypeTheme>`
           display: flex;
           flex-direction: column;
           align-items: center;
+          justify-content: center;
 
           & > svg {
             flex: none;

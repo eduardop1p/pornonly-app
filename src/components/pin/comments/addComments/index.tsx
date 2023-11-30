@@ -40,7 +40,7 @@ export default function AddComments({
   const handleAddCommentInPin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const commentsAndUsers = document.querySelector(
-      '.comments-and-users'
+      '#scroll-comments-and-users'
     ) as HTMLDivElement;
     if (!commentValue || isLoading) return;
     if (!isAuth || !token) {
