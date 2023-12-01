@@ -29,7 +29,7 @@ const breakMenuActiveInitalState = {
   routeActive: '/no-router-type-content-404',
 };
 
-export default function Nav({ user, tags, children, userAvatar }: Props) {
+export default function NavHeader({ user, tags, children, userAvatar }: Props) {
   const { isAuth } = user;
 
   const [breakMenuActive, setBreakMenuActive] = useState(
