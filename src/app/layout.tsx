@@ -1,6 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import dynamic from 'next/dynamic';
+import GoogleAnalytics from '@/components/googleAnalytics';
 
 import StyledComponentsRegistry from '@/lib/registry';
 
@@ -26,6 +27,9 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/assets/svgs/logo.svg" sizes="32x32" />
       </head>
+      {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS ? (
+        <GoogleAnalytics ga_id={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
+      ) : null}
       <body>
         <StyledComponentsRegistry>
           <AppTheme>
