@@ -8,7 +8,7 @@ import { verify } from 'jsonwebtoken';
 import styles from './styles.module.css';
 
 import Logo from '../logo';
-import Nav from '@/components/Nav';
+import Nav from '../Nav';
 import UserAvatar from '../userAvatar';
 import { UserTokenType } from '@/app/publish-pin/page';
 
