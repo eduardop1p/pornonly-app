@@ -19,7 +19,7 @@ import { TagType } from '../header';
 interface Props {
   user: UserAuthType;
   children?: ReactNode;
-  tags: TagType[];
+  tags?: TagType[];
   userAvatar: ReactNode;
 }
 

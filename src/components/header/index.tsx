@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import 'server-only';
+// import 'server-only';
 
 import Link from 'next/link';
 import { cookies } from 'next/headers';
@@ -36,14 +36,14 @@ export default async function Header() {
     user = { isAuth, ...userVerify } as UserAuthType;
   }
 
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all-midia-tags-category`,
-    {
-      method: 'GET',
-    }
-  );
-  const data = (await res.json()) as TagsType;
-  const results = data.midiaTags;
+  // const res = await fetch(
+  //   `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all-midia-tags-category`,
+  //   {
+  //     method: 'GET',
+  //   }
+  // );
+  // const data = (await res.json()) as TagsType;
+  // const results = data.midiaTags;
 
   return (
     <header className={styles['header-container']}>
@@ -53,7 +53,6 @@ export default async function Header() {
       </Link>
       <Nav
         user={user}
-        tags={results}
         userAvatar={
           <UserAvatar containerWidth={60} containerHeight={60} noLink />
         }
