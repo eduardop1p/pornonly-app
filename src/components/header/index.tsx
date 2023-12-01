@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-// import 'server-only';
+import 'server-only';
 
 import Link from 'next/link';
 import { cookies } from 'next/headers';
@@ -8,7 +8,7 @@ import { verify } from 'jsonwebtoken';
 import styles from './styles.module.css';
 
 import Logo from '../logo';
-import Nav from '../Nav';
+import Nav from '@/components/Nav';
 import UserAvatar from '../userAvatar';
 import { UserTokenType } from '@/app/publish-pin/page';
 
@@ -35,15 +35,6 @@ export default async function Header() {
     const userVerify = verify(token, process.env.TOKEN_SECRET) as UserTokenType;
     user = { isAuth, ...userVerify } as UserAuthType;
   }
-
-  // const res = await fetch(
-  //   `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all-midia-tags-category`,
-  //   {
-  //     method: 'GET',
-  //   }
-  // );
-  // const data = (await res.json()) as TagsType;
-  // const results = data.midiaTags;
 
   return (
     <header className={styles['header-container']}>
