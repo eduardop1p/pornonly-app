@@ -7,9 +7,11 @@ import { MidiaResultsType, MidiaType } from '@/app/page';
 import Pin from '@/components/pin';
 import BackButton from '@/components/pin/backButton';
 import { UserIdResultsType } from '@/components/masonry/userPin';
-import IndexCommentsMinWidth1000 from '@/components/pin/IndexCommentsMinWidth1000';
-import IndexCommentsMaxWidth1000 from '@/components/pin/IndexCommentsMaxWidth1000';
 import UserAvatar from '@/components/userAvatar';
+import UserPin from '@/components/masonry/userPin';
+import SaveAndMore from '@/components/pin/saveAndMore';
+import Description from '@/components/pin/description';
+import Comments from '@/components/pin/comments';
 
 import Masonry from '@/components/masonry';
 import NotFoundPage from '@/app/not-found';
@@ -167,32 +169,53 @@ export default async function Page({ params }: Props) {
         <div className={styles['container-pin']} id="container-pin">
           <Pin data={dataPin} />
         </div>
-        <IndexCommentsMinWidth1000
-          dataPin={dataPin}
-          isAuth={isAuth}
-          isSave={isSave}
-          resultsComments={resultsComments}
-          token={token as string}
-          totalResults={commentsMidia.totalResults}
-          userId={userId}
-        >
-          <UserAvatar containerHeight={48} containerWidth={48} noLink />
-        </IndexCommentsMinWidth1000>
+        <div className={styles['container-comments']} id="container-comments">
+          <div className={styles['pin-info-user']} id="pin-info-user">
+            <SaveAndMore
+              isSave={isSave}
+              data={{
+                _id: dataPin._id,
+                title: dataPin.title,
+                description: dataPin.description,
+                url: dataPin.url,
+                midiaType: dataPin.midiaType,
+                username: dataPin.userId.username,
+                height: dataPin.height,
+                width: dataPin.width,
+              }}
+              isAuth={isAuth}
+              token={token as string}
+            />
+            <div className={styles['pin-info']}>
+              <h2 className={styles['pin-title']}>{dataPin.title}</h2>
+              {dataPin.description && (
+                <Description description={dataPin.description} />
+              )}
+              <UserPin
+                profilePhoto={dataPin.userId.profilePhoto}
+                username={dataPin.userId.username}
+                midia={dataPin.userId.midia}
+                isAdmin={dataPin.userId.isAdmin}
+              />
+            </div>
+          </div>
+          <div className={styles.comments}>
+            <Comments
+              midiaId={dataPin._id}
+              resultsComments={resultsComments}
+              totalComments={commentsMidia.totalResults}
+              dataPin={dataPin}
+              token={token as string}
+              isAuth={isAuth}
+              userId={userId}
+            >
+              <UserAvatar containerHeight={48} containerWidth={48} noLink />
+            </Comments>
+          </div>
+        </div>
       </div>
 
       <div className={styles['more-similar']}>
-        <IndexCommentsMaxWidth1000
-          dataPin={dataPin}
-          isAuth={isAuth}
-          isSave={isSave}
-          resultsComments={resultsComments}
-          token={token as string}
-          totalResults={commentsMidia.totalResults}
-          userId={userId}
-        >
-          <UserAvatar containerHeight={48} containerWidth={48} noLink />
-        </IndexCommentsMaxWidth1000>
-
         {resultsMidiaSearchTag.length ? (
           <>
             <h2>Mais como este</h2>

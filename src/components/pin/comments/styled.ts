@@ -201,6 +201,9 @@ export const ContainerCommentsAndUsers = styled.div<TypeTheme>`
         height: calc(100% - 45px);
         overflow: hidden auto;
 
+        @media (max-width: 1400px) {
+          height: calc(100% - 38px);
+        }
         @media (max-width: 1000px) {
           height: calc(100% - 198px);
         }
