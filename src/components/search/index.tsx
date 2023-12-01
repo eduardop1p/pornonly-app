@@ -9,6 +9,7 @@ import {
   useRef,
   useCallback,
   MouseEvent,
+  FocusEvent,
 } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 import { useMediaQuery } from 'react-responsive';
@@ -153,6 +154,7 @@ export default function Search() {
     setSearchValueInput(value.title);
     handleRemoveSelected();
     setFocusSearch(false);
+    setShowMaxSearch(false);
     router.push(`/search?search_query=${value.title}`);
   };
 
@@ -175,9 +177,11 @@ export default function Search() {
     }, 100);
   };
 
-  const handleSearchBlur = () => {
-    setFocusSearch(false);
-    setShowMaxSearch(false);
+  const handleSearchBlur = (event: FocusEvent<HTMLFormElement>) => {
+    if (!event.currentTarget.contains(event.relatedTarget)) {
+      setFocusSearch(false);
+      setShowMaxSearch(false);
+    }
   };
 
   return (
