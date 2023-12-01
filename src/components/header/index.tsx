@@ -8,7 +8,7 @@ import { verify } from 'jsonwebtoken';
 import styles from './styles.module.css';
 
 import Logo from '../logo';
-import Nav from '../Nav';
+import { default as NavH } from '../Nav';
 import UserAvatar from '../userAvatar';
 import { UserTokenType } from '@/app/publish-pin/page';
 
@@ -42,14 +42,14 @@ export default async function Header() {
         <Logo />
         <h2>Pornonly</h2>
       </Link>
-      <Nav
+      <NavH
         user={user}
         userAvatar={
           <UserAvatar containerWidth={60} containerHeight={60} noLink />
         }
       >
         <UserAvatar containerWidth={25} containerHeight={25} />
-      </Nav>
+      </NavH>
     </header>
   );
 }
