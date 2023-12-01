@@ -37,7 +37,8 @@ export default function Logout({
       }
       router.push('/login');
       router.refresh();
-    } catch {
+    } catch (err) {
+      // console.log(err);
       handleError('O logout falhou. Tente novalmente');
     } finally {
       setIsLoading(false);

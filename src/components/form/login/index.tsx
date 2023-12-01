@@ -79,10 +79,17 @@ export default function Login() {
         setError(jsonResponse.type, { message: jsonResponse.error });
         return;
       }
+      await fetch(
+        `${process.env.NEXT_PUBLIC_URL_SITE}/api/login?token=${jsonResponse.token}`,
+        {
+          method: 'GET',
+        }
+      );
       const from = searchParams.get('from');
       from ? router.push(from as string) : router.push('/');
       router.refresh(); // usar router.refresh() para atualizar os estados do react no client, esse refresh não irar carregar a pagina
     } catch (err) {
+      console.log(err);
       handleError('Erro interno no servidor');
     } finally {
       setIsLoading(false);
