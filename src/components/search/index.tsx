@@ -155,6 +155,7 @@ export default function Search() {
     handleRemoveSelected();
     setFocusSearch(false);
     setShowMaxSearch(false);
+    inputRef.current?.blur();
     router.push(`/search?search_query=${value.title}`);
   };
 
