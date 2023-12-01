@@ -26,13 +26,14 @@ export default function Logout({
 
     try {
       setIsLoading(true);
-      const res = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/logout`, {
-        method: 'GET',
-        credentials: 'include',
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_URL_SITE}/api/logout`,
+        {
+          method: 'GET',
+        }
+      );
       if (!res.ok) {
-        const dataJson = await res.json();
-        handleError(dataJson.error);
+        handleError('O logout falhou. Tente novalmente');
         return;
       }
       router.push('/login');
