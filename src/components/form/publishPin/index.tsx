@@ -1031,7 +1031,7 @@ function UploadPinProgress({ progress }: { progress: number }) {
         zIndex: 10,
       }}
     >
-      <LinearProgressWithLabel value={progress} valueBuffer={progress} />
+      <LinearProgressWithLabel variant='determinate' value={progress} valueBuffer={progress} />
     </Box>
   );
 }
