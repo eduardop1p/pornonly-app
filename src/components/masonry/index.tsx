@@ -617,7 +617,7 @@ function useFetchItemsUserMidia(
 
       const res = await fetch(
         // eslint-disable-next-line
-        `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all-midia-userid/${userId}?midiaType=${midiaType}&page=${currentPage.current}`,
+        `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all-midia-userid/${userId}?midiaType=${midiaType.current}&page=${currentPage.current}`,
         {
           method: 'GET',
           cache: 'no-cache',
