@@ -75,7 +75,7 @@ export default function Pin({ data }: Props) {
     handleOnResize();
   }, [handleOnResize]);
 
-  function updateVideoStyle() {
+  const handleVideoFullScreen = () => {
     let video = document.querySelector('#pin video') as HTMLVideoElement;
     console.log(video);
     if (!video) return;
@@ -86,15 +86,15 @@ export default function Pin({ data }: Props) {
     } else {
       video.style.objectFit = 'contain';
     }
-  }
+  };
 
   useEffect(() => {
     window.addEventListener('resize', handleOnResize);
-    document.addEventListener('fullscreenchange', updateVideoStyle);
+    document.addEventListener('fullscreenchange', handleVideoFullScreen);
 
     return () => {
       window.removeEventListener('resize', handleOnResize);
-      document.removeEventListener('fullscreenchange', updateVideoStyle);
+      document.removeEventListener('fullscreenchange', handleVideoFullScreen);
     };
   }, [handleOnResize]);
 
