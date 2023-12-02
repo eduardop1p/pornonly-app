@@ -434,7 +434,10 @@ function MidiaTypeOption({
         return;
       }
       const data = dataUserMidia as MidiaType;
-      const results = data.midia.results;
+      const results = data.midia.results.map((value, index: number) => ({
+        ...value,
+        index,
+      }));
       setStPublishsResults(results);
       setMidiaTypeFilter(midiaType);
     } catch (err) {

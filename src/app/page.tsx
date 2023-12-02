@@ -42,7 +42,8 @@ export default async function Page() {
     `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all?order=${order}&page=1`,
     {
       method: 'GET',
-      next: { tags: ['pin'] },
+      cache: 'no-cache',
+      // next: { tags: ['pin'] },
     }
   );
   if (!res.ok) {

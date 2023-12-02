@@ -154,7 +154,7 @@ export default function CreateAccount({ isAuth }: { isAuth: boolean }) {
       <GlobalErrorComponent errorMsg={msgError} />
       <h1>Bem vind@ a Pornonly</h1>
       <p className={styles.param}>
-        Crie uma conta grátes e aproveite o máximo do nosso site
+        Crie uma conta grátis e aproveite o máximo do nosso site
       </p>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <Input
@@ -215,7 +215,7 @@ export default function CreateAccount({ isAuth }: { isAuth: boolean }) {
       </form>
       {!isAuth && (
         <span className="login-title">
-          Já tem tem uma conta?
+          Já tem uma conta?
           <Link href="/login">Login</Link>
         </span>
       )}

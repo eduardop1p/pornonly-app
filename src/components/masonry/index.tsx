@@ -422,6 +422,7 @@ function useFetchItemsHome(
         setHasMore(false);
         return;
       }
+      console.log(results);
       setStResults(state => [...state, ...results]);
     } catch (err) {
       console.log(err);
