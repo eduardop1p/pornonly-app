@@ -2,7 +2,7 @@ import { MidiaType } from '@/app/page';
 
 const getUserCreated = async (userId: string) => {
   const resUserMidia = await fetch(
-    `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all-midia-userid/${userId}?page=1`,
+    `${process.env.NEXT_PUBLIC_URL_API}/midia/get-all-midia-userid/${userId}?midiaType=undefined&page=1`,
     {
       method: 'GET',
       cache: 'no-cache',

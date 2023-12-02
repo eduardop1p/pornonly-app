@@ -101,7 +101,7 @@ export default function Masonry({
   const { handleSuccess, msgSuccess } = useGlobalSuccess();
 
   let currentPage = useRef(1);
-  const midiaType = useRef<MidiaTypeFilterType>(midiaTypeFilter);
+  let midiaType = useRef<MidiaTypeFilterType>(midiaTypeFilter);
   const order = useRef<'popular' | 'desc' | 'asc'>('popular');
   let playPromise = useRef<Promise<void> | undefined>(undefined);
 
@@ -277,6 +277,7 @@ export default function Masonry({
       }
       case 'user-midia': {
         if (typeof userId === 'undefined') return;
+        midiaType.current = midiaTypeFilter;
         await useFetchItemsUserMidia(
           setHasMore,
           currentPage,
@@ -289,6 +290,7 @@ export default function Masonry({
       }
       case 'user-saves': {
         if (typeof userId === 'undefined') return;
+        midiaType.current = midiaTypeFilter;
         await useFetchItemsUserSaves(
           setHasMore,
           currentPage,
@@ -652,7 +654,7 @@ function useFetchItemsUserSaves(
 
       const res = await fetch(
         // eslint-disable-next-line
-        `${process.env.NEXT_PUBLIC_URL_API}/saves/get-all-saves-userid/${userId}?midiaType=${midiaType}&page=${currentPage.current}`,
+        `${process.env.NEXT_PUBLIC_URL_API}/saves/get-all-saves-userid/${userId}?midiaType=${midiaType.current}&page=${currentPage.current}`,
         {
           method: 'GET',
           cache: 'no-cache',

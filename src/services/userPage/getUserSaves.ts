@@ -2,7 +2,7 @@ import { MidiaType } from '@/app/page';
 
 const getUserSaves = async (userId: string) => {
   const resUserSaves = await fetch(
-    `${process.env.NEXT_PUBLIC_URL_API}/saves/get-all-saves-userid/${userId}?page=1`,
+    `${process.env.NEXT_PUBLIC_URL_API}/saves/get-all-saves-userid/${userId}?midiaType=undefined&page=1`,
     {
       method: 'GET',
       cache: 'no-cache',
