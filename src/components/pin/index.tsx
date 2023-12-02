@@ -75,10 +75,27 @@ export default function Pin({ data }: Props) {
     handleOnResize();
   }, [handleOnResize]);
 
+  function updateVideoStyle() {
+    let video = document.querySelector('#pin video') as HTMLVideoElement;
+    console.log(video);
+    if (!video) return;
+    let isFullScreen = document.fullscreenElement;
+
+    if (!isFullScreen) {
+      video.style.objectFit = 'cover';
+    } else {
+      video.style.objectFit = 'contain';
+    }
+  }
+
   useEffect(() => {
     window.addEventListener('resize', handleOnResize);
+    document.addEventListener('fullscreenchange', updateVideoStyle);
 
-    return () => window.removeEventListener('resize', handleOnResize);
+    return () => {
+      window.removeEventListener('resize', handleOnResize);
+      document.removeEventListener('fullscreenchange', updateVideoStyle);
+    };
   }, [handleOnResize]);
 
   const [pinIsLoading, setPinIsLoading] = useState(true);
