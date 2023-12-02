@@ -45,6 +45,7 @@ export default function UserPublishs({
 
   const [stPublishsResults, setStPublishsResults] = useState(publishsResults);
   const [pinSelectMode, setPinSelectMode] = useState(false);
+  const [showContainerSelectMode, setShowContainerSelectMode] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [midiaTypeFilter, setMidiaTypeFilter] =
     useState<MidiaTypeFilterType>(undefined);
@@ -158,16 +159,20 @@ export default function UserPublishs({
                 setIsLoading={setIsLoading}
                 setStPublishsResults={setStPublishsResults}
                 token={token}
+                showContainerSelectMode={showContainerSelectMode}
+                setShowContainerSelectMode={setShowContainerSelectMode}
               />
             ) : null}
             <MidiaTypeOption
               userId={userId}
+              setPinSelectMode={setPinSelectMode}
               handleError={handleError}
               isLoading={isLoading}
               setIsLoading={setIsLoading}
               setStPublishsResults={setStPublishsResults}
               setMidiaTypeFilter={setMidiaTypeFilter}
               midiaTypeFilter={midiaTypeFilter}
+              setShowContainerSelectMode={setShowContainerSelectMode}
             />
           </div>
         ) : null}
@@ -236,6 +241,8 @@ function MoreOptions({
   handleError,
   handleSuccess,
   token,
+  setShowContainerSelectMode,
+  showContainerSelectMode,
 }: {
   setPinSelectMode: Dispatch<SetStateAction<boolean>>;
   pinSelectMode: boolean;
@@ -247,9 +254,9 @@ function MoreOptions({
   handleError(msg: string): void;
   handleSuccess(msg: string): void;
   token: string;
+  showContainerSelectMode: boolean;
+  setShowContainerSelectMode: Dispatch<SetStateAction<boolean>>;
 }) {
-  const [showContainerSelectMode, setShowContainerSelectMode] = useState(false);
-
   const refContainerManageMoreOptions = useRef<HTMLDivElement | null>(null);
   const refBtnManageMoreOptions = useRef<HTMLButtonElement | null>(null);
 
@@ -395,6 +402,8 @@ function MidiaTypeOption({
   setIsLoading,
   setMidiaTypeFilter,
   midiaTypeFilter,
+  setPinSelectMode,
+  setShowContainerSelectMode,
 }: {
   userId: string;
   isLoading: boolean;
@@ -403,6 +412,8 @@ function MidiaTypeOption({
   handleError(msg: string): void;
   setMidiaTypeFilter: Dispatch<SetStateAction<MidiaTypeFilterType>>;
   midiaTypeFilter: MidiaTypeFilterType;
+  setPinSelectMode: Dispatch<SetStateAction<boolean>>;
+  setShowContainerSelectMode: Dispatch<SetStateAction<boolean>>;
 }) {
   const [showContainerMidiaTypeOptions, setShowContainerMidiaTypeOptions] =
     useState(false);
@@ -418,6 +429,8 @@ function MidiaTypeOption({
 
   const handleGetPinsToMidiaType = async (midiaType: MidiaTypeFilterType) => {
     if (isLoading) return;
+    setPinSelectMode(false);
+    setShowContainerSelectMode(false);
 
     try {
       setIsLoading(true);

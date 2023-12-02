@@ -633,7 +633,10 @@ function useFetchItemsUserMidia(
         setHasMore(false);
         return;
       }
-      setStResults(state => [...state, ...results]);
+      setStResults(state => [
+        ...state,
+        ...results.map((value, index: number) => ({ ...value, index })),
+      ]);
     } catch (err) {
       console.error(err);
     }
