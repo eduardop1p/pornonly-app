@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 export default async function Page() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_URL_API}/category`, {
     method: 'GET',
-    next: { tags: ['pin'] },
+    cache: 'no-cache',
   });
   if (!res.ok) {
     return <NotFoundPage />;
