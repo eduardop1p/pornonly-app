@@ -83,12 +83,18 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
     setNewHeight(localNewHeight);
   }, [data, pinProportion]);
 
-  const handleDawnload = async () => {
-    if (!isAuth) {
-      router.push(`/login?from=${pathName}`);
-      return;
+  const handleRankPin = async () => {
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_URL_API}/midia/rank/${data._id}`, {
+        method: 'GET',
+      });
+      await revalidatePin();
+    } catch (err) {
+      console.error(err);
     }
+  };
 
+  const handleDawnload = async () => {
     const link = document.createElement('a');
     link.style.display = 'none';
     link.href = data.url;
@@ -97,6 +103,8 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
     link.target = '_blank';
     link.click(); // link.click() vai simular um click no meu link
     document.body.removeChild(link);
+
+    handleRankPin();
   };
 
   const handleUserSavePin = async () => {
@@ -118,6 +126,7 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
         }
       );
       await revalidatePin();
+      handleRankPin();
       // const jsonRes = await res.json();
       // if (!res.ok) {
       //   handleError(jsonRes.error as string);
@@ -172,6 +181,7 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
         text: data.description,
         url: location.href,
       });
+      handleRankPin();
     } catch {
       handleError('Seu navegador não suporta está função');
     }

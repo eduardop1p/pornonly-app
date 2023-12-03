@@ -161,6 +161,7 @@ export default async function Page({ params }: Props) {
     }
   );
   const dataMidiaSearchTag = (await resMidiaSearchTags.json()) as MidiaType;
+  // console.log(dataMidiaSearchTag)
   const resultsMidiaSearchTag = dataMidiaSearchTag.midia.results.filter(
     value => value._id !== pinid
   );
