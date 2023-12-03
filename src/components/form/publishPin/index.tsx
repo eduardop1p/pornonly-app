@@ -239,11 +239,11 @@ const NewPin = forwardRef(
         clearErrors('description');
         clearErrors('tags');
 
-        if (title.trim().length < 4) {
+        if (title.trim().length < 4 && !isAdmin) {
           setError('title', { message: 'Titulo muito curto.' });
           controller = false;
         }
-        if (title.trim().length > 100) {
+        if (title.trim().length > 100 && !isAdmin) {
           setError('title', { message: 'Titulo muito grande.' });
           controller = false;
         }
@@ -260,7 +260,7 @@ const NewPin = forwardRef(
 
         return controller;
       },
-      [setError, clearErrors]
+      [setError, clearErrors, isAdmin]
     );
 
     useEffect(() => {

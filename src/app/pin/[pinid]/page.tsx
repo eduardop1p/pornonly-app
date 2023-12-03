@@ -84,7 +84,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
 
   return {
-    title: `Pornonly - ${data.title}`,
+    title: data.title ? `Pornonly - ${data.title}` : 'Pornonly',
     description: data.description,
     openGraph: {
       type: 'website',
@@ -187,7 +187,9 @@ export default async function Page({ params }: Props) {
               token={token as string}
             />
             <div className={styles['pin-info']}>
-              <h2 className={styles['pin-title']}>{dataPin.title}</h2>
+              {dataPin.title && (
+                <h2 className={styles['pin-title']}>{dataPin.title}</h2>
+              )}
               {dataPin.description && (
                 <Description description={dataPin.description} />
               )}

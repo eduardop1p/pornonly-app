@@ -214,7 +214,7 @@ export default function SaveAndMore({ data, isAuth, token, isSave }: Props) {
               src={data.url}
               height={newHeight}
               width={newWidth}
-              alt={data.title}
+              alt={data.title ? data.title : 'no title'}
               onLoad={() => setIsLoadingFullScreen(false)}
             />
           </div>

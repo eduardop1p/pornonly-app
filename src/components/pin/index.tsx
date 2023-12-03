@@ -159,7 +159,7 @@ export default function Pin({ data }: Props) {
         <>
           <Image
             src={data.url}
-            alt={data.title}
+            alt={data.title ? data.title : 'no title'}
             priority
             fill
             sizes="100%"

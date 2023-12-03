@@ -202,7 +202,7 @@ function PinImgPublished({
       >
         <Image
           src={midiaValue.url}
-          alt={midiaValue.title}
+          alt={midiaValue.title ? midiaValue.title : 'no title'}
           priority
           fill
           sizes="100%"
@@ -217,13 +217,15 @@ function PinImgPublished({
       </Link>
       {visibleUserInfo && (
         <div className="pin-title-and-user">
-          <Link
-            href={`/pin/${midiaValue._id} `}
-            title={upperFirst(midiaValue.title)}
-            className="pin-title"
-          >
-            {upperFirst(midiaValue.title)}
-          </Link>
+          {midiaValue.title ? (
+            <Link
+              href={`/pin/${midiaValue._id} `}
+              title={upperFirst(midiaValue.title)}
+              className="pin-title"
+            >
+              {upperFirst(midiaValue.title)}
+            </Link>
+          ) : null}
           <Link
             className="pin-original-user"
             href={`/${midiaValue.userId.username} `}
@@ -271,7 +273,7 @@ function PinImgPending({
         <span className="title-pending">Em análise</span>
         <Image
           src={midiaValue.url}
-          alt={midiaValue.title}
+          alt={midiaValue.title ? midiaValue.title : 'no title'}
           priority
           fill
           sizes="100%"
@@ -346,7 +348,7 @@ function PinVideoPublished({
         </svg>
         <Image
           src={midiaValue.thumb ? midiaValue.thumb : ''}
-          alt={midiaValue.title}
+          alt={midiaValue.title ? midiaValue.title : 'no title'}
           priority
           fill
           sizes="100%"
@@ -382,13 +384,15 @@ function PinVideoPublished({
       </Link>
       {visibleUserInfo && (
         <div className="pin-title-and-user">
-          <Link
-            href={`/pin/${midiaValue._id}`}
-            title={upperFirst(midiaValue.title)}
-            className="pin-title"
-          >
-            {upperFirst(midiaValue.title)}
-          </Link>
+          {midiaValue.title ? (
+            <Link
+              href={`/pin/${midiaValue._id}`}
+              title={upperFirst(midiaValue.title)}
+              className="pin-title"
+            >
+              {upperFirst(midiaValue.title)}
+            </Link>
+          ) : null}
           <Link
             className="pin-original-user"
             href={`/${midiaValue.userId.username}`}
@@ -446,7 +450,7 @@ function PinVideoPending({
         </svg>
         <Image
           src={midiaValue.thumb ? midiaValue.thumb : ''}
-          alt={midiaValue.title}
+          alt={midiaValue.title ? midiaValue.title : 'no title'}
           priority
           fill
           sizes="100%"
