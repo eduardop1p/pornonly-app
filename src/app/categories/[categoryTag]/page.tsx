@@ -67,6 +67,7 @@ export default async function Page({ params, searchParams }: Props) {
         results={results}
         midiaTypeFilter={midiaType}
         visibleUserInfo={true}
+        tags={[categoryTag]}
       />
     </main>
   );
