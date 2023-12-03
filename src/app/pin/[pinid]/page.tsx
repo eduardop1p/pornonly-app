@@ -135,6 +135,7 @@ export default async function Page({ params }: Props) {
       cache: 'no-cache',
     }
   );
+  // console.log(await resComments.json());
   if (!resComments.ok) {
     return <NotFoundPage />;
   }
