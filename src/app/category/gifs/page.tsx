@@ -8,6 +8,9 @@ import NotFoundPage from '../../not-found';
 
 export const metadata: Metadata = {
   title: 'Pornonly - Gifs',
+  alternates: {
+    canonical: `${process.env.NEXT_PUBLIC_URL_SITE}/category/gifs`,
+  },
 };
 
 export default async function Page() {

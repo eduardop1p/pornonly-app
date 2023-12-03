@@ -18,6 +18,9 @@ export interface UserTokenType {
 export const metadata: Metadata = {
   title: 'Pornonly - Criar pin',
   description: 'Crie seu pin personalizado aqui mesmo na pornonly.',
+  alternates: {
+    canonical: `${process.env.NEXT_PUBLIC_URL_SITE}/publish-pin`,
+  },
 };
 
 export default function Page() {

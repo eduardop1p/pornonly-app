@@ -86,6 +86,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: data.title ? `Pornonly - ${data.title}` : 'Pornonly',
     description: data.description,
+    alternates: {
+      canonical: `${process.env.NEXT_PUBLIC_URL_SITE}/pin/${pinid}`,
+    },
     openGraph: {
       type: 'website',
       title: data.title,

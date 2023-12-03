@@ -8,6 +8,9 @@ import NotFoundPage from '../not-found';
 
 export const metadata: Metadata = {
   title: 'Pornonly - Ruivas',
+  alternates: {
+    canonical: `${process.env.NEXT_PUBLIC_URL_SITE}/redheads`,
+  },
 };
 
 export default async function Page() {

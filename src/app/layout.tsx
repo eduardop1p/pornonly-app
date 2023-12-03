@@ -15,6 +15,9 @@ const Header = dynamic(() => import('@/components/header'), {
 export const metadata: Metadata = {
   title: 'Pornonly',
   description: 'Pononly - Aproveite do melhor conteúdo adulto aqui.',
+  alternates: {
+    canonical: `${process.env.NEXT_PUBLIC_URL_SITE}`,
+  },
 };
 
 export default function RootLayout({

@@ -47,6 +47,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // eslint-disable-next-line
     title: `Pornonly - ${upperFirst(categoryTag.replaceAll('-', ' '))}`,
     // title: `Pornonly - ${deburr(upperFirst(categoryTag.replaceAll('-', ' ')))}`,
+    alternates: {
+      canonical: `${process.env.NEXT_PUBLIC_URL_SITE}/${categoryTag}`,
+    },
   };
 }
 

@@ -22,6 +22,9 @@ export interface CategoryType {
 
 export const metadata: Metadata = {
   title: 'Pornonly - Categorias',
+  alternates: {
+    canonical: `${process.env.NEXT_PUBLIC_URL_SITE}/categories`,
+  },
 };
 
 export default async function Page() {

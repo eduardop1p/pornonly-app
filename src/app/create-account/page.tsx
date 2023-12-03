@@ -6,6 +6,9 @@ import styles from './styles.module.css';
 export const metadata: Metadata = {
   title: 'Pornonly - Criar conta',
   description: 'Pononly - Crie uma conta e aproveite o maximo do nosso site.',
+  alternates: {
+    canonical: `${process.env.NEXT_PUBLIC_URL_SITE}/create-account`,
+  },
 };
 
 import CreateAccount from '@/components/form/createAccount';
